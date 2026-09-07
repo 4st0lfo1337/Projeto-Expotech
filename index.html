@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>voceimporta - Depressão: Você não está sozinho | Feira de Ciências</title>
+    <title>voceimporta - Depressão: Você não está sozinho | Expotech 2026</title>
     <style>
         :root {
             --cor-primaria: #7a8a7a;
@@ -55,7 +55,6 @@
             display: flex;
         }
 
-        /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -127,7 +126,6 @@
             color: #8a7a6a;
         }
 
-        /* Botão hambúrguer para mobile */
         .menu-toggle {
             display: none;
             position: fixed;
@@ -150,7 +148,6 @@
             border-radius: 1px;
         }
 
-        /* Overlay para mobile */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -162,7 +159,6 @@
             z-index: 997;
         }
 
-        /* ===== CONTEÚDO PRINCIPAL ===== */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-largura);
@@ -659,7 +655,6 @@
             color: #c8b898;
         }
 
-        /* Seção clara (ajuda/contato) com estética industrial clara */
         .secao-clara {
             background-color: #d0c8b8;
             color: #1a1510;
@@ -740,7 +735,8 @@
         .botao-ajuda-flutuante {
             position: fixed;
             bottom: 30px;
-            left: calc(var(--sidebar-largura) + 30px);
+            right: 30px;
+            left: auto;
             z-index: 1000;
         }
         .botao-ajuda-flutuante button {
@@ -896,7 +892,6 @@
             border-color: #5a5a5a;
         }
 
-        /* Responsividade */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -911,9 +906,6 @@
                 margin-left: 0;
                 width: 100%;
             }
-            .botao-ajuda-flutuante {
-                left: 20px;
-            }
             .sidebar-overlay.ativo {
                 display: block;
             }
@@ -922,6 +914,10 @@
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 1.8rem;
+            }
+            .botao-ajuda-flutuante {
+                right: 20px;
+                bottom: 20px;
             }
             .botao-ajuda-flutuante button {
                 padding: 0.8rem 1.2rem;
@@ -935,15 +931,12 @@
 </head>
 <body>
 
-    <!-- Botão hambúrguer (mobile) -->
     <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
         <span></span><span></span><span></span>
     </button>
 
-    <!-- Overlay para mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#inicio" class="logo">voce<span>importa</span></a>
@@ -963,16 +956,15 @@
             <li><a href="#contato">Contato</a></li>
         </ul>
         <div class="sidebar-footer">
-            Feira de Ciências 2025
+            Expotech 2026
         </div>
     </nav>
 
-    <!-- Conteúdo principal -->
     <div class="main-content">
 
         <div class="botao-ajuda-flutuante">
             <button id="btnAjudaAgora" aria-label="Preciso de ajuda agora">
-                ⚠️ Preciso de ajuda agora
+                Preciso de ajuda agora
             </button>
         </div>
 
@@ -982,11 +974,11 @@
                 <h2>Você não está sozinho</h2>
                 <p>Se você está em crise ou conhece alguém que precisa de ajuda imediata, ligue agora:</p>
                 <div class="telefone-grande">
-                    <a href="tel:188">📞 188</a>
+                    <a href="tel:188">188</a>
                 </div>
                 <p><strong>CVV – Centro de Valorização da Vida</strong><br>Atendimento gratuito, 24 horas por dia.</p>
                 <div class="telefone-grande" style="font-size:1.6rem; color:#c8a090;">
-                    <a href="tel:192" style="color:#c8a090;">📞 192 (SAMU)</a>
+                    <a href="tel:192" style="color:#c8a090;">192 (SAMU)</a>
                 </div>
                 <p style="font-size:0.9rem; color:#a09080;">Em caso de risco imediato, ligue para o SAMU ou vá ao pronto-socorro mais próximo. Não fique sozinho.</p>
                 <p style="font-size:0.9rem; color:#8a7a6a; margin-top:1rem;"><em>Respire fundo. Você é importante. Há pessoas que se importam com você.</em></p>
@@ -1373,7 +1365,7 @@
                     <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d467688.89495119266!2d-46.5952992!3d-23.6824124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sCAPS!5e0!3m2!1spt-BR!2sbr!4v1715000000000!5m2!1spt-BR!2sbr" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <p style="text-align:center; font-size:0.9rem; color:#2a3a4a; margin-top:1rem;">
-                    💡 <em>Dica: substitua o mapa acima pelo endereço da sua cidade, pesquisando por "CAPS", "UBS" ou "hospital psiquiátrico".</em>
+                    Dica: substitua o mapa acima pelo endereço da sua cidade, pesquisando por "CAPS", "UBS" ou "hospital psiquiátrico".
                 </p>
             </div>
         </section>
@@ -1386,16 +1378,16 @@
                 </div>
                 <div class="compartilhar-container">
                     <a href="https://wa.me/?text=Conheça%20o%20projeto%20voceimporta%20sobre%20depressão%20e%20saúde%20mental" target="_blank" class="btn-compartilhar btn-whatsapp">
-                         WhatsApp
+                        WhatsApp
                     </a>
                     <a href="https://www.facebook.com/sharer/sharer.php?u=https://voceimporta.example.com" target="_blank" class="btn-compartilhar btn-facebook">
-                         Facebook
+                        Facebook
                     </a>
                     <a href="https://twitter.com/intent/tweet?text=Você%20não%20está%20sozinho%20na%20luta%20contra%20a%20depressão%20%23voceimporta%20%23saudemental" target="_blank" class="btn-compartilhar btn-twitter">
-                         Twitter
+                        Twitter
                     </a>
                     <button class="btn-compartilhar btn-link" id="btnCopiarLink" onclick="copiarLink()">
-                         Copiar link
+                        Copiar link
                     </button>
                 </div>
             </div>
@@ -1455,7 +1447,7 @@
                     <a href="#contato">Contato</a>
                 </div>
                 <p>
-                    Projeto <strong>voceimporta</strong> — Conscientização sobre Depressão para a Feira de Ciências 2025.<br>
+                    Projeto <strong>voceimporta</strong> — Conscientização sobre Depressão para a Expotech 2026.<br>
                     Fontes: OMS, Ministério da Saúde, ABP — Se precisar de ajuda, ligue CVV 188.
                 </p>
                 <p style="margin-top: 0.5rem; font-size: 0.8rem;">
@@ -1467,7 +1459,6 @@
     </div>
 
     <script>
-        // Menu lateral (mobile)
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -1492,12 +1483,10 @@
 
         sidebarOverlay.addEventListener('click', fecharSidebar);
 
-        // Fechar sidebar ao clicar em um link (mobile)
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
             link.addEventListener('click', fecharSidebar);
         });
 
-        // Botão flutuante de ajuda
         const btnAjudaAgora = document.getElementById('btnAjudaAgora');
         const modalEmergencia = document.getElementById('modalEmergencia');
         const btnFecharModal = document.getElementById('btnFecharModal');
@@ -1516,7 +1505,6 @@
             }
         });
 
-        // Função para copiar link
         function copiarLink() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
@@ -1526,7 +1514,6 @@
             });
         }
 
-        // ========== AUTOAVALIAÇÃO (baseada no PHQ-9) ==========
         const perguntasAutoavaliacao = [
             "Pouco interesse ou prazer em fazer as coisas",
             "Se sentir para baixo, deprimido ou sem esperança",
@@ -1632,7 +1619,6 @@
 
         carregarPergunta();
 
-        // Formulário de contato
         const formContato = document.getElementById('formContato');
         const formMensagem = document.getElementById('formMensagem');
 
