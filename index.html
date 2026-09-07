@@ -42,6 +42,73 @@
             color: var(--cor-texto);
             line-height: 1.8;
             overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Gradiente do escuro para o claro ao longo da página */
+        body {
+            background: linear-gradient(to bottom, #0a0e14 0%, #0f1720 30%, #1a2530 50%, #2a3540 70%, #3a4550 85%, #e8ecf0 100%);
+            background-attachment: fixed;
+        }
+
+        /* Classes para seções com fundo claro */
+        .secao-clara {
+            background-color: rgba(232, 236, 240, 0.9);
+            color: #1a2a3a;
+            border-radius: 0;
+        }
+
+        .secao-clara .section-titulo h2,
+        .secao-clara .texto-corrido strong,
+        .secao-clara .card h3,
+        .secao-clara .ajuda-card h3 {
+            color: #1a2a3a;
+        }
+
+        .secao-clara .section-titulo p,
+        .secao-clara .texto-corrido,
+        .secao-clara .card p,
+        .secao-clara .ajuda-card p {
+            color: #2a3a4a;
+        }
+
+        .secao-clara .card,
+        .secao-clara .ajuda-card,
+        .secao-clara .form-container,
+        .secao-clara .quiz-container {
+            background: #ffffff;
+            border-color: #ccd5dd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .secao-clara .quiz-pergunta {
+            color: #1a2a3a;
+        }
+
+        .secao-clara .quiz-opcao {
+            background: #f5f7f9;
+            border-color: #ccd5dd;
+            color: #1a2a3a;
+        }
+
+        .secao-clara .quiz-opcao:hover {
+            background: #e8ecf0;
+            border-color: #5a8ab5;
+        }
+
+        .secao-clara .quiz-opcao.selecionada {
+            background: #d0e0f0;
+            border-color: #5a8ab5;
+        }
+
+        .secao-clara .btn-quiz,
+        .secao-clara .btn-enviar {
+            background: #5a8ab5;
+            color: #fff;
+        }
+        .secao-clara .btn-quiz:hover,
+        .secao-clara .btn-enviar:hover {
+            background: #6b9e7a;
         }
 
         .container {
@@ -278,6 +345,27 @@
             font-size: 1rem;
             font-style: normal;
             opacity: 0.7;
+        }
+
+        /* Citações adicionais */
+        .citacoes-lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .citacao-item {
+            background: var(--cor-cards);
+            padding: 1.5rem;
+            border-radius: var(--raio-borda);
+            border-left: 4px solid var(--cor-primaria);
+            font-style: italic;
+            color: var(--cor-texto);
+        }
+        .secao-clara .citacao-item {
+            background: #ffffff;
+            border-left-color: #5a8ab5;
+            color: #2a3a4a;
         }
 
         .quiz-container {
@@ -722,6 +810,30 @@
         <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pessoa sentada sozinha em um banco, representando solidão" class="imagem-ilustrativa">
     </div>
 
+    <!-- NOVA SEÇÃO: CITAÇÕES SOBRE DOENÇA SILENCIOSA -->
+    <section id="citacoes" style="background: var(--cor-escura);">
+        <div class="container">
+            <div class="section-titulo">
+                <h2>Depressão: uma doença silenciosa</h2>
+                <p>Muitas vezes, quem mais sorri por fora é quem mais sofre por dentro.</p>
+            </div>
+            <div class="citacoes-lista">
+                <div class="citacao-item">
+                    "A depressão é uma doença silenciosa. Ela não aparece em exames de sangue, não deixa marcas visíveis, mas corrói a alma por dentro. Quem sofre aprende a esconder a dor atrás de um sorriso."
+                    <br><cite style="display:block; margin-top:0.5rem;">— Anônimo</cite>
+                </div>
+                <div class="citacao-item">
+                    "Pode afetar qualquer pessoa: o colega de trabalho que parece sempre animado, a amiga que está sempre disposta a ajudar, o filho que tira boas notas. A depressão não escolhe perfil, não avisa, não pede licença."
+                    <br><cite style="display:block; margin-top:0.5rem;">— Adaptado de relatos</cite>
+                </div>
+                <div class="citacao-item">
+                    "O mais difícil não é sentir a tristeza, é ter que fingir que está tudo bem. A depressão silenciosa é um grito abafado pela necessidade de parecer forte."
+                    <br><cite style="display:block; margin-top:0.5rem;">— Anônimo</cite>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- NOVA SEÇÃO: ESTÁGIOS DA DEPRESSÃO -->
     <section id="estagios" style="background: var(--cor-destaque);">
         <div class="container">
@@ -879,7 +991,8 @@
         </div>
     </section>
 
-    <section id="ajuda">
+    <!-- SEÇÃO DE AJUDA COM TEMA CLARO -->
+    <section id="ajuda" class="secao-clara">
         <div class="container">
             <div class="section-titulo">
                 <h2>Onde buscar ajuda</h2>
@@ -908,7 +1021,8 @@
         </div>
     </section>
 
-    <section id="contato" style="background: var(--cor-destaque);">
+    <!-- SEÇÃO DE CONTATO COM TEMA CLARO -->
+    <section id="contato" class="secao-clara" style="padding-top: 2rem;">
         <div class="container">
             <div class="section-titulo">
                 <h2>Deixe sua mensagem</h2>
