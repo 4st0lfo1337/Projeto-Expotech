@@ -712,35 +712,12 @@
             color: #333;
         }
 
-        /* Exercício de respiração */
+        /* Seção de respiração (agora sem círculo) */
         .respiro-container {
-            max-width: 400px;
+            max-width: 600px;
             margin: 2rem auto;
             text-align: center;
-        }
-        .circulo-respiro {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--cor-secundaria) 0%, #4a7a5a 70%);
-            margin: 0 auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 50px rgba(107, 158, 122, 0.4);
-            transition: transform 4s ease-in-out;
-            animation: respiro 8s infinite ease-in-out;
-        }
-        .circulo-respiro span {
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-        @keyframes respiro {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.5); }
-            100% { transform: scale(1); }
+            padding: 0 20px;
         }
         .respiro-instrucoes {
             font-size: 1.1rem;
@@ -749,18 +726,6 @@
         }
         .secao-clara .respiro-instrucoes {
             color: #2a3a4a;
-        }
-
-        /* Ícones SVG */
-        .icone-svg {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 1rem;
-            display: block;
-        }
-        .icone-svg svg {
-            width: 100%;
-            height: 100%;
         }
 
         /* Botão de compartilhamento */
@@ -842,10 +807,6 @@
             .mapa-container iframe {
                 height: 300px;
             }
-            .circulo-respiro {
-                width: 150px;
-                height: 150px;
-            }
         }
     </style>
 </head>
@@ -865,9 +826,9 @@
                 <li><a href="#tratamentos">Tratamentos</a></li>
                 <li><a href="#ajudar">Como ajudar</a></li>
                 <li><a href="#autoavaliacao">Autoavaliação</a></li>
-                <li><a href="#respiro">Respiro</a></li>
-                <li><a href="#mapa">Mapa</a></li>
+                <li><a href="#respiro">Como se acalmar</a></li>
                 <li><a href="#ajuda">Ajuda</a></li>
+                <li><a href="#mapa">Mapa</a></li>
                 <li><a href="#contato">Contato</a></li>
             </ul>
         </nav>
@@ -1215,43 +1176,33 @@
         </div>
     </section>
 
-    <!-- Seção de respiro / respiração guiada -->
+    <!-- Seção "Como se acalmar" (sem círculo) -->
     <section id="respiro" style="background: var(--cor-destaque);">
         <div class="container">
             <div class="section-titulo">
-                <h2>Exercício de respiração</h2>
-                <p>Em momentos de ansiedade, respire fundo. Siga o ritmo do círculo.</p>
+                <h2>Como se acalmar</h2>
+                <p>Técnicas simples para reduzir a ansiedade e encontrar um momento de paz.</p>
             </div>
             <div class="respiro-container">
-                <div class="circulo-respiro">
-                    <span>Inspire...<br>Expire...</span>
-                </div>
                 <p class="respiro-instrucoes">
-                    Inspire pelo nariz por 4 segundos, segure por 4 segundos, expire pela boca por 4 segundos.
-                    Repita por alguns minutos até se sentir mais calmo.
+                    Em momentos de ansiedade, experimente a respiração diafragmática:
+                </p>
+                <p class="respiro-instrucoes">
+                    <strong>Passo 1:</strong> Sente-se confortavelmente e coloque uma mão no peito e outra no abdômen.<br>
+                    <strong>Passo 2:</strong> Inspire lentamente pelo nariz, contando até 4.<br>
+                    <strong>Passo 3:</strong> Segure a respiração por 2 segundos.<br>
+                    <strong>Passo 4:</strong> Expire lentamente pela boca, contando até 6.<br>
+                    <strong>Passo 5:</strong> Repita por 5 a 10 minutos, focando na sensação do ar entrando e saindo.
+                </p>
+                <p class="respiro-instrucoes" style="margin-top:1rem;">
+                    Outra técnica é o <em>grounding</em> (ancoragem): identifique 5 coisas que você pode ver,
+                    4 que pode tocar, 3 que pode ouvir, 2 que pode cheirar e 1 que pode saborear.
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- Seção do mapa de serviços -->
-    <section id="mapa" class="secao-clara">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Onde encontrar ajuda gratuita</h2>
-                <p>Mapa com CAPS, UBS e hospitais que oferecem atendimento em saúde mental.</p>
-            </div>
-            <div class="mapa-container">
-                <!-- Exemplo com iframe do Google Maps (substitua pelo endereço da sua região) -->
-                <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d467688.89495119266!2d-46.5952992!3d-23.6824124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sCAPS!5e0!3m2!1spt-BR!2sbr!4v1715000000000!5m2!1spt-BR!2sbr" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-            <p style="text-align:center; font-size:0.9rem; color:#2a3a4a; margin-top:1rem;">
-                💡 <em>Dica: substitua o mapa acima pelo endereço da sua cidade, pesquisando por "CAPS", "UBS" ou "hospital psiquiátrico".</em>
-            </p>
-        </div>
-    </section>
-
-    <!-- Seção de ajuda com tema claro -->
+    <!-- Seção "Onde buscar ajuda" (agora antes do mapa) -->
     <section id="ajuda" class="secao-clara">
         <div class="container">
             <div class="section-titulo">
@@ -1278,6 +1229,22 @@
                     <span class="telefone destaque-vermelho">190 (Polícia)</span>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Seção do mapa de serviços (agora depois de ajuda) -->
+    <section id="mapa" class="secao-clara">
+        <div class="container">
+            <div class="section-titulo">
+                <h2>Onde encontrar ajuda gratuita</h2>
+                <p>Mapa com CAPS, UBS e hospitais que oferecem atendimento em saúde mental.</p>
+            </div>
+            <div class="mapa-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d467688.89495119266!2d-46.5952992!3d-23.6824124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sCAPS!5e0!3m2!1spt-BR!2sbr!4v1715000000000!5m2!1spt-BR!2sbr" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <p style="text-align:center; font-size:0.9rem; color:#2a3a4a; margin-top:1rem;">
+                💡 <em>Dica: substitua o mapa acima pelo endereço da sua cidade, pesquisando por "CAPS", "UBS" ou "hospital psiquiátrico".</em>
+            </p>
         </div>
     </section>
 
@@ -1353,9 +1320,9 @@
                 <a href="#tratamentos">Tratamentos</a>
                 <a href="#ajudar">Como ajudar</a>
                 <a href="#autoavaliacao">Autoavaliação</a>
-                <a href="#respiro">Respiro</a>
-                <a href="#mapa">Mapa</a>
+                <a href="#respiro">Como se acalmar</a>
                 <a href="#ajuda">Ajuda</a>
+                <a href="#mapa">Mapa</a>
                 <a href="#compartilhar">Compartilhar</a>
                 <a href="#contato">Contato</a>
             </div>
@@ -1396,7 +1363,6 @@
             modalEmergencia.classList.remove('ativo');
         });
 
-        // Fecha modal ao clicar fora do conteúdo
         modalEmergencia.addEventListener('click', (e) => {
             if (e.target === modalEmergencia) {
                 modalEmergencia.classList.remove('ativo');
