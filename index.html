@@ -5,23 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Depressão: Informação e Esperança | Feira de Ciências</title>
     <style>
-        /* ============================================
-                   VARIÁVEIS E RESET
-                   ============================================ */
         :root {
-            --cor-primaria: #2c6e9c;
-            --cor-secundaria: #4a9e6b;
-            --cor-escura: #1a2a3a;
-            --cor-texto: #333333;
-            --cor-texto-claro: #666666;
-            --cor-fundo: #f8f9fa;
-            --cor-branca: #ffffff;
-            --cor-cards: #ffffff;
-            --cor-destaque: #e8f0fe;
-            --cor-alerta: #e74c3c;
-            --cor-borda: #e0e0e0;
-            --sombra: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --sombra-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+            --cor-primaria: #5a8ab5;
+            --cor-secundaria: #6b9e7a;
+            --cor-escura: #0f1720;
+            --cor-texto: #d0d8e0;
+            --cor-texto-claro: #a0aab5;
+            --cor-fundo: #0a0e14;
+            --cor-cards: #131a22;
+            --cor-destaque: #1a2530;
+            --cor-alerta: #c05a5a;
+            --cor-borda: #2a3540;
+            --sombra: 0 4px 20px rgba(0, 0, 0, 0.6);
+            --sombra-hover: 0 8px 30px rgba(0, 0, 0, 0.8);
             --raio-borda: 12px;
             --transicao: 0.3s ease;
             --fonte-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -29,20 +25,6 @@
             --tamanho-h2: clamp(1.6rem, 3vw, 2.4rem);
             --tamanho-h3: clamp(1.2rem, 2vw, 1.6rem);
             --tamanho-texto: clamp(1rem, 1.2vw, 1.1rem);
-        }
-
-        /* Modo escuro */
-        [data-tema="escuro"] {
-            --cor-texto: #e0e0e0;
-            --cor-texto-claro: #b0b0b0;
-            --cor-fundo: #121212;
-            --cor-cards: #1e1e1e;
-            --cor-branca: #1e1e1e;
-            --cor-destaque: #1a3a5c;
-            --cor-borda: #333333;
-            --cor-escura: #0d0d0d;
-            --sombra: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --sombra-hover: 0 8px 30px rgba(0, 0, 0, 0.6);
         }
 
         * {
@@ -61,13 +43,9 @@
             background-color: var(--cor-fundo);
             color: var(--cor-texto);
             line-height: 1.7;
-            transition: background-color var(--transicao), color var(--transicao);
             overflow-x: hidden;
         }
 
-        /* ============================================
-                   UTILITÁRIOS
-                   ============================================ */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -81,22 +59,17 @@
 
         .section-titulo h2 {
             font-size: var(--tamanho-h2);
-            color: var(--cor-escura);
+            color: #ffffff;
             margin-bottom: 0.8rem;
             position: relative;
             display: inline-block;
-            transition: color var(--transicao);
-        }
-
-        [data-tema="escuro"] .section-titulo h2 {
-            color: #e0e0e0;
         }
 
         .section-titulo h2::after {
             content: '';
             display: block;
             width: 60%;
-            height: 4px;
+            height: 3px;
             background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
             margin: 0.8rem auto 0;
             border-radius: 2px;
@@ -109,9 +82,6 @@
             margin: 0 auto;
         }
 
-        /* ============================================
-                   BOTÃO VOLTAR AO TOPO
-                   ============================================ */
         .voltar-topo {
             position: fixed;
             bottom: 30px;
@@ -119,7 +89,7 @@
             width: 50px;
             height: 50px;
             background: var(--cor-primaria);
-            color: white;
+            color: #ffffff;
             border: none;
             border-radius: 50%;
             font-size: 1.5rem;
@@ -144,47 +114,14 @@
         .voltar-topo:hover {
             background: var(--cor-secundaria);
             transform: translateY(-5px);
-            box-shadow: var(--sombra-hover);
         }
 
-        /* ============================================
-                   BOTÃO MODO ESCURO
-                   ============================================ */
-        .modo-escuro-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 45px;
-            height: 45px;
-            background: var(--cor-cards);
-            color: var(--cor-texto);
-            border: 2px solid var(--cor-borda);
-            border-radius: 50%;
-            font-size: 1.3rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--sombra);
-            transition: all var(--transicao);
-            z-index: 1001;
-        }
-
-        .modo-escuro-btn:hover {
-            transform: scale(1.1);
-            box-shadow: var(--sombra-hover);
-        }
-
-        /* ============================================
-                   HEADER / NAVEGAÇÃO
-                   ============================================ */
         header {
             background: var(--cor-cards);
             box-shadow: var(--sombra);
             position: sticky;
             top: 0;
             z-index: 999;
-            transition: background-color var(--transicao);
         }
 
         .navbar {
@@ -202,17 +139,10 @@
             font-weight: 700;
             color: var(--cor-primaria);
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: color var(--transicao);
+            letter-spacing: 0.5px;
         }
 
         .logo span {
-            color: var(--cor-secundaria);
-        }
-
-        .logo:hover {
             color: var(--cor-secundaria);
         }
 
@@ -268,27 +198,13 @@
             transition: all var(--transicao);
         }
 
-        /* ============================================
-                   HERO SECTION
-                   ============================================ */
         .hero {
-            background: linear-gradient(135deg, var(--cor-primaria) 0%, #1a4a6e 50%, var(--cor-escura) 100%);
-            color: white;
+            background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 50%, #0a0e14 100%);
+            color: #ffffff;
             padding: 5rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
-        }
-
-        .hero::before {
-            content: '🧠';
-            position: absolute;
-            font-size: 15rem;
-            opacity: 0.08;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
         }
 
         .hero .container {
@@ -310,23 +226,25 @@
             margin: 0 auto 2rem;
             opacity: 0.9;
             line-height: 1.6;
+            color: #c0c8d0;
         }
 
         .hero-badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             padding: 0.5rem 1.5rem;
             border-radius: 50px;
             font-size: 0.9rem;
             margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.5px;
         }
 
         .btn-hero {
             display: inline-block;
             background: var(--cor-secundaria);
-            color: white;
+            color: #ffffff;
             padding: 1rem 2.5rem;
             border-radius: 50px;
             text-decoration: none;
@@ -335,18 +253,15 @@
             transition: all var(--transicao);
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(74, 158, 107, 0.4);
+            box-shadow: 0 4px 15px rgba(107, 158, 122, 0.3);
         }
 
         .btn-hero:hover {
-            background: #3d8a5e;
+            background: #5a8a68;
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(74, 158, 107, 0.5);
+            box-shadow: 0 8px 25px rgba(107, 158, 122, 0.4);
         }
 
-        /* ============================================
-                   SEÇÕES GERAIS
-                   ============================================ */
         section {
             padding: 4rem 0;
         }
@@ -371,24 +286,22 @@
         .card:hover {
             transform: translateY(-8px);
             box-shadow: var(--sombra-hover);
-            border-color: var(--cor-secundaria);
+            border-color: var(--cor-primaria);
         }
 
         .card .icone {
-            font-size: 3rem;
+            font-size: 2rem;
             margin-bottom: 1rem;
             display: block;
+            color: var(--cor-primaria);
+            font-weight: 700;
+            letter-spacing: 2px;
         }
 
         .card h3 {
             font-size: var(--tamanho-h3);
-            color: var(--cor-escura);
+            color: #ffffff;
             margin-bottom: 0.8rem;
-            transition: color var(--transicao);
-        }
-
-        [data-tema="escuro"] .card h3 {
-            color: #e0e0e0;
         }
 
         .card p {
@@ -396,9 +309,6 @@
             font-size: 0.95rem;
         }
 
-        /* ============================================
-                   ESTATÍSTICAS
-                   ============================================ */
         .estatisticas {
             background: var(--cor-destaque);
             padding: 3rem 0;
@@ -429,9 +339,6 @@
             margin-top: 0.3rem;
         }
 
-        /* ============================================
-                   SINTOMAS (LISTA)
-                   ============================================ */
         .sintomas-lista {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -458,19 +365,16 @@
             transform: translateX(5px);
         }
 
-        .sintoma-item .check {
+        .sintoma-item .marcador {
             color: var(--cor-secundaria);
             font-weight: bold;
             font-size: 1.2rem;
             flex-shrink: 0;
         }
 
-        /* ============================================
-                   CITAÇÃO / DEPOIMENTO
-                   ============================================ */
         .citacao {
             background: var(--cor-escura);
-            color: white;
+            color: #e0e6ec;
             padding: 3rem 0;
             text-align: center;
         }
@@ -492,9 +396,6 @@
             opacity: 0.7;
         }
 
-        /* ============================================
-                   QUIZ INTERATIVO
-                   ============================================ */
         .quiz-container {
             background: var(--cor-cards);
             border-radius: var(--raio-borda);
@@ -509,12 +410,7 @@
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
-            color: var(--cor-escura);
-            transition: color var(--transicao);
-        }
-
-        [data-tema="escuro"] .quiz-pergunta {
-            color: #e0e0e0;
+            color: #ffffff;
         }
 
         .quiz-opcoes {
@@ -543,15 +439,15 @@
 
         .quiz-opcao.correta {
             border-color: var(--cor-secundaria);
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: #1a3321;
+            color: #9fd0a5;
             font-weight: 600;
         }
 
         .quiz-opcao.incorreta {
             border-color: var(--cor-alerta);
-            background: #ffebee;
-            color: #c62828;
+            background: #3a2020;
+            color: #d9a0a0;
         }
 
         .quiz-resultado {
@@ -564,25 +460,25 @@
         }
 
         .quiz-resultado.bom {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: #1a3321;
+            color: #9fd0a5;
         }
 
         .quiz-resultado.medio {
-            background: #fff3e0;
-            color: #e65100;
+            background: #332d1a;
+            color: #d4c07a;
         }
 
         .quiz-resultado.atencao {
-            background: #ffebee;
-            color: #c62828;
+            background: #3a2020;
+            color: #d9a0a0;
         }
 
         .btn-quiz {
             display: inline-block;
             padding: 0.8rem 2rem;
             background: var(--cor-primaria);
-            color: white;
+            color: #ffffff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -598,9 +494,6 @@
             transform: translateY(-2px);
         }
 
-        /* ============================================
-                   CONTATO / AJUDA
-                   ============================================ */
         .ajuda-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -624,17 +517,15 @@
         }
 
         .ajuda-card .icone {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
+            color: var(--cor-primaria);
+            font-weight: 700;
         }
 
         .ajuda-card h3 {
-            color: var(--cor-escura);
+            color: #ffffff;
             margin-bottom: 0.5rem;
-        }
-
-        [data-tema="escuro"] .ajuda-card h3 {
-            color: #e0e0e0;
         }
 
         .ajuda-card p {
@@ -655,9 +546,6 @@
             color: var(--cor-alerta);
         }
 
-        /* ============================================
-                   FORMULÁRIO
-                   ============================================ */
         .form-container {
             background: var(--cor-cards);
             border-radius: var(--raio-borda);
@@ -707,7 +595,7 @@
 
         .btn-enviar {
             background: var(--cor-secundaria);
-            color: white;
+            color: #ffffff;
             padding: 0.9rem 2rem;
             border: none;
             border-radius: 8px;
@@ -720,9 +608,9 @@
         }
 
         .btn-enviar:hover {
-            background: #3d8a5e;
+            background: #5a8a68;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(74, 158, 107, 0.4);
+            box-shadow: 0 6px 20px rgba(107, 158, 122, 0.3);
         }
 
         .form-mensagem {
@@ -736,22 +624,19 @@
 
         .form-mensagem.sucesso {
             display: block;
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: #1a3321;
+            color: #9fd0a5;
         }
 
         .form-mensagem.erro {
             display: block;
-            background: #ffebee;
-            color: #c62828;
+            background: #3a2020;
+            color: #d9a0a0;
         }
 
-        /* ============================================
-                   FOOTER
-                   ============================================ */
         footer {
             background: var(--cor-escura);
-            color: #aaa;
+            color: #8a9aa8;
             text-align: center;
             padding: 2rem 0;
             margin-top: 2rem;
@@ -771,7 +656,7 @@
         }
 
         footer .links-footer a {
-            color: #ccc;
+            color: #b0bec5;
             text-decoration: none;
             font-size: 0.9rem;
             transition: color var(--transicao);
@@ -781,9 +666,6 @@
             color: var(--cor-secundaria);
         }
 
-        /* ============================================
-                   RESPONSIVIDADE
-                   ============================================ */
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -831,14 +713,6 @@
                 padding: 1.5rem;
             }
 
-            .modo-escuro-btn {
-                top: 15px;
-                right: 15px;
-                width: 40px;
-                height: 40px;
-                font-size: 1.1rem;
-            }
-
             .voltar-topo {
                 bottom: 20px;
                 right: 20px;
@@ -866,7 +740,6 @@
             }
         }
 
-        /* Animação de entrada */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -899,27 +772,14 @@
 </head>
 <body>
 
-    <!-- ============================================
-    BOTÃO MODO ESCURO
-    ============================================ -->
-    <button class="modo-escuro-btn" id="btnModoEscuro" title="Alternar modo escuro" aria-label="Alternar modo escuro">
-        🌙
-    </button>
-
-    <!-- ============================================
-    BOTÃO VOLTAR AO TOPO
-    ============================================ -->
     <button class="voltar-topo" id="btnVoltarTopo" title="Voltar ao topo" aria-label="Voltar ao topo">
         ↑
     </button>
 
-    <!-- ============================================
-    HEADER / NAVEGAÇÃO
-    ============================================ -->
     <header>
         <nav class="navbar">
             <a href="#" class="logo">
-                🧠 Depressão<span>Info</span>
+                Depressão<span>Info</span>
             </a>
             <div class="menu-hamburguer" id="menuHamburguer" aria-label="Abrir menu">
                 <span></span><span></span><span></span>
@@ -936,34 +796,28 @@
         </nav>
     </header>
 
-    <!-- ============================================
-    HERO SECTION
-    ============================================ -->
     <section class="hero" id="inicio">
         <div class="container">
-            <span class="hero-badge">📊 Feira de Ciências 2025</span>
+            <span class="hero-badge">Feira de Ciências 2025</span>
             <h1>Depressão: Informação que Salva Vidas</h1>
             <p>
                 Entenda essa doença que afeta milhões de brasileiros, aprenda a reconhecer os sinais
                 e descubra como você pode ajudar. A informação é o primeiro passo para a esperança.
             </p>
-            <a href="#sobre" class="btn-hero">Começar a Explorar ↓</a>
+            <a href="#sobre" class="btn-hero">Começar a Explorar</a>
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: O QUE É DEPRESSÃO
-    ============================================ -->
     <section id="sobre">
         <div class="container">
             <div class="section-titulo animar">
-                <h2>🧠 O que é Depressão?</h2>
+                <h2>O que é Depressão?</h2>
                 <p>Muito mais que uma tristeza passageira — é uma doença que exige atenção e cuidado.</p>
             </div>
             <div class="card-grid">
                 <div class="card animar delay-1">
-                    <span class="icone">📋</span>
-                    <h3>Definição</h3>
+                    <span class="icone">DEFINIÇÃO</span>
+                    <h3>Conceito Clínico</h3>
                     <p>
                         A depressão é um transtorno mental caracterizado por tristeza profunda e persistente,
                         perda de interesse em atividades cotidianas e baixa energia. É uma condição médica
@@ -971,17 +825,17 @@
                     </p>
                 </div>
                 <div class="card animar delay-2">
-                    <span class="icone">⚖️</span>
-                    <h3>Não é Frescura</h3>
+                    <span class="icone">SERIEDADE</span>
+                    <h3>Não é Fraqueza</h3>
                     <p>
                         Diferente da tristeza comum, que passa em poucos dias, a depressão é duradoura
                         (semanas ou meses) e interfere significativamente na vida da pessoa. Não é falta
-                        de vontade, fraqueza ou "drama" — é uma doença que precisa de tratamento.
+                        de vontade ou "drama" — é uma doença que precisa de tratamento.
                     </p>
                 </div>
                 <div class="card animar delay-3">
-                    <span class="icone">🧬</span>
-                    <h3>Causas Complexas</h3>
+                    <span class="icone">CAUSAS</span>
+                    <h3>Fatores Complexos</h3>
                     <p>
                         Fatores biológicos (genética, química cerebral), psicológicos (traumas, estresse
                         crônico) e sociais (isolamento, problemas financeiros) podem desencadear ou
@@ -992,13 +846,10 @@
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: ESTATÍSTICAS NO BRASIL
-    ============================================ -->
     <section class="estatisticas" id="estatisticas">
         <div class="container">
             <div class="section-titulo animar">
-                <h2>📊 Depressão no Brasil</h2>
+                <h2>Depressão no Brasil</h2>
                 <p>Números que mostram a importância de falar sobre o assunto.</p>
             </div>
             <div class="stats-grid">
@@ -1025,73 +876,64 @@
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: SINTOMAS
-    ============================================ -->
     <section id="sintomas">
         <div class="container">
             <div class="section-titulo animar">
-                <h2>⚠️ Sinais e Sintomas</h2>
+                <h2>Sinais e Sintomas</h2>
                 <p>Reconhecer os sintomas é o primeiro passo para buscar ajuda. Se você se identifica com vários deles, procure um profissional.</p>
             </div>
             <div class="sintomas-lista">
-                <div class="sintoma-item animar delay-1"><span class="check">✔</span> Tristeza profunda e persistente</div>
-                <div class="sintoma-item animar delay-1"><span class="check">✔</span> Perda de interesse em atividades que antes davam prazer</div>
-                <div class="sintoma-item animar delay-2"><span class="check">✔</span> Alterações no apetite (comer demais ou de menos)</div>
-                <div class="sintoma-item animar delay-2"><span class="check">✔</span> Insônia ou sono excessivo</div>
-                <div class="sintoma-item animar delay-3"><span class="check">✔</span> Fadiga constante e falta de energia</div>
-                <div class="sintoma-item animar delay-3"><span class="check">✔</span> Sentimentos de culpa, inutilidade ou desesperança</div>
-                <div class="sintoma-item animar delay-4"><span class="check">✔</span> Dificuldade de concentração e tomada de decisões</div>
-                <div class="sintoma-item animar delay-4"><span class="check">✔</span> Pensamentos de morte ou ideação suicida</div>
-                <div class="sintoma-item animar delay-4"><span class="check">✔</span> Irritabilidade e ansiedade frequentes</div>
-                <div class="sintoma-item animar delay-4"><span class="check">✔</span> Isolamento social e afastamento de amigos/família</div>
+                <div class="sintoma-item animar delay-1"><span class="marcador">—</span> Tristeza profunda e persistente</div>
+                <div class="sintoma-item animar delay-1"><span class="marcador">—</span> Perda de interesse em atividades que antes davam prazer</div>
+                <div class="sintoma-item animar delay-2"><span class="marcador">—</span> Alterações no apetite (comer demais ou de menos)</div>
+                <div class="sintoma-item animar delay-2"><span class="marcador">—</span> Insônia ou sono excessivo</div>
+                <div class="sintoma-item animar delay-3"><span class="marcador">—</span> Fadiga constante e falta de energia</div>
+                <div class="sintoma-item animar delay-3"><span class="marcador">—</span> Sentimentos de culpa, inutilidade ou desesperança</div>
+                <div class="sintoma-item animar delay-4"><span class="marcador">—</span> Dificuldade de concentração e tomada de decisões</div>
+                <div class="sintoma-item animar delay-4"><span class="marcador">—</span> Pensamentos de morte ou ideação suicida</div>
+                <div class="sintoma-item animar delay-4"><span class="marcador">—</span> Irritabilidade e ansiedade frequentes</div>
+                <div class="sintoma-item animar delay-4"><span class="marcador">—</span> Isolamento social e afastamento de amigos/família</div>
             </div>
             <p style="text-align:center; margin-top:2rem; color:var(--cor-alerta); font-weight:600;">
-                🚨 Se você ou alguém que você conhece está pensando em suicídio, ligue imediatamente para o CVV: 188 (gratuito, 24h).
+                Se você ou alguém que você conhece está pensando em suicídio, ligue imediatamente para o CVV: 188 (gratuito, 24h).
             </p>
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: TRATAMENTOS
-    ============================================ -->
     <section id="tratamentos" style="background: var(--cor-destaque);">
         <div class="container">
             <div class="section-titulo animar">
-                <h2>💊 Tratamentos Disponíveis</h2>
+                <h2>Tratamentos Disponíveis</h2>
                 <p>A depressão tem tratamento e a maioria das pessoas melhora com acompanhamento adequado.</p>
             </div>
             <div class="card-grid">
                 <div class="card animar delay-1">
-                    <span class="icone">🧑‍⚕️</span>
-                    <h3>Psicoterapia</h3>
+                    <span class="icone">PSICOTERAPIA</span>
+                    <h3>Terapia Cognitivo-Comportamental</h3>
                     <p>
-                        Terapias como a Cognitivo-Comportamental (TCC) ajudam a identificar padrões de
-                        pensamento negativos e desenvolver estratégias para lidar com eles. É fundamental
-                        no tratamento da depressão.
+                        Terapias como a TCC ajudam a identificar padrões de pensamento negativos e
+                        desenvolver estratégias para lidar com eles. É fundamental no tratamento.
                     </p>
                 </div>
                 <div class="card animar delay-2">
-                    <span class="icone">💊</span>
-                    <h3>Medicação</h3>
+                    <span class="icone">MEDICAÇÃO</span>
+                    <h3>Antidepressivos</h3>
                     <p>
-                        Antidepressivos prescritos por psiquiatras ajudam a regular os neurotransmissores
-                        no cérebro. O uso deve ser sempre acompanhado por um profissional e nunca
-                        interrompido sem orientação.
+                        Prescritos por psiquiatras, ajudam a regular os neurotransmissores no cérebro.
+                        O uso deve ser sempre acompanhado por um profissional e nunca interrompido sem orientação.
                     </p>
                 </div>
                 <div class="card animar delay-3">
-                    <span class="icone">🏃</span>
-                    <h3>Mudanças no Estilo de Vida</h3>
+                    <span class="icone">ESTILO DE VIDA</span>
+                    <h3>Hábitos Saudáveis</h3>
                     <p>
                         Exercícios físicos regulares, alimentação equilibrada, sono adequado e redução
-                        do estresse são coadjuvantes importantes no tratamento. Atividades ao ar livre
-                        também ajudam.
+                        do estresse são coadjuvantes importantes no tratamento.
                     </p>
                 </div>
                 <div class="card animar delay-4">
-                    <span class="icone">🤝</span>
-                    <h3>Rede de Apoio</h3>
+                    <span class="icone">APOIO SOCIAL</span>
+                    <h3>Rede de Suporte</h3>
                     <p>
                         O suporte de familiares, amigos e grupos de apoio é essencial. Sentir-se acolhido
                         e compreendido faz toda a diferença no processo de recuperação.
@@ -1101,9 +943,6 @@
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: CITAÇÃO
-    ============================================ -->
     <section class="citacao">
         <div class="container">
             <blockquote class="animar">
@@ -1114,18 +953,15 @@
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: COMO AJUDAR
-    ============================================ -->
     <section id="ajudar">
         <div class="container">
             <div class="section-titulo animar">
-                <h2>🤝 Como Ajudar Alguém com Depressão</h2>
+                <h2>Como Ajudar Alguém com Depressão</h2>
                 <p>Pequenas atitudes podem fazer uma grande diferença na vida de quem sofre.</p>
             </div>
             <div class="card-grid">
                 <div class="card animar delay-1">
-                    <span class="icone">👂</span>
+                    <span class="icone">OUVIR</span>
                     <h3>Ouça sem Julgar</h3>
                     <p>
                         Ofereça um ouvido atento e acolhedor. Não minimize o sofrimento da pessoa
@@ -1133,7 +969,7 @@
                     </p>
                 </div>
                 <div class="card animar delay-2">
-                    <span class="icone">📞</span>
+                    <span class="icone">INCENTIVAR</span>
                     <h3>Incentive a Buscar Ajuda</h3>
                     <p>
                         Sugira gentilmente que a pessoa procure um psicólogo ou psiquiatra.
@@ -1141,7 +977,7 @@
                     </p>
                 </div>
                 <div class="card animar delay-3">
-                    <span class="icone">🏠</span>
+                    <span class="icone">PRESENÇA</span>
                     <h3>Esteja Presente</h3>
                     <p>
                         Convide para atividades leves, como um café ou uma caminhada.
@@ -1149,7 +985,7 @@
                     </p>
                 </div>
                 <div class="card animar delay-4">
-                    <span class="icone">🚨</span>
+                    <span class="icone">ATENÇÃO</span>
                     <h3>Fique Atento a Sinais de Alerta</h3>
                     <p>
                         Se a pessoa falar sobre morte ou suicídio, leve a sério. Ligue para o CVV (188)
@@ -1160,67 +996,58 @@
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: QUIZ INTERATIVO
-    ============================================ -->
     <section id="quiz" style="background: var(--cor-destaque);">
         <div class="container">
             <div class="section-titulo animar">
-                <h2>📝 Quiz: Teste seus Conhecimentos</h2>
+                <h2>Quiz: Teste seus Conhecimentos</h2>
                 <p>Responda as perguntas abaixo e veja o quanto você sabe sobre depressão.</p>
             </div>
             <div class="quiz-container animar">
                 <div id="quizPergunta" class="quiz-pergunta">Carregando pergunta...</div>
                 <div class="quiz-opcoes" id="quizOpcoes"></div>
                 <div id="quizResultado" class="quiz-resultado" style="display:none;"></div>
-                <button class="btn-quiz" id="btnProximaPergunta" style="display:none;">Próxima Pergunta →</button>
-                <button class="btn-quiz" id="btnReiniciarQuiz" style="display:none; background: var(--cor-secundaria);">🔄 Refazer Quiz</button>
+                <button class="btn-quiz" id="btnProximaPergunta" style="display:none;">Próxima Pergunta</button>
+                <button class="btn-quiz" id="btnReiniciarQuiz" style="display:none; background: var(--cor-secundaria);">Refazer Quiz</button>
             </div>
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: ONDE BUSCAR AJUDA
-    ============================================ -->
     <section id="ajuda-contatos">
         <div class="container">
             <div class="section-titulo animar">
-                <h2>📞 Onde Buscar Ajuda</h2>
+                <h2>Onde Buscar Ajuda</h2>
                 <p>Se você ou alguém próximo precisa de apoio, estes canais estão disponíveis.</p>
             </div>
             <div class="ajuda-container">
                 <div class="ajuda-card animar delay-1">
-                    <span class="icone">❤️</span>
-                    <h3>CVV — Centro de Valorização da Vida</h3>
+                    <span class="icone">CVV</span>
+                    <h3>Centro de Valorização da Vida</h3>
                     <p>Apoio emocional gratuito e sigiloso, 24 horas por dia.</p>
-                    <span class="telefone">📞 188</span>
+                    <span class="telefone">188</span>
                     <p style="font-size:0.85rem;">Ligação gratuita de qualquer telefone</p>
                 </div>
                 <div class="ajuda-card animar delay-2">
-                    <span class="icone">🏥</span>
-                    <h3>SUS — CAPS</h3>
+                    <span class="icone">SUS</span>
+                    <h3>CAPS – Atenção Psicossocial</h3>
                     <p>Centros de Atenção Psicossocial oferecem tratamento gratuito.</p>
                     <p style="font-weight:600;">Procure o CAPS mais próximo de você</p>
                     <p style="font-size:0.85rem;">Encaminhamento pela UBS do seu bairro</p>
                 </div>
                 <div class="ajuda-card animar delay-3">
-                    <span class="icone">🚨</span>
+                    <span class="icone">EMERGÊNCIA</span>
                     <h3>Emergências</h3>
                     <p>Em caso de risco iminente de suicídio, ligue imediatamente:</p>
-                    <span class="telefone destaque-vermelho">📞 192 (SAMU)</span>
-                    <span class="telefone destaque-vermelho">📞 190 (Polícia)</span>
+                    <span class="telefone destaque-vermelho">192 (SAMU)</span>
+                    <span class="telefone destaque-vermelho">190 (Polícia)</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ============================================
-    SEÇÃO: FORMULÁRIO DE CONTATO / FEEDBACK
-    ============================================ -->
     <section id="contato" style="background: var(--cor-destaque);">
         <div class="container">
             <div class="section-titulo animar">
-                <h2>💬 Deixe sua Mensagem</h2>
+                <h2>Deixe sua Mensagem</h2>
                 <p>Compartilhe sua opinião sobre o projeto ou tire dúvidas. Responderemos em breve!</p>
             </div>
             <div class="form-container animar">
@@ -1246,16 +1073,13 @@
                         <label for="mensagem">Mensagem:</label>
                         <textarea id="mensagem" name="mensagem" placeholder="Escreva sua mensagem..." required></textarea>
                     </div>
-                    <button type="submit" class="btn-enviar">📨 Enviar Mensagem</button>
+                    <button type="submit" class="btn-enviar">Enviar Mensagem</button>
                 </form>
                 <div id="formMensagem" class="form-mensagem"></div>
             </div>
         </div>
     </section>
 
-    <!-- ============================================
-    FOOTER
-    ============================================ -->
     <footer>
         <div class="container">
             <div class="links-footer">
@@ -1268,72 +1092,29 @@
                 <a href="#contato">Contato</a>
             </div>
             <p>
-                🧠 Projeto desenvolvido para a Feira de Ciências 2025 — Conscientização sobre Depressão.<br>
+                Projeto desenvolvido para a Feira de Ciências 2025 — Conscientização sobre Depressão.<br>
                 Fontes: OMS, Ministério da Saúde, ABP — Se precisar de ajuda, ligue CVV 188.
             </p>
             <p style="margin-top: 0.5rem; font-size: 0.8rem;">
-                Feito com 💚 por estudantes de Desenvolvimento de Sistemas.
+                Feito por estudantes de Desenvolvimento de Sistemas.
             </p>
         </div>
     </footer>
 
-    <!-- ============================================
-    JAVASCRIPT
-    ============================================ -->
     <script>
-        // ============================================
-        // MENU HAMBURGUER (MOBILE)
-        // ============================================
         const menuHamburguer = document.getElementById('menuHamburguer');
         const navLinks = document.getElementById('navLinks');
 
         menuHamburguer.addEventListener('click', () => {
             navLinks.classList.toggle('ativo');
-            // Anima as barras do hambúrguer
-            const spans = menuHamburguer.querySelectorAll('span');
-            spans.forEach(span => span.style.transform = navLinks.classList.contains('ativo') ?
-                'rotate(45deg)' : 'none');
         });
 
-        // Fecha o menu ao clicar em um link
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('ativo');
-                const spans = menuHamburguer.querySelectorAll('span');
-                spans.forEach(span => span.style.transform = 'none');
             });
         });
 
-        // ============================================
-        // MODO ESCURO
-        // ============================================
-        const btnModoEscuro = document.getElementById('btnModoEscuro');
-        const body = document.body;
-
-        // Verifica preferência salva
-        const temaSalvo = localStorage.getItem('tema');
-        if (temaSalvo === 'escuro') {
-            body.setAttribute('data-tema', 'escuro');
-            btnModoEscuro.textContent = '☀️';
-        } else {
-            btnModoEscuro.textContent = '🌙';
-        }
-
-        btnModoEscuro.addEventListener('click', () => {
-            if (body.getAttribute('data-tema') === 'escuro') {
-                body.removeAttribute('data-tema');
-                btnModoEscuro.textContent = '🌙';
-                localStorage.setItem('tema', 'claro');
-            } else {
-                body.setAttribute('data-tema', 'escuro');
-                btnModoEscuro.textContent = '☀️';
-                localStorage.setItem('tema', 'escuro');
-            }
-        });
-
-        // ============================================
-        // BOTÃO VOLTAR AO TOPO
-        // ============================================
         const btnVoltarTopo = document.getElementById('btnVoltarTopo');
 
         window.addEventListener('scroll', () => {
@@ -1348,9 +1129,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // ============================================
-        // ANIMAÇÃO DOS CONTADORES DE ESTATÍSTICAS
-        // ============================================
         const statNumeros = document.querySelectorAll('.stat-numero');
         let contadoresAnimados = false;
 
@@ -1385,11 +1163,7 @@
         window.addEventListener('scroll', animarContadores);
         window.addEventListener('load', animarContadores);
 
-        // ============================================
-        // ANIMAÇÃO DE SCROLL PARA ELEMENTOS
-        // ============================================
         const elementosAnimados = document.querySelectorAll('.animar');
-
         const observadorAnimacao = new IntersectionObserver((entradas) => {
             entradas.forEach(entrada => {
                 if (entrada.isIntersecting) {
@@ -1405,9 +1179,6 @@
             observadorAnimacao.observe(el);
         });
 
-        // ============================================
-        // QUIZ INTERATIVO
-        // ============================================
         const perguntasQuiz = [{
             pergunta: 'Qual é o número de telefone do CVV (Centro de Valorização da Vida)?',
             opcoes: ['180', '188', '192', '100'],
@@ -1507,9 +1278,8 @@
                 botoes[dados.correta].classList.add('correta');
             }
 
-            // Mostra explicação
             quizResultadoEl.style.display = 'block';
-            quizResultadoEl.innerHTML = `<strong>${indiceSelecionado === dados.correta ? '✅ Correto!' : '❌ Incorreto'}</strong><br>${dados.explicacao}`;
+            quizResultadoEl.innerHTML = `<strong>${indiceSelecionado === dados.correta ? 'Correto.' : 'Incorreto.'}</strong><br>${dados.explicacao}`;
             quizResultadoEl.className = 'quiz-resultado ' + (indiceSelecionado === dados.correta ? 'bom' : 'atencao');
 
             if (quizIndiceAtual < perguntasQuiz.length - 1) {
@@ -1526,13 +1296,13 @@
             let classe = '';
 
             if (porcentagem >= 80) {
-                mensagem = `🏆 Excelente! Você acertou ${quizPontuacao} de ${perguntasQuiz.length} perguntas (${porcentagem}%). Você está bem informado sobre depressão!`;
+                mensagem = `Excelente! Você acertou ${quizPontuacao} de ${perguntasQuiz.length} perguntas (${porcentagem}%). Você está bem informado.`;
                 classe = 'bom';
             } else if (porcentagem >= 50) {
-                mensagem = `👍 Bom trabalho! Você acertou ${quizPontuacao} de ${perguntasQuiz.length} perguntas (${porcentagem}%). Continue aprendendo sobre o tema!`;
+                mensagem = `Bom trabalho! Você acertou ${quizPontuacao} de ${perguntasQuiz.length} perguntas (${porcentagem}%). Continue aprendendo.`;
                 classe = 'medio';
             } else {
-                mensagem = `📚 Você acertou ${quizPontuacao} de ${perguntasQuiz.length} perguntas (${porcentagem}%). Vale a pena revisar o conteúdo do site para aprender mais!`;
+                mensagem = `Você acertou ${quizPontuacao} de ${perguntasQuiz.length} perguntas (${porcentagem}%). Recomendamos revisar o conteúdo do site.`;
                 classe = 'atencao';
             }
 
@@ -1552,12 +1322,8 @@
             carregarPergunta();
         });
 
-        // Inicia o quiz
         carregarPergunta();
 
-        // ============================================
-        // FORMULÁRIO DE CONTATO
-        // ============================================
         const formContato = document.getElementById('formContato');
         const formMensagem = document.getElementById('formMensagem');
 
@@ -1566,36 +1332,26 @@
 
             const nome = document.getElementById('nome').value.trim();
             const email = document.getElementById('email').value.trim();
-            const assunto = document.getElementById('assunto').value;
             const mensagem = document.getElementById('mensagem').value.trim();
 
             if (nome && email && mensagem) {
-                // Simula envio (em um projeto real, aqui seria uma chamada a API/backend)
                 formMensagem.className = 'form-mensagem sucesso';
-                formMensagem.textContent = `✅ Obrigado, ${nome}! Sua mensagem foi enviada com sucesso. Retornaremos em breve.`;
+                formMensagem.textContent = `Obrigado, ${nome}. Sua mensagem foi enviada com sucesso.`;
                 formContato.reset();
 
-                // Esconde a mensagem após 5 segundos
                 setTimeout(() => {
                     formMensagem.className = 'form-mensagem';
                     formMensagem.textContent = '';
                 }, 5000);
             } else {
                 formMensagem.className = 'form-mensagem erro';
-                formMensagem.textContent = '❌ Por favor, preencha todos os campos obrigatórios.';
+                formMensagem.textContent = 'Por favor, preencha todos os campos obrigatórios.';
                 setTimeout(() => {
                     formMensagem.className = 'form-mensagem';
                     formMensagem.textContent = '';
                 }, 4000);
             }
         });
-
-        // ============================================
-        // SAUDAÇÃO NO CONSOLE (apenas para devs)
-        // ============================================
-        console.log('🧠 Site sobre Depressão — Feira de Ciências 2025');
-        console.log('💚 Se você precisa de ajuda, ligue CVV 188 (gratuito, 24h).');
-        console.log('📚 Fontes: OMS, Ministério da Saúde, ABP.');
     </script>
 </body>
 </html>
