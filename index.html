@@ -549,6 +549,52 @@
             color: #c08a7a;
         }
 
+        /* NOVA LISTA DE AJUDA */
+        .ajuda-lista {
+            max-width: 900px;
+            margin: 2rem auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .ajuda-item {
+            background: #1e1812;
+            border-left: 4px solid var(--cor-primaria);
+            border-radius: 2px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+        .ajuda-item:nth-child(2) {
+            border-left-color: var(--cor-secundaria);
+        }
+        .ajuda-item:nth-child(3) {
+            border-left-color: var(--cor-alerta);
+        }
+        .ajuda-item h3 {
+            color: #c8b898;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+        }
+        .ajuda-item p {
+            color: #a09890;
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+        }
+        .ajuda-item .telefone {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #c8b090;
+            display: inline-block;
+            margin-right: 1rem;
+            text-shadow: 0 0 8px rgba(200,160,100,0.3);
+        }
+        .ajuda-item .destaque-vermelho {
+            color: #c08a7a;
+        }
+
         .form-container {
             background: #1e1812;
             border-radius: 2px;
@@ -1133,7 +1179,7 @@
         </section>
 
         <div class="container">
-            <img src="https://preview.redd.it/sh3-lighting-composition-is-unmatched-some-shots-in-this-v0-dheuqavdaz5d1.jpg?width=640&crop=smart&auto=webp&s=e384f79e4f5eb28c756c9e7cb37fe59074e22a77"" alt="Pessoa sentada sozinha em um banco, representando solidão" class="imagem-ilustrativa">
+            <img src="https://preview.redd.it/sh3-lighting-composition-is-unmatched-some-shots-in-this-v0-dheuqavdaz5d1.jpg?width=640&crop=smart&auto=webp&s=e384f79e4f5eb28c756c9e7cb37fe59074e22a77" alt="Pessoa sentada sozinha em um banco, representando solidão" class="imagem-ilustrativa">
         </div>
 
         <section id="citacoes" style="background: #0f0a08;">
@@ -1339,28 +1385,28 @@
             </div>
         </section>
 
+        <!-- SEÇÃO "ONDE BUSCAR AJUDA" REFORMULADA -->
         <section id="ajuda" class="secao-clara">
             <div class="container">
                 <div class="section-titulo">
                     <h2>Onde buscar ajuda</h2>
-                    <p>Se você ou alguém próximo precisa de apoio, estes canais estão disponíveis.</p>
+                    <p>Canais de apoio disponíveis para momentos de necessidade.</p>
                 </div>
-                <div class="ajuda-container">
-                    <div class="ajuda-card">
+                <div class="ajuda-lista">
+                    <div class="ajuda-item">
                         <h3>CVV – Centro de Valorização da Vida</h3>
-                        <p>Apoio emocional gratuito e sigiloso, 24 horas por dia.</p>
+                        <p>Apoio emocional gratuito, sigiloso e disponível 24 horas por dia, todos os dias. Ideal para desabafar e receber orientação em momentos de angústia.</p>
                         <span class="telefone">188</span>
-                        <p style="font-size:0.85rem;">Ligação gratuita de qualquer telefone</p>
+                        <p style="font-size:0.85rem; color:#a09080;">Ligação gratuita de qualquer telefone fixo ou celular.</p>
                     </div>
-                    <div class="ajuda-card">
-                        <h3>SUS – CAPS</h3>
-                        <p>Centros de Atenção Psicossocial oferecem tratamento gratuito.</p>
+                    <div class="ajuda-item">
+                        <h3>SUS – CAPS (Centro de Atenção Psicossocial)</h3>
+                        <p>Oferece acompanhamento psicológico e psiquiátrico gratuito pelo Sistema Único de Saúde. Procure a unidade mais próxima ou peça encaminhamento na UBS do seu bairro.</p>
                         <p style="font-weight:600;">Procure o CAPS mais próximo</p>
-                        <p style="font-size:0.85rem;">Encaminhamento pela UBS do seu bairro</p>
                     </div>
-                    <div class="ajuda-card">
-                        <h3>Emergências</h3>
-                        <p>Em caso de risco iminente de suicídio, ligue imediatamente:</p>
+                    <div class="ajuda-item">
+                        <h3>Emergências – risco imediato</h3>
+                        <p>Se houver risco de suicídio ou crise grave, ligue imediatamente para os serviços de emergência.</p>
                         <span class="telefone destaque-vermelho">192 (SAMU)</span>
                         <span class="telefone destaque-vermelho">190 (Polícia)</span>
                     </div>
