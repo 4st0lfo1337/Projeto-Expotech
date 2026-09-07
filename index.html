@@ -570,6 +570,7 @@
                 <li><a href="#sobre">O que é</a></li>
                 <li><a href="#tabu">Quebrando o tabu</a></li>
                 <li><a href="#sintomas">Sintomas</a></li>
+                <li><a href="#estagios">Estágios</a></li>
                 <li><a href="#tratamentos">Tratamentos</a></li>
                 <li><a href="#ajudar">Como ajudar</a></li>
                 <li><a href="#autoavaliacao">Autoavaliação</a></li>
@@ -721,7 +722,68 @@
         <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pessoa sentada sozinha em um banco, representando solidão" class="imagem-ilustrativa">
     </div>
 
-    <section id="tratamentos" style="background: var(--cor-destaque);">
+    <!-- NOVA SEÇÃO: ESTÁGIOS DA DEPRESSÃO -->
+    <section id="estagios" style="background: var(--cor-destaque);">
+        <div class="container">
+            <div class="section-titulo">
+                <h2>Estágios da depressão e o que fazer em cada um</h2>
+                <p>Entender a gravidade dos sintomas ajuda a direcionar a busca por ajuda adequada.</p>
+            </div>
+            <div class="texto-corrido">
+                <p>
+                    A depressão pode ser classificada em diferentes estágios, de acordo com a intensidade
+                    e a frequência dos sintomas. Essa classificação não é rígida e serve como um guia
+                    para entender o que a pessoa está passando e qual tipo de suporte pode ser mais
+                    eficaz. O mais importante é que, independentemente do estágio, buscar ajuda
+                    profissional é sempre recomendado.
+                </p>
+
+                <h3 style="color: #ffffff; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio leve</h3>
+                <p>
+                    No estágio leve, a pessoa pode se sentir triste, desanimada ou sem energia, mas
+                    ainda consegue cumprir a maioria das suas obrigações diárias, como trabalhar ou
+                    estudar. Os sintomas podem ser confundidos com cansaço ou estresse passageiro.
+                    <strong>O que fazer:</strong> procure um psicólogo para avaliação e comece a
+                    psicoterapia. Mudanças no estilo de vida, como exercícios físicos regulares,
+                    alimentação equilibrada e melhora do sono, também fazem grande diferença.
+                    Compartilhar o que sente com pessoas de confiança é fundamental.
+                </p>
+
+                <h3 style="color: #ffffff; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio moderado</h3>
+                <p>
+                    No estágio moderado, os sintomas são mais intensos e frequentes, prejudicando
+                    significativamente o desempenho no trabalho, nos estudos e nas relações sociais.
+                    A pessoa pode se isolar, ter crises de choro frequentes, dificuldade de concentração
+                    e alterações no apetite e no sono. <strong>O que fazer:</strong> além da
+                    psicoterapia, é importante consultar um psiquiatra para avaliar a necessidade de
+                    medicação antidepressiva. O acompanhamento conjunto (psicólogo e psiquiatra) é o
+                    mais indicado. A rede de apoio deve estar presente, incentivando e ajudando nas
+                    tarefas do dia a dia.
+                </p>
+
+                <h3 style="color: #ffffff; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio grave</h3>
+                <p>
+                    O estágio grave envolve sintomas incapacitantes, como incapacidade de realizar
+                    tarefas básicas, isolamento total, ideação suicida ou tentativas de suicídio.
+                    A pessoa pode apresentar lentidão psicomotora ou agitação intensa, e necessita de
+                    intervenção imediata. <strong>O que fazer:</strong> procure ajuda médica de
+                    emergência — SAMU (192), pronto-socorro ou CAPS. Se houver risco iminente de
+                    suicídio, não deixe a pessoa sozinha. O tratamento pode exigir internação breve
+                    para estabilização e, em seguida, acompanhamento intensivo com psiquiatra e
+                    psicólogo. A família e os amigos precisam estar presentes e informados sobre como
+                    apoiar.
+                </p>
+
+                <p style="margin-top: 2rem;">
+                    Lembre-se: a depressão é tratável em qualquer estágio. Quanto mais cedo o
+                    tratamento começar, melhores são as chances de recuperação completa. Não hesite em
+                    pedir ajuda — você não está sozinho.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tratamentos">
         <div class="container">
             <div class="section-titulo">
                 <h2>Tratamentos disponíveis</h2>
@@ -889,6 +951,7 @@
                 <a href="#sobre">O que é</a>
                 <a href="#tabu">Quebrando o tabu</a>
                 <a href="#sintomas">Sintomas</a>
+                <a href="#estagios">Estágios</a>
                 <a href="#tratamentos">Tratamentos</a>
                 <a href="#ajudar">Como ajudar</a>
                 <a href="#autoavaliacao">Autoavaliação</a>
@@ -972,7 +1035,6 @@
         }
 
         function selecionarOpcao(idx, btn) {
-            // Remove seleção anterior
             document.querySelectorAll('.quiz-opcao').forEach(b => b.classList.remove('selecionada'));
             btn.classList.add('selecionada');
             respostaAtual = opcoesFrequencia[idx].valor;
