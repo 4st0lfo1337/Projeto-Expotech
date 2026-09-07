@@ -26,6 +26,7 @@
             --tamanho-h2: clamp(1.6rem, 3vw, 2.2rem);
             --tamanho-h3: clamp(1.2rem, 2vw, 1.5rem);
             --tamanho-texto: clamp(1rem, 1.2vw, 1.1rem);
+            --sidebar-largura: 260px;
         }
 
         * {
@@ -51,6 +52,122 @@
                 radial-gradient(circle at 30% 40%, rgba(80, 50, 30, 0.3) 0%, transparent 60%),
                 radial-gradient(circle at 70% 80%, rgba(50, 40, 30, 0.4) 0%, transparent 50%);
             min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-largura);
+            height: 100vh;
+            background: #1e1812;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.8), inset -1px 0 0 #3a3028;
+            z-index: 998;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 3px solid #3a3028;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 2px solid #3a3028;
+            background: #0f0a08;
+        }
+
+        .sidebar .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #c8b090;
+            text-decoration: none;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(200, 160, 100, 0.4);
+            display: block;
+        }
+
+        .sidebar .logo span {
+            color: #8a6a4a;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 1rem 0;
+            flex: 1;
+        }
+
+        .sidebar-nav li a {
+            display: block;
+            padding: 0.7rem 1.5rem;
+            color: #b0a890;
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-weight: 500;
+        }
+
+        .sidebar-nav li a:hover {
+            color: #d0c8b8;
+            background: #252018;
+            border-left-color: #8a6a4a;
+            text-shadow: 0 0 8px rgba(200,180,150,0.5);
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            text-align: center;
+            border-top: 2px solid #3a3028;
+            font-size: 0.75rem;
+            color: #8a7a6a;
+        }
+
+        /* Botão hambúrguer para mobile */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background: #1e1812;
+            border: 2px solid #3a3028;
+            border-radius: 2px;
+            padding: 8px 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #c8b090;
+            margin: 4px 0;
+            border-radius: 1px;
+        }
+
+        /* Overlay para mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 997;
+        }
+
+        /* ===== CONTEÚDO PRINCIPAL ===== */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-largura);
+            min-height: 100vh;
+            width: calc(100% - var(--sidebar-largura));
         }
 
         .container {
@@ -79,75 +196,6 @@
             max-width: 700px;
             margin: 0 auto;
             font-style: italic;
-        }
-
-        header {
-            background: #1e1812;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.9), inset 0 0 20px rgba(80,50,30,0.3);
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            border-bottom: 3px solid #3a3028;
-        }
-
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #c8b090;
-            text-decoration: none;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(200, 160, 100, 0.4);
-        }
-
-        .logo span {
-            color: #8a6a4a;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #b0a890;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.2s, text-shadow 0.2s;
-            letter-spacing: 1px;
-        }
-
-        .nav-links a:hover {
-            color: #d0c8b8;
-            text-shadow: 0 0 8px rgba(200,180,150,0.5);
-        }
-
-        .menu-hamburguer {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .menu-hamburguer span {
-            width: 25px;
-            height: 3px;
-            background: #c8b090;
-            border-radius: 1px;
         }
 
         .hero {
@@ -674,7 +722,6 @@
             background: #7a6a5a;
         }
 
-        /* Mapa */
         .mapa-container {
             max-width: 100%;
             margin: 2rem auto;
@@ -690,11 +737,10 @@
             filter: grayscale(0.8) sepia(0.3);
         }
 
-        /* Botão flutuante de ajuda */
         .botao-ajuda-flutuante {
             position: fixed;
             bottom: 30px;
-            left: 30px;
+            left: calc(var(--sidebar-largura) + 30px);
             z-index: 1000;
         }
         .botao-ajuda-flutuante button {
@@ -719,7 +765,6 @@
             box-shadow: 0 10px 35px rgba(0,0,0,0.9), inset 0 0 20px rgba(170,100,70,0.4);
         }
 
-        /* Modal de emergência */
         .modal-emergencia {
             display: none;
             position: fixed;
@@ -791,7 +836,6 @@
             color: #d0c8b8;
         }
 
-        /* Seção de respiração */
         .respiro-container {
             max-width: 600px;
             margin: 2rem auto;
@@ -807,7 +851,6 @@
             color: #3a3028;
         }
 
-        /* Botão de compartilhamento */
         .compartilhar-container {
             display: flex;
             gap: 1rem;
@@ -853,37 +896,32 @@
             border-color: #5a5a5a;
         }
 
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                align-items: flex-start;
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
             }
-            .nav-links {
-                display: none;
+            .sidebar.ativo {
+                transform: translateX(0);
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
                 width: 100%;
-                flex-direction: column;
-                gap: 0.5rem;
-                padding-top: 0.8rem;
-                border-top: 1px solid #3a3028;
-            }
-            .nav-links.ativo {
-                display: flex;
-            }
-            .menu-hamburguer {
-                display: flex;
-                position: absolute;
-                top: 1rem;
-                right: 20px;
-            }
-            .hero {
-                padding: 2.5rem 0;
-            }
-            .hero h1 {
-                font-size: 1.8rem;
             }
             .botao-ajuda-flutuante {
-                bottom: 20px;
                 left: 20px;
+            }
+            .sidebar-overlay.ativo {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
             }
             .botao-ajuda-flutuante button {
                 padding: 0.8rem 1.2rem;
@@ -897,536 +935,569 @@
 </head>
 <body>
 
-    <header>
-        <nav class="navbar">
-            <a href="#" class="logo">voce<span>importa</span></a>
-            <div class="menu-hamburguer" id="menuHamburguer" aria-label="Abrir menu">
-                <span></span><span></span><span></span>
-            </div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#sobre">O que é</a></li>
-                <li><a href="#tabu">Quebrando o tabu</a></li>
-                <li><a href="#sintomas">Sintomas</a></li>
-                <li><a href="#estagios">Estágios</a></li>
-                <li><a href="#tratamentos">Tratamentos</a></li>
-                <li><a href="#ajudar">Como ajudar</a></li>
-                <li><a href="#autoavaliacao">Autoavaliação</a></li>
-                <li><a href="#respiro">Como se acalmar</a></li>
-                <li><a href="#ajuda">Ajuda</a></li>
-                <li><a href="#mapa">Mapa</a></li>
-                <li><a href="#contato">Contato</a></li>
-            </ul>
-        </nav>
-    </header>
+    <!-- Botão hambúrguer (mobile) -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+    </button>
 
-    <div class="botao-ajuda-flutuante">
-        <button id="btnAjudaAgora" aria-label="Preciso de ajuda agora">
-            ⚠️ Preciso de ajuda agora
-        </button>
-    </div>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <div class="modal-emergencia" id="modalEmergencia">
-        <div class="modal-conteudo">
-            <button class="modal-fechar" id="btnFecharModal" aria-label="Fechar">&times;</button>
-            <h2>Você não está sozinho</h2>
-            <p>Se você está em crise ou conhece alguém que precisa de ajuda imediata, ligue agora:</p>
-            <div class="telefone-grande">
-                <a href="tel:188">📞 188</a>
-            </div>
-            <p><strong>CVV – Centro de Valorização da Vida</strong><br>Atendimento gratuito, 24 horas por dia.</p>
-            <div class="telefone-grande" style="font-size:1.6rem; color:#c8a090;">
-                <a href="tel:192" style="color:#c8a090;">📞 192 (SAMU)</a>
-            </div>
-            <p style="font-size:0.9rem; color:#a09080;">Em caso de risco imediato, ligue para o SAMU ou vá ao pronto-socorro mais próximo. Não fique sozinho.</p>
-            <p style="font-size:0.9rem; color:#8a7a6a; margin-top:1rem;"><em>Respire fundo. Você é importante. Há pessoas que se importam com você.</em></p>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#inicio" class="logo">voce<span>importa</span></a>
         </div>
-    </div>
-
-    <section class="hero" id="inicio">
-        <div class="container">
-            <h1>Você não está sozinho</h1>
-            <p>
-                A depressão é uma doença real, tratável e que não define quem você é.
-                Informação acolhedora para quebrar tabus e mostrar que existe esperança.
-            </p>
-            <a href="#sobre" class="btn-hero">Entender a depressão</a>
+        <ul class="sidebar-nav">
+            <li><a href="#sobre">O que é</a></li>
+            <li><a href="#tabu">Quebrando o tabu</a></li>
+            <li><a href="#sintomas">Sintomas</a></li>
+            <li><a href="#estagios">Estágios</a></li>
+            <li><a href="#tratamentos">Tratamentos</a></li>
+            <li><a href="#ajudar">Como ajudar</a></li>
+            <li><a href="#autoavaliacao">Autoavaliação</a></li>
+            <li><a href="#respiro">Como se acalmar</a></li>
+            <li><a href="#ajuda">Ajuda</a></li>
+            <li><a href="#mapa">Mapa</a></li>
+            <li><a href="#compartilhar">Compartilhar</a></li>
+            <li><a href="#contato">Contato</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            Feira de Ciências 2025
         </div>
-    </section>
+    </nav>
 
-    <div class="container">
-        <img src="https://images.unsplash.com/photo-1541199249251-f713e6145474?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pessoa olhando pela janela em momento de reflexão" class="imagem-ilustrativa">
-    </div>
+    <!-- Conteúdo principal -->
+    <div class="main-content">
 
-    <section id="sobre">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>O que é depressão?</h2>
-            </div>
-            <div class="texto-corrido">
-                <p>
-                    A depressão é um transtorno mental que vai muito além de uma tristeza passageira.
-                    Ela se caracteriza por uma sensação profunda e persistente de vazio, desânimo e
-                    falta de interesse pelas coisas que antes traziam alegria. Diferente de um dia ruim,
-                    a depressão dura semanas, meses ou até anos, e interfere diretamente na capacidade
-                    da pessoa de trabalhar, estudar, se relacionar e cuidar de si mesma.
-                </p>
-                <p>
-                    É importante compreender que a depressão não é frescura, preguiça ou falta de fé.
-                    Trata-se de uma condição médica reconhecida pela Organização Mundial da Saúde (OMS),
-                    com causas biológicas, psicológicas e sociais. Ela pode afetar qualquer pessoa,
-                    independentemente de idade, gênero, classe social ou história de vida.
-                </p>
-                <p>
-                    A boa notícia é que a depressão tem tratamento eficaz. Psicoterapia, medicação
-                    e mudanças no estilo de vida ajudam a maioria das pessoas a se recuperar e retomar
-                    o controle de suas vidas. Buscar ajuda não é sinal de fraqueza, mas de coragem.
-                </p>
-            </div>
+        <div class="botao-ajuda-flutuante">
+            <button id="btnAjudaAgora" aria-label="Preciso de ajuda agora">
+                ⚠️ Preciso de ajuda agora
+            </button>
         </div>
-    </section>
 
-    <div class="container">
-        <img src="https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Mãos dadas em sinal de apoio" class="imagem-ilustrativa">
-    </div>
-
-    <section id="tabu" style="background: #1a1510;">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Quebrando o tabu: depressão não é frescura</h2>
-            </div>
-            <div class="texto-corrido">
-                <p>
-                    Um dos maiores obstáculos para quem sofre de depressão é o preconceito.
-                    Muitas pessoas ainda acreditam que é "frescura", "drama" ou que basta "se animar".
-                    Esse tipo de pensamento só aumenta o sofrimento de quem já carrega um fardo pesado,
-                    impedindo que a pessoa procure ajuda e se sinta acolhida.
-                </p>
-                <p>
-                    A depressão é uma doença como qualquer outra. Assim como ninguém escolhe ter diabetes
-                    ou pressão alta, ninguém escolhe ter depressão. Os sintomas são reais, causam dor
-                    emocional intensa e podem levar a consequências graves se não forem tratados.
-                    Reconhecer a depressão como doença é o primeiro passo para combater o estigma e
-                    construir uma sociedade mais empática.
-                </p>
-                <p>
-                    Se você convive com alguém que está passando por isso, evite frases como "isso é
-                    frescura", "olha pelo lado bom" ou "tem gente em situação pior". Em vez disso,
-                    ofereça escuta, compreensão e incentive a busca por um profissional de saúde.
-                    Acolhimento salva vidas.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="estatisticas" class="estatisticas">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Depressão em números no Brasil</h2>
-                <p>Dados que reforçam a importância de falar sobre o assunto.</p>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-numero">11</span>
-                    <span class="stat-rotulo">milhões de brasileiros sofrem de depressão</span>
+        <div class="modal-emergencia" id="modalEmergencia">
+            <div class="modal-conteudo">
+                <button class="modal-fechar" id="btnFecharModal" aria-label="Fechar">&times;</button>
+                <h2>Você não está sozinho</h2>
+                <p>Se você está em crise ou conhece alguém que precisa de ajuda imediata, ligue agora:</p>
+                <div class="telefone-grande">
+                    <a href="tel:188">📞 188</a>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-numero">5%</span>
-                    <span class="stat-rotulo">da população adulta é afetada</span>
+                <p><strong>CVV – Centro de Valorização da Vida</strong><br>Atendimento gratuito, 24 horas por dia.</p>
+                <div class="telefone-grande" style="font-size:1.6rem; color:#c8a090;">
+                    <a href="tel:192" style="color:#c8a090;">📞 192 (SAMU)</a>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-numero">1º</span>
-                    <span class="stat-rotulo">país mais ansioso da América Latina</span>
+                <p style="font-size:0.9rem; color:#a09080;">Em caso de risco imediato, ligue para o SAMU ou vá ao pronto-socorro mais próximo. Não fique sozinho.</p>
+                <p style="font-size:0.9rem; color:#8a7a6a; margin-top:1rem;"><em>Respire fundo. Você é importante. Há pessoas que se importam com você.</em></p>
+            </div>
+        </div>
+
+        <section class="hero" id="inicio">
+            <div class="container">
+                <h1>Você não está sozinho</h1>
+                <p>
+                    A depressão é uma doença real, tratável e que não define quem você é.
+                    Informação acolhedora para quebrar tabus e mostrar que existe esperança.
+                </p>
+                <a href="#sobre" class="btn-hero">Entender a depressão</a>
+            </div>
+        </section>
+
+        <div class="container">
+            <img src="https://images.unsplash.com/photo-1541199249251-f713e6145474?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pessoa olhando pela janela em momento de reflexão" class="imagem-ilustrativa">
+        </div>
+
+        <section id="sobre">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>O que é depressão?</h2>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-numero">38%</span>
-                    <span class="stat-rotulo">de aumento de casos entre jovens</span>
+                <div class="texto-corrido">
+                    <p>
+                        A depressão é um transtorno mental que vai muito além de uma tristeza passageira.
+                        Ela se caracteriza por uma sensação profunda e persistente de vazio, desânimo e
+                        falta de interesse pelas coisas que antes traziam alegria. Diferente de um dia ruim,
+                        a depressão dura semanas, meses ou até anos, e interfere diretamente na capacidade
+                        da pessoa de trabalhar, estudar, se relacionar e cuidar de si mesma.
+                    </p>
+                    <p>
+                        É importante compreender que a depressão não é frescura, preguiça ou falta de fé.
+                        Trata-se de uma condição médica reconhecida pela Organização Mundial da Saúde (OMS),
+                        com causas biológicas, psicológicas e sociais. Ela pode afetar qualquer pessoa,
+                        independentemente de idade, gênero, classe social ou história de vida.
+                    </p>
+                    <p>
+                        A boa notícia é que a depressão tem tratamento eficaz. Psicoterapia, medicação
+                        e mudanças no estilo de vida ajudam a maioria das pessoas a se recuperar e retomar
+                        o controle de suas vidas. Buscar ajuda não é sinal de fraqueza, mas de coragem.
+                    </p>
                 </div>
             </div>
-            <p style="text-align:center; margin-top:1.5rem; font-size:0.85rem; color:#a09080;">
-                Fonte: OMS, Ministério da Saúde e ABP (2023-2025)
-            </p>
-        </div>
-    </section>
+        </section>
 
-    <section id="sintomas">
         <div class="container">
-            <div class="section-titulo">
-                <h2>Sinais e sintomas</h2>
-                <p>Reconhecer os sintomas é o primeiro passo para buscar ajuda.</p>
-            </div>
-            <div class="texto-corrido">
-                <p>
-                    Os sintomas da depressão variam de pessoa para pessoa, mas os mais comuns incluem
-                    tristeza profunda e persistente, perda de interesse ou prazer em atividades que
-                    antes eram agradáveis, alterações no apetite (comer demais ou de menos), insônia ou
-                    sono excessivo, fadiga constante, sentimentos de culpa, inutilidade ou desesperança,
-                    dificuldade de concentração, irritabilidade e, em casos mais graves, pensamentos de
-                    morte ou ideação suicida.
-                </p>
-                <p>
-                    É comum que a pessoa se isole, evite contato social e sinta que nada faz sentido.
-                    Esses sintomas não são frescura nem fraqueza: são manifestações de uma doença que
-                    precisa de tratamento adequado. Se você se identificou com vários desses sinais por
-                    mais de duas semanas, procure um médico ou psicólogo. Não espere a situação piorar.
-                </p>
-                <p>
-                    Lembre-se: pedir ajuda é um ato de coragem, não de vergonha. Você merece ser ouvido
-                    e cuidado.
-                </p>
-            </div>
+            <img src="https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Mãos dadas em sinal de apoio" class="imagem-ilustrativa">
         </div>
-    </section>
 
-    <div class="container">
-        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pessoa sentada sozinha em um banco, representando solidão" class="imagem-ilustrativa">
-    </div>
-
-    <section id="citacoes" style="background: #0f0a08;">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Depressão: uma doença silenciosa</h2>
-                <p>Muitas vezes, quem mais sorri por fora é quem mais sofre por dentro.</p>
-            </div>
-            <div class="citacoes-lista">
-                <div class="citacao-item">
-                    "A depressão é uma doença silenciosa. Ela não aparece em exames de sangue, não deixa marcas visíveis, mas corrói a alma por dentro. Quem sofre aprende a esconder a dor atrás de um sorriso."
-                    <br><cite style="display:block; margin-top:0.5rem;">— Anônimo</cite>
+        <section id="tabu" style="background: #1a1510;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Quebrando o tabu: depressão não é frescura</h2>
                 </div>
-                <div class="citacao-item">
-                    "Pode afetar qualquer pessoa: o colega de trabalho que parece sempre animado, a amiga que está sempre disposta a ajudar, o filho que tira boas notas. A depressão não escolhe perfil, não avisa, não pede licença."
-                    <br><cite style="display:block; margin-top:0.5rem;">— Adaptado de relatos</cite>
-                </div>
-                <div class="citacao-item">
-                    "O mais difícil não é sentir a tristeza, é ter que fingir que está tudo bem. A depressão silenciosa é um grito abafado pela necessidade de parecer forte."
-                    <br><cite style="display:block; margin-top:0.5rem;">— Anônimo</cite>
+                <div class="texto-corrido">
+                    <p>
+                        Um dos maiores obstáculos para quem sofre de depressão é o preconceito.
+                        Muitas pessoas ainda acreditam que é "frescura", "drama" ou que basta "se animar".
+                        Esse tipo de pensamento só aumenta o sofrimento de quem já carrega um fardo pesado,
+                        impedindo que a pessoa procure ajuda e se sinta acolhida.
+                    </p>
+                    <p>
+                        A depressão é uma doença como qualquer outra. Assim como ninguém escolhe ter diabetes
+                        ou pressão alta, ninguém escolhe ter depressão. Os sintomas são reais, causam dor
+                        emocional intensa e podem levar a consequências graves se não forem tratados.
+                        Reconhecer a depressão como doença é o primeiro passo para combater o estigma e
+                        construir uma sociedade mais empática.
+                    </p>
+                    <p>
+                        Se você convive com alguém que está passando por isso, evite frases como "isso é
+                        frescura", "olha pelo lado bom" ou "tem gente em situação pior". Em vez disso,
+                        ofereça escuta, compreensão e incentive a busca por um profissional de saúde.
+                        Acolhimento salva vidas.
+                    </p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="estagios" style="background: #1a1510;">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Estágios da depressão e o que fazer em cada um</h2>
-                <p>Entender a gravidade dos sintomas ajuda a direcionar a busca por ajuda adequada.</p>
-            </div>
-            <div class="texto-corrido">
-                <p>
-                    A depressão pode ser classificada em diferentes estágios, de acordo com a intensidade
-                    e a frequência dos sintomas. Essa classificação não é rígida e serve como um guia
-                    para entender o que a pessoa está passando e qual tipo de suporte pode ser mais
-                    eficaz. O mais importante é que, independentemente do estágio, buscar ajuda
-                    profissional é sempre recomendado.
-                </p>
-
-                <h3 style="color: #c8b898; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio leve</h3>
-                <p>
-                    No estágio leve, a pessoa pode se sentir triste, desanimada ou sem energia, mas
-                    ainda consegue cumprir a maioria das suas obrigações diárias, como trabalhar ou
-                    estudar. Os sintomas podem ser confundidos com cansaço ou estresse passageiro.
-                    <strong>O que fazer:</strong> procure um psicólogo para avaliação e comece a
-                    psicoterapia. Mudanças no estilo de vida, como exercícios físicos regulares,
-                    alimentação equilibrada e melhora do sono, também fazem grande diferença.
-                    Compartilhar o que sente com pessoas de confiança é fundamental.
-                </p>
-
-                <h3 style="color: #c8b898; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio moderado</h3>
-                <p>
-                    No estágio moderado, os sintomas são mais intensos e frequentes, prejudicando
-                    significativamente o desempenho no trabalho, nos estudos e nas relações sociais.
-                    A pessoa pode se isolar, ter crises de choro frequentes, dificuldade de concentração
-                    e alterações no apetite e no sono. <strong>O que fazer:</strong> além da
-                    psicoterapia, é importante consultar um psiquiatra para avaliar a necessidade de
-                    medicação antidepressiva. O acompanhamento conjunto (psicólogo e psiquiatra) é o
-                    mais indicado. A rede de apoio deve estar presente, incentivando e ajudando nas
-                    tarefas do dia a dia.
-                </p>
-
-                <h3 style="color: #c8b898; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio grave</h3>
-                <p>
-                    O estágio grave envolve sintomas incapacitantes, como incapacidade de realizar
-                    tarefas básicas, isolamento total, ideação suicida ou tentativas de suicídio.
-                    A pessoa pode apresentar lentidão psicomotora ou agitação intensa, e necessita de
-                    intervenção imediata. <strong>O que fazer:</strong> procure ajuda médica de
-                    emergência — SAMU (192), pronto-socorro ou CAPS. Se houver risco iminente de
-                    suicídio, não deixe a pessoa sozinha. O tratamento pode exigir internação breve
-                    para estabilização e, em seguida, acompanhamento intensivo com psiquiatra e
-                    psicólogo. A família e os amigos precisam estar presentes e informados sobre como
-                    apoiar.
-                </p>
-
-                <p style="margin-top: 2rem;">
-                    Lembre-se: a depressão é tratável em qualquer estágio. Quanto mais cedo o
-                    tratamento começar, melhores são as chances de recuperação completa. Não hesite em
-                    pedir ajuda — você não está sozinho.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="tratamentos">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Tratamentos disponíveis</h2>
-                <p>A depressão tem tratamento e a recuperação é possível.</p>
-            </div>
-            <div class="texto-corrido">
-                <p>
-                    O tratamento da depressão geralmente envolve psicoterapia e, em alguns casos, uso de
-                    medicamentos antidepressivos prescritos por um psiquiatra. A Terapia
-                    Cognitivo-Comportamental (TCC) é uma das abordagens mais eficazes, ajudando a pessoa
-                    a identificar e modificar padrões de pensamento negativos. A medicação atua regulando
-                    substâncias químicas no cérebro, proporcionando alívio dos sintomas mais intensos.
-                </p>
-                <p>
-                    Além do acompanhamento profissional, mudanças no estilo de vida são grandes aliadas:
-                    praticar exercícios físicos regularmente, manter uma alimentação equilibrada, dormir
-                    bem, reduzir o estresse e fortalecer os vínculos sociais contribuem para a melhora.
-                    O apoio de amigos e familiares também é fundamental nesse processo.
-                </p>
-                <p>
-                    O mais importante é entender que a depressão não precisa ser enfrentada sozinha.
-                    Existem profissionais capacitados e serviços públicos de saúde prontos para ajudar.
-                    Você não está sozinho nessa jornada.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <div class="container">
-        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Profissional de saúde conversando com paciente" class="imagem-ilustrativa">
-    </div>
-
-    <section class="citacao">
-        <div class="container">
-            <blockquote>
-                "A depressão é uma prisão onde você é tanto o prisioneiro quanto o carcereiro.
-                Mas a porta está aberta — às vezes só precisamos de alguém para nos mostrar o caminho."
-                <cite>— Adaptado de Dorothy Rowe</cite>
-            </blockquote>
-        </div>
-    </section>
-
-    <section id="ajudar">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Como ajudar alguém com depressão</h2>
-                <p>Pequenas atitudes podem fazer uma grande diferença.</p>
-            </div>
-            <div class="texto-corrido">
-                <p>
-                    Se você conhece alguém que está passando por um quadro depressivo, a sua presença e
-                    compreensão são valiosas. Primeiro, ofereça um ouvido atento, sem julgamentos.
-                    Deixe a pessoa falar sobre o que sente, sem interromper ou minimizar a dor dela.
-                    Frases como "não é nada", "se anime" ou "tem gente pior" não ajudam e podem até
-                    piorar o sofrimento.
-                </p>
-                <p>
-                    Incentive a busca por ajuda profissional de forma gentil e respeitosa. Ofereça-se
-                    para acompanhar a pessoa a uma consulta com psicólogo ou psiquiatra, se ela desejar.
-                    Esteja presente também nos momentos simples: um convite para um café, uma caminhada
-                    leve ou apenas ficar em silêncio ao lado dela pode transmitir acolhimento.
-                </p>
-                <p>
-                    Fique atento a sinais de alerta, como falas sobre morte, despedidas ou falta de
-                    esperança. Se perceber risco de suicídio, não hesite em buscar ajuda imediatamente:
-                    ligue para o CVV (188) ou encaminhe a pessoa a um serviço de emergência. Nunca deixe
-                    a pessoa sozinha nesses momentos.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="autoavaliacao" style="background: #1a1510;">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Autoavaliação: como você tem se sentido?</h2>
-                <p>
-                    Responda com sinceridade pensando nas últimas duas semanas. Esta ferramenta não substitui
-                    uma avaliação profissional, mas pode ajudar a refletir sobre seu estado emocional.
-                </p>
-            </div>
-            <div class="quiz-container">
-                <div id="quizPergunta" class="quiz-pergunta">Carregando pergunta...</div>
-                <div class="quiz-opcoes" id="quizOpcoes"></div>
-                <div id="quizResultado" class="quiz-resultado"></div>
-                <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-                    <button class="btn-quiz" id="btnProximaPergunta" style="display:none;">Próxima pergunta</button>
-                    <button class="btn-quiz" id="btnReiniciarQuiz" style="display:none; background: #4a3a2a;">Refazer autoavaliação</button>
+        <section id="estatisticas" class="estatisticas">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Depressão em números no Brasil</h2>
+                    <p>Dados que reforçam a importância de falar sobre o assunto.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="respiro" style="background: #1a1510;">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Como se acalmar</h2>
-                <p>Técnicas simples para reduzir a ansiedade e encontrar um momento de paz.</p>
-            </div>
-            <div class="respiro-container">
-                <p class="respiro-instrucoes">
-                    Em momentos de ansiedade, experimente a respiração diafragmática:
-                </p>
-                <p class="respiro-instrucoes">
-                    <strong>Passo 1:</strong> Sente-se confortavelmente e coloque uma mão no peito e outra no abdômen.<br>
-                    <strong>Passo 2:</strong> Inspire lentamente pelo nariz, contando até 4.<br>
-                    <strong>Passo 3:</strong> Segure a respiração por 2 segundos.<br>
-                    <strong>Passo 4:</strong> Expire lentamente pela boca, contando até 6.<br>
-                    <strong>Passo 5:</strong> Repita por 5 a 10 minutos, focando na sensação do ar entrando e saindo.
-                </p>
-                <p class="respiro-instrucoes" style="margin-top:1rem;">
-                    Outra técnica é o <em>grounding</em> (ancoragem): identifique 5 coisas que você pode ver,
-                    4 que pode tocar, 3 que pode ouvir, 2 que pode cheirar e 1 que pode saborear.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="ajuda" class="secao-clara">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Onde buscar ajuda</h2>
-                <p>Se você ou alguém próximo precisa de apoio, estes canais estão disponíveis.</p>
-            </div>
-            <div class="ajuda-container">
-                <div class="ajuda-card">
-                    <h3>CVV – Centro de Valorização da Vida</h3>
-                    <p>Apoio emocional gratuito e sigiloso, 24 horas por dia.</p>
-                    <span class="telefone">188</span>
-                    <p style="font-size:0.85rem;">Ligação gratuita de qualquer telefone</p>
-                </div>
-                <div class="ajuda-card">
-                    <h3>SUS – CAPS</h3>
-                    <p>Centros de Atenção Psicossocial oferecem tratamento gratuito.</p>
-                    <p style="font-weight:600;">Procure o CAPS mais próximo</p>
-                    <p style="font-size:0.85rem;">Encaminhamento pela UBS do seu bairro</p>
-                </div>
-                <div class="ajuda-card">
-                    <h3>Emergências</h3>
-                    <p>Em caso de risco iminente de suicídio, ligue imediatamente:</p>
-                    <span class="telefone destaque-vermelho">192 (SAMU)</span>
-                    <span class="telefone destaque-vermelho">190 (Polícia)</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="mapa" class="secao-clara">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Onde encontrar ajuda gratuita</h2>
-                <p>Mapa com CAPS, UBS e hospitais que oferecem atendimento em saúde mental.</p>
-            </div>
-            <div class="mapa-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d467688.89495119266!2d-46.5952992!3d-23.6824124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sCAPS!5e0!3m2!1spt-BR!2sbr!4v1715000000000!5m2!1spt-BR!2sbr" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-            <p style="text-align:center; font-size:0.9rem; color:#2a3a4a; margin-top:1rem;">
-                💡 <em>Dica: substitua o mapa acima pelo endereço da sua cidade, pesquisando por "CAPS", "UBS" ou "hospital psiquiátrico".</em>
-            </p>
-        </div>
-    </section>
-
-    <section id="compartilhar" class="secao-clara" style="padding-top: 2rem;">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Compartilhe esta mensagem</h2>
-                <p>Ajude a divulgar a conscientização sobre depressão. Você pode salvar vidas.</p>
-            </div>
-            <div class="compartilhar-container">
-                <a href="https://wa.me/?text=Conheça%20o%20projeto%20voceimporta%20sobre%20depressão%20e%20saúde%20mental" target="_blank" class="btn-compartilhar btn-whatsapp">
-                     WhatsApp
-                </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https://voceimporta.example.com" target="_blank" class="btn-compartilhar btn-facebook">
-                     Facebook
-                </a>
-                <a href="https://twitter.com/intent/tweet?text=Você%20não%20está%20sozinho%20na%20luta%20contra%20a%20depressão%20%23voceimporta%20%23saudemental" target="_blank" class="btn-compartilhar btn-twitter">
-                     Twitter
-                </a>
-                <button class="btn-compartilhar btn-link" id="btnCopiarLink" onclick="copiarLink()">
-                     Copiar link
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <section id="contato" class="secao-clara" style="padding-top: 2rem;">
-        <div class="container">
-            <div class="section-titulo">
-                <h2>Deixe sua mensagem</h2>
-                <p>Compartilhe sua opinião sobre o projeto ou tire dúvidas.</p>
-            </div>
-            <div class="form-container">
-                <form id="formContato">
-                    <div class="form-grupo">
-                        <label for="nome">Nome:</label>
-                        <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-numero">11</span>
+                        <span class="stat-rotulo">milhões de brasileiros sofrem de depressão</span>
                     </div>
-                    <div class="form-grupo">
-                        <label for="email">E-mail:</label>
-                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                    <div class="stat-item">
+                        <span class="stat-numero">5%</span>
+                        <span class="stat-rotulo">da população adulta é afetada</span>
                     </div>
-                    <div class="form-grupo">
-                        <label for="assunto">Assunto:</label>
-                        <select id="assunto" name="assunto">
-                            <option value="feedback">Feedback sobre o projeto</option>
-                            <option value="duvida">Dúvida sobre depressão</option>
-                            <option value="sugestao">Sugestão de conteúdo</option>
-                            <option value="outro">Outro</option>
-                        </select>
+                    <div class="stat-item">
+                        <span class="stat-numero">1º</span>
+                        <span class="stat-rotulo">país mais ansioso da América Latina</span>
                     </div>
-                    <div class="form-grupo">
-                        <label for="mensagem">Mensagem:</label>
-                        <textarea id="mensagem" name="mensagem" placeholder="Escreva sua mensagem..." required></textarea>
+                    <div class="stat-item">
+                        <span class="stat-numero">38%</span>
+                        <span class="stat-rotulo">de aumento de casos entre jovens</span>
                     </div>
-                    <button type="submit" class="btn-enviar">Enviar mensagem</button>
-                </form>
-                <div id="formMensagem" class="form-mensagem"></div>
+                </div>
+                <p style="text-align:center; margin-top:1.5rem; font-size:0.85rem; color:#a09080;">
+                    Fonte: OMS, Ministério da Saúde e ABP (2023-2025)
+                </p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer>
-        <div class="container">
-            <div class="links-footer">
-                <a href="#inicio">Início</a>
-                <a href="#sobre">O que é</a>
-                <a href="#tabu">Quebrando o tabu</a>
-                <a href="#sintomas">Sintomas</a>
-                <a href="#estagios">Estágios</a>
-                <a href="#tratamentos">Tratamentos</a>
-                <a href="#ajudar">Como ajudar</a>
-                <a href="#autoavaliacao">Autoavaliação</a>
-                <a href="#respiro">Como se acalmar</a>
-                <a href="#ajuda">Ajuda</a>
-                <a href="#mapa">Mapa</a>
-                <a href="#compartilhar">Compartilhar</a>
-                <a href="#contato">Contato</a>
+        <section id="sintomas">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Sinais e sintomas</h2>
+                    <p>Reconhecer os sintomas é o primeiro passo para buscar ajuda.</p>
+                </div>
+                <div class="texto-corrido">
+                    <p>
+                        Os sintomas da depressão variam de pessoa para pessoa, mas os mais comuns incluem
+                        tristeza profunda e persistente, perda de interesse ou prazer em atividades que
+                        antes eram agradáveis, alterações no apetite (comer demais ou de menos), insônia ou
+                        sono excessivo, fadiga constante, sentimentos de culpa, inutilidade ou desesperança,
+                        dificuldade de concentração, irritabilidade e, em casos mais graves, pensamentos de
+                        morte ou ideação suicida.
+                    </p>
+                    <p>
+                        É comum que a pessoa se isole, evite contato social e sinta que nada faz sentido.
+                        Esses sintomas não são frescura nem fraqueza: são manifestações de uma doença que
+                        precisa de tratamento adequado. Se você se identificou com vários desses sinais por
+                        mais de duas semanas, procure um médico ou psicólogo. Não espere a situação piorar.
+                    </p>
+                    <p>
+                        Lembre-se: pedir ajuda é um ato de coragem, não de vergonha. Você merece ser ouvido
+                        e cuidado.
+                    </p>
+                </div>
             </div>
-            <p>
-                Projeto <strong>voceimporta</strong> — Conscientização sobre Depressão para a Feira de Ciências 2025.<br>
-                Fontes: OMS, Ministério da Saúde, ABP — Se precisar de ajuda, ligue CVV 188.
-            </p>
-            <p style="margin-top: 0.5rem; font-size: 0.8rem;">
-                Feito por estudantes de Desenvolvimento de Sistemas.
-            </p>
+        </section>
+
+        <div class="container">
+            <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pessoa sentada sozinha em um banco, representando solidão" class="imagem-ilustrativa">
         </div>
-    </footer>
+
+        <section id="citacoes" style="background: #0f0a08;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Depressão: uma doença silenciosa</h2>
+                    <p>Muitas vezes, quem mais sorri por fora é quem mais sofre por dentro.</p>
+                </div>
+                <div class="citacoes-lista">
+                    <div class="citacao-item">
+                        "A depressão é uma doença silenciosa. Ela não aparece em exames de sangue, não deixa marcas visíveis, mas corrói a alma por dentro. Quem sofre aprende a esconder a dor atrás de um sorriso."
+                        <br><cite style="display:block; margin-top:0.5rem;">— Anônimo</cite>
+                    </div>
+                    <div class="citacao-item">
+                        "Pode afetar qualquer pessoa: o colega de trabalho que parece sempre animado, a amiga que está sempre disposta a ajudar, o filho que tira boas notas. A depressão não escolhe perfil, não avisa, não pede licença."
+                        <br><cite style="display:block; margin-top:0.5rem;">— Adaptado de relatos</cite>
+                    </div>
+                    <div class="citacao-item">
+                        "O mais difícil não é sentir a tristeza, é ter que fingir que está tudo bem. A depressão silenciosa é um grito abafado pela necessidade de parecer forte."
+                        <br><cite style="display:block; margin-top:0.5rem;">— Anônimo</cite>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="estagios" style="background: #1a1510;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Estágios da depressão e o que fazer em cada um</h2>
+                    <p>Entender a gravidade dos sintomas ajuda a direcionar a busca por ajuda adequada.</p>
+                </div>
+                <div class="texto-corrido">
+                    <p>
+                        A depressão pode ser classificada em diferentes estágios, de acordo com a intensidade
+                        e a frequência dos sintomas. Essa classificação não é rígida e serve como um guia
+                        para entender o que a pessoa está passando e qual tipo de suporte pode ser mais
+                        eficaz. O mais importante é que, independentemente do estágio, buscar ajuda
+                        profissional é sempre recomendado.
+                    </p>
+
+                    <h3 style="color: #c8b898; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio leve</h3>
+                    <p>
+                        No estágio leve, a pessoa pode se sentir triste, desanimada ou sem energia, mas
+                        ainda consegue cumprir a maioria das suas obrigações diárias, como trabalhar ou
+                        estudar. Os sintomas podem ser confundidos com cansaço ou estresse passageiro.
+                        <strong>O que fazer:</strong> procure um psicólogo para avaliação e comece a
+                        psicoterapia. Mudanças no estilo de vida, como exercícios físicos regulares,
+                        alimentação equilibrada e melhora do sono, também fazem grande diferença.
+                        Compartilhar o que sente com pessoas de confiança é fundamental.
+                    </p>
+
+                    <h3 style="color: #c8b898; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio moderado</h3>
+                    <p>
+                        No estágio moderado, os sintomas são mais intensos e frequentes, prejudicando
+                        significativamente o desempenho no trabalho, nos estudos e nas relações sociais.
+                        A pessoa pode se isolar, ter crises de choro frequentes, dificuldade de concentração
+                        e alterações no apetite e no sono. <strong>O que fazer:</strong> além da
+                        psicoterapia, é importante consultar um psiquiatra para avaliar a necessidade de
+                        medicação antidepressiva. O acompanhamento conjunto (psicólogo e psiquiatra) é o
+                        mais indicado. A rede de apoio deve estar presente, incentivando e ajudando nas
+                        tarefas do dia a dia.
+                    </p>
+
+                    <h3 style="color: #c8b898; margin-top: 2rem; margin-bottom: 0.8rem;">Estágio grave</h3>
+                    <p>
+                        O estágio grave envolve sintomas incapacitantes, como incapacidade de realizar
+                        tarefas básicas, isolamento total, ideação suicida ou tentativas de suicídio.
+                        A pessoa pode apresentar lentidão psicomotora ou agitação intensa, e necessita de
+                        intervenção imediata. <strong>O que fazer:</strong> procure ajuda médica de
+                        emergência — SAMU (192), pronto-socorro ou CAPS. Se houver risco iminente de
+                        suicídio, não deixe a pessoa sozinha. O tratamento pode exigir internação breve
+                        para estabilização e, em seguida, acompanhamento intensivo com psiquiatra e
+                        psicólogo. A família e os amigos precisam estar presentes e informados sobre como
+                        apoiar.
+                    </p>
+
+                    <p style="margin-top: 2rem;">
+                        Lembre-se: a depressão é tratável em qualquer estágio. Quanto mais cedo o
+                        tratamento começar, melhores são as chances de recuperação completa. Não hesite em
+                        pedir ajuda — você não está sozinho.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tratamentos">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Tratamentos disponíveis</h2>
+                    <p>A depressão tem tratamento e a recuperação é possível.</p>
+                </div>
+                <div class="texto-corrido">
+                    <p>
+                        O tratamento da depressão geralmente envolve psicoterapia e, em alguns casos, uso de
+                        medicamentos antidepressivos prescritos por um psiquiatra. A Terapia
+                        Cognitivo-Comportamental (TCC) é uma das abordagens mais eficazes, ajudando a pessoa
+                        a identificar e modificar padrões de pensamento negativos. A medicação atua regulando
+                        substâncias químicas no cérebro, proporcionando alívio dos sintomas mais intensos.
+                    </p>
+                    <p>
+                        Além do acompanhamento profissional, mudanças no estilo de vida são grandes aliadas:
+                        praticar exercícios físicos regularmente, manter uma alimentação equilibrada, dormir
+                        bem, reduzir o estresse e fortalecer os vínculos sociais contribuem para a melhora.
+                        O apoio de amigos e familiares também é fundamental nesse processo.
+                    </p>
+                    <p>
+                        O mais importante é entender que a depressão não precisa ser enfrentada sozinha.
+                        Existem profissionais capacitados e serviços públicos de saúde prontos para ajudar.
+                        Você não está sozinho nessa jornada.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Profissional de saúde conversando com paciente" class="imagem-ilustrativa">
+        </div>
+
+        <section class="citacao">
+            <div class="container">
+                <blockquote>
+                    "A depressão é uma prisão onde você é tanto o prisioneiro quanto o carcereiro.
+                    Mas a porta está aberta — às vezes só precisamos de alguém para nos mostrar o caminho."
+                    <cite>— Adaptado de Dorothy Rowe</cite>
+                </blockquote>
+            </div>
+        </section>
+
+        <section id="ajudar">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Como ajudar alguém com depressão</h2>
+                    <p>Pequenas atitudes podem fazer uma grande diferença.</p>
+                </div>
+                <div class="texto-corrido">
+                    <p>
+                        Se você conhece alguém que está passando por um quadro depressivo, a sua presença e
+                        compreensão são valiosas. Primeiro, ofereça um ouvido atento, sem julgamentos.
+                        Deixe a pessoa falar sobre o que sente, sem interromper ou minimizar a dor dela.
+                        Frases como "não é nada", "se anime" ou "tem gente pior" não ajudam e podem até
+                        piorar o sofrimento.
+                    </p>
+                    <p>
+                        Incentive a busca por ajuda profissional de forma gentil e respeitosa. Ofereça-se
+                        para acompanhar a pessoa a uma consulta com psicólogo ou psiquiatra, se ela desejar.
+                        Esteja presente também nos momentos simples: um convite para um café, uma caminhada
+                        leve ou apenas ficar em silêncio ao lado dela pode transmitir acolhimento.
+                    </p>
+                    <p>
+                        Fique atento a sinais de alerta, como falas sobre morte, despedidas ou falta de
+                        esperança. Se perceber risco de suicídio, não hesite em buscar ajuda imediatamente:
+                        ligue para o CVV (188) ou encaminhe a pessoa a um serviço de emergência. Nunca deixe
+                        a pessoa sozinha nesses momentos.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="autoavaliacao" style="background: #1a1510;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Autoavaliação: como você tem se sentido?</h2>
+                    <p>
+                        Responda com sinceridade pensando nas últimas duas semanas. Esta ferramenta não substitui
+                        uma avaliação profissional, mas pode ajudar a refletir sobre seu estado emocional.
+                    </p>
+                </div>
+                <div class="quiz-container">
+                    <div id="quizPergunta" class="quiz-pergunta">Carregando pergunta...</div>
+                    <div class="quiz-opcoes" id="quizOpcoes"></div>
+                    <div id="quizResultado" class="quiz-resultado"></div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <button class="btn-quiz" id="btnProximaPergunta" style="display:none;">Próxima pergunta</button>
+                        <button class="btn-quiz" id="btnReiniciarQuiz" style="display:none; background: #4a3a2a;">Refazer autoavaliação</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="respiro" style="background: #1a1510;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Como se acalmar</h2>
+                    <p>Técnicas simples para reduzir a ansiedade e encontrar um momento de paz.</p>
+                </div>
+                <div class="respiro-container">
+                    <p class="respiro-instrucoes">
+                        Em momentos de ansiedade, experimente a respiração diafragmática:
+                    </p>
+                    <p class="respiro-instrucoes">
+                        <strong>Passo 1:</strong> Sente-se confortavelmente e coloque uma mão no peito e outra no abdômen.<br>
+                        <strong>Passo 2:</strong> Inspire lentamente pelo nariz, contando até 4.<br>
+                        <strong>Passo 3:</strong> Segure a respiração por 2 segundos.<br>
+                        <strong>Passo 4:</strong> Expire lentamente pela boca, contando até 6.<br>
+                        <strong>Passo 5:</strong> Repita por 5 a 10 minutos, focando na sensação do ar entrando e saindo.
+                    </p>
+                    <p class="respiro-instrucoes" style="margin-top:1rem;">
+                        Outra técnica é o <em>grounding</em> (ancoragem): identifique 5 coisas que você pode ver,
+                        4 que pode tocar, 3 que pode ouvir, 2 que pode cheirar e 1 que pode saborear.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ajuda" class="secao-clara">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Onde buscar ajuda</h2>
+                    <p>Se você ou alguém próximo precisa de apoio, estes canais estão disponíveis.</p>
+                </div>
+                <div class="ajuda-container">
+                    <div class="ajuda-card">
+                        <h3>CVV – Centro de Valorização da Vida</h3>
+                        <p>Apoio emocional gratuito e sigiloso, 24 horas por dia.</p>
+                        <span class="telefone">188</span>
+                        <p style="font-size:0.85rem;">Ligação gratuita de qualquer telefone</p>
+                    </div>
+                    <div class="ajuda-card">
+                        <h3>SUS – CAPS</h3>
+                        <p>Centros de Atenção Psicossocial oferecem tratamento gratuito.</p>
+                        <p style="font-weight:600;">Procure o CAPS mais próximo</p>
+                        <p style="font-size:0.85rem;">Encaminhamento pela UBS do seu bairro</p>
+                    </div>
+                    <div class="ajuda-card">
+                        <h3>Emergências</h3>
+                        <p>Em caso de risco iminente de suicídio, ligue imediatamente:</p>
+                        <span class="telefone destaque-vermelho">192 (SAMU)</span>
+                        <span class="telefone destaque-vermelho">190 (Polícia)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mapa" class="secao-clara">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Onde encontrar ajuda gratuita</h2>
+                    <p>Mapa com CAPS, UBS e hospitais que oferecem atendimento em saúde mental.</p>
+                </div>
+                <div class="mapa-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d467688.89495119266!2d-46.5952992!3d-23.6824124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sCAPS!5e0!3m2!1spt-BR!2sbr!4v1715000000000!5m2!1spt-BR!2sbr" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <p style="text-align:center; font-size:0.9rem; color:#2a3a4a; margin-top:1rem;">
+                    💡 <em>Dica: substitua o mapa acima pelo endereço da sua cidade, pesquisando por "CAPS", "UBS" ou "hospital psiquiátrico".</em>
+                </p>
+            </div>
+        </section>
+
+        <section id="compartilhar" class="secao-clara" style="padding-top: 2rem;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Compartilhe esta mensagem</h2>
+                    <p>Ajude a divulgar a conscientização sobre depressão. Você pode salvar vidas.</p>
+                </div>
+                <div class="compartilhar-container">
+                    <a href="https://wa.me/?text=Conheça%20o%20projeto%20voceimporta%20sobre%20depressão%20e%20saúde%20mental" target="_blank" class="btn-compartilhar btn-whatsapp">
+                         WhatsApp
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://voceimporta.example.com" target="_blank" class="btn-compartilhar btn-facebook">
+                         Facebook
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?text=Você%20não%20está%20sozinho%20na%20luta%20contra%20a%20depressão%20%23voceimporta%20%23saudemental" target="_blank" class="btn-compartilhar btn-twitter">
+                         Twitter
+                    </a>
+                    <button class="btn-compartilhar btn-link" id="btnCopiarLink" onclick="copiarLink()">
+                         Copiar link
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="secao-clara" style="padding-top: 2rem;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Deixe sua mensagem</h2>
+                    <p>Compartilhe sua opinião sobre o projeto ou tire dúvidas.</p>
+                </div>
+                <div class="form-container">
+                    <form id="formContato">
+                        <div class="form-grupo">
+                            <label for="nome">Nome:</label>
+                            <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+                        </div>
+                        <div class="form-grupo">
+                            <label for="email">E-mail:</label>
+                            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                        </div>
+                        <div class="form-grupo">
+                            <label for="assunto">Assunto:</label>
+                            <select id="assunto" name="assunto">
+                                <option value="feedback">Feedback sobre o projeto</option>
+                                <option value="duvida">Dúvida sobre depressão</option>
+                                <option value="sugestao">Sugestão de conteúdo</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label for="mensagem">Mensagem:</label>
+                            <textarea id="mensagem" name="mensagem" placeholder="Escreva sua mensagem..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-enviar">Enviar mensagem</button>
+                    </form>
+                    <div id="formMensagem" class="form-mensagem"></div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="links-footer">
+                    <a href="#inicio">Início</a>
+                    <a href="#sobre">O que é</a>
+                    <a href="#tabu">Quebrando o tabu</a>
+                    <a href="#sintomas">Sintomas</a>
+                    <a href="#estagios">Estágios</a>
+                    <a href="#tratamentos">Tratamentos</a>
+                    <a href="#ajudar">Como ajudar</a>
+                    <a href="#autoavaliacao">Autoavaliação</a>
+                    <a href="#respiro">Como se acalmar</a>
+                    <a href="#ajuda">Ajuda</a>
+                    <a href="#mapa">Mapa</a>
+                    <a href="#compartilhar">Compartilhar</a>
+                    <a href="#contato">Contato</a>
+                </div>
+                <p>
+                    Projeto <strong>voceimporta</strong> — Conscientização sobre Depressão para a Feira de Ciências 2025.<br>
+                    Fontes: OMS, Ministério da Saúde, ABP — Se precisar de ajuda, ligue CVV 188.
+                </p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+                    Feito por estudantes de Desenvolvimento de Sistemas.
+                </p>
+            </div>
+        </footer>
+
+    </div>
 
     <script>
-        const menuHamburguer = document.getElementById('menuHamburguer');
-        const navLinks = document.getElementById('navLinks');
+        // Menu lateral (mobile)
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-        menuHamburguer.addEventListener('click', () => {
-            navLinks.classList.toggle('ativo');
+        function abrirSidebar() {
+            sidebar.classList.add('ativo');
+            sidebarOverlay.classList.add('ativo');
+        }
+
+        function fecharSidebar() {
+            sidebar.classList.remove('ativo');
+            sidebarOverlay.classList.remove('ativo');
+        }
+
+        menuToggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('ativo')) {
+                fecharSidebar();
+            } else {
+                abrirSidebar();
+            }
         });
 
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('ativo');
-            });
+        sidebarOverlay.addEventListener('click', fecharSidebar);
+
+        // Fechar sidebar ao clicar em um link (mobile)
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', fecharSidebar);
         });
 
+        // Botão flutuante de ajuda
         const btnAjudaAgora = document.getElementById('btnAjudaAgora');
         const modalEmergencia = document.getElementById('modalEmergencia');
         const btnFecharModal = document.getElementById('btnFecharModal');
@@ -1445,6 +1516,7 @@
             }
         });
 
+        // Função para copiar link
         function copiarLink() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
@@ -1454,6 +1526,7 @@
             });
         }
 
+        // ========== AUTOAVALIAÇÃO (baseada no PHQ-9) ==========
         const perguntasAutoavaliacao = [
             "Pouco interesse ou prazer em fazer as coisas",
             "Se sentir para baixo, deprimido ou sem esperança",
@@ -1559,6 +1632,7 @@
 
         carregarPergunta();
 
+        // Formulário de contato
         const formContato = document.getElementById('formContato');
         const formMensagem = document.getElementById('formMensagem');
 
