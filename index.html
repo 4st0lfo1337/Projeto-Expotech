@@ -889,6 +889,17 @@
             color: #d0c8b8;
         }
 
+        /* SEÇÃO COMO SE ACALMAR COM GRADIENTE PARA O CLARO */
+        #respiro {
+            background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%);
+        }
+        #respiro .section-titulo h2 {
+            color: #d0c8b8;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+        #respiro .section-titulo p {
+            color: #b0a898;
+        }
         .respiro-container {
             max-width: 600px;
             margin: 2rem auto;
@@ -897,12 +908,22 @@
         }
         .respiro-instrucoes {
             font-size: 1.1rem;
-            color: #b8b0a8;
+            color: #d0c8b8;
             margin-bottom: 0.5rem;
             text-align: center;
         }
-        .secao-clara .respiro-instrucoes {
-            color: #3a3028;
+        .respiro-passo {
+            color: #d0c8b8;
+            text-decoration: underline;
+            margin-bottom: 0.5rem;
+        }
+        .respiro-passo strong {
+            color: #d0c8b8;
+        }
+        .respiro-grounding {
+            margin-top: 1.5rem;
+            color: #1a1510;
+            font-weight: 600;
         }
 
         .compartilhar-container {
@@ -1360,7 +1381,7 @@
             </div>
         </section>
 
-        <section id="respiro" style="background: #1a1510;">
+        <section id="respiro">
             <div class="container">
                 <div class="section-titulo">
                     <h2>Como se acalmar</h2>
@@ -1370,14 +1391,12 @@
                     <p class="respiro-instrucoes">
                         Em momentos de ansiedade, experimente a respiração diafragmática:
                     </p>
-                    <div style="text-align: center;">
-                        <p><strong>Passo 1:</strong> Sente-se confortavelmente e coloque uma mão no peito e outra no abdômen.</p>
-                        <p><strong>Passo 2:</strong> Inspire lentamente pelo nariz, contando até 4.</p>
-                        <p><strong>Passo 3:</strong> Segure a respiração por 2 segundos.</p>
-                        <p><strong>Passo 4:</strong> Expire lentamente pela boca, contando até 6.</p>
-                        <p><strong>Passo 5:</strong> Repita por 5 a 10 minutos, focando na sensação do ar entrando e saindo.</p>
-                    </div>
-                    <p class="respiro-instrucoes" style="margin-top:1rem;">
+                    <p class="respiro-passo"><strong>Passo 1:</strong> Sente-se confortavelmente e coloque uma mão no peito e outra no abdômen.</p>
+                    <p class="respiro-passo"><strong>Passo 2:</strong> Inspire lentamente pelo nariz, contando até 4.</p>
+                    <p class="respiro-passo"><strong>Passo 3:</strong> Segure a respiração por 2 segundos.</p>
+                    <p class="respiro-passo"><strong>Passo 4:</strong> Expire lentamente pela boca, contando até 6.</p>
+                    <p class="respiro-passo"><strong>Passo 5:</strong> Repita por 5 a 10 minutos, focando na sensação do ar entrando e saindo.</p>
+                    <p class="respiro-grounding">
                         Outra técnica é o <em>grounding</em> (ancoragem): identifique 5 coisas que você pode ver,
                         4 que pode tocar, 3 que pode ouvir, 2 que pode cheirar e 1 que pode saborear.
                     </p>
