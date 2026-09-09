@@ -6,6 +6,7 @@
     <title>voceimporta - Depressão: Você não está sozinho | Expotech 2026</title>
     <style>
         :root {
+            --noise-opacity: 0.8; /* Opacidade inicial forte do efeito de TV */
             --cor-primaria: #7a8a7a;
             --cor-secundaria: #6b7a5a;
             --cor-escura: #1a1510;
@@ -53,6 +54,41 @@
                 radial-gradient(circle at 70% 80%, rgba(50, 40, 30, 0.4) 0%, transparent 50%);
             min-height: 100vh;
             display: flex;
+        }
+
+        /* EFEITO DE NOISE / TV ANTIGA */
+        #noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite clicar através do efeito */
+            z-index: 9999;
+            opacity: var(--noise-opacity);
+            background-image: 
+                /* Scanlines (linhas de TV) */
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.45) 0px,
+                    rgba(0, 0, 0, 0.45) 1px,
+                    transparent 1px,
+                    transparent 3px
+                ),
+                /* Ruído estático (SVG embutido) */
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.9'/%3E%3C/svg%3E");
+            background-size: 100% 4px, 200px 200px;
+            mix-blend-mode: overlay;
+            animation: noise-anim 0.15s steps(4) infinite;
+            transition: opacity 0.1s linear;
+        }
+
+        @keyframes noise-anim {
+            0% { background-position: 0 0, 0 0; }
+            25% { background-position: 0 0, -5% 5%; }
+            50% { background-position: 0 0, 5% -5%; }
+            75% { background-position: 0 0, -5% -5%; }
+            100% { background-position: 0 0, 5% 5%; }
         }
 
         .sidebar {
@@ -1010,6 +1046,9 @@
 </head>
 <body>
 
+    <!-- Overlay de efeito de ruído / TV antiga -->
+    <div id="noise-overlay"></div>
+
     <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
         <span></span><span></span><span></span>
     </button>
@@ -1546,6 +1585,35 @@
     </div>
 
     <script>
+        // Lógica do efeito de noise que diminui ao rolar a página
+        const noiseOverlay = document.getElementById('noise-overlay');
+        const ajudaSection = document.getElementById('ajuda');
+
+        function updateNoiseOpacity() {
+            if (!ajudaSection || !noiseOverlay) return;
+            
+            // Distância do topo da página até a seção "Onde buscar ajuda"
+            const targetDistance = ajudaSection.offsetTop;
+            const currentScroll = window.scrollY;
+            
+            // Calcula a fração de rolagem. Usamos 0.85 para que o efeito desapareça 
+            // completamente um pouco antes de a seção chegar totalmente ao topo, 
+            // garantindo clareza visual ao chegar na parte de ajuda.
+            const scrollFraction = Math.min(currentScroll / (targetDistance * 0.85), 1);
+            
+            const maxOpacity = 0.8; // Efeito forte no começo
+            const currentOpacity = maxOpacity * (1 - scrollFraction);
+            
+            // Atualiza a variável CSS que controla a opacidade
+            document.documentElement.style.setProperty('--noise-opacity', currentOpacity.toFixed(3));
+        }
+
+        // Ouve o evento de scroll de forma otimizada (passive)
+        window.addEventListener('scroll', updateNoiseOpacity, { passive: true });
+        window.addEventListener('resize', updateNoiseOpacity);
+        // Chama uma vez no carregamento para garantir o estado inicial correto
+        updateNoiseOpacity();
+
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
