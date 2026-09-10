@@ -6,7 +6,7 @@
     <title>voceimporta - Depressão: Você não está sozinho | Expotech 2026</title>
     <style>
         :root {
-            --noise-opacity: 0.8; /* Opacidade inicial forte do efeito de TV */
+            --noise-opacity: 0.8;
             --cor-primaria: #7a8a7a;
             --cor-secundaria: #6b7a5a;
             --cor-escura: #1a1510;
@@ -56,18 +56,16 @@
             display: flex;
         }
 
-        /* EFEITO DE NOISE / TV ANTIGA */
         #noise-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Permite clicar através do efeito */
+            pointer-events: none;
             z-index: 9999;
             opacity: var(--noise-opacity);
             background-image: 
-                /* Scanlines (linhas de TV) */
                 repeating-linear-gradient(
                     0deg,
                     rgba(0, 0, 0, 0.45) 0px,
@@ -75,7 +73,6 @@
                     transparent 1px,
                     transparent 3px
                 ),
-                /* Ruído estático (SVG embutido) */
                 url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.9'/%3E%3C/svg%3E");
             background-size: 100% 4px, 200px 200px;
             mix-blend-mode: overlay;
@@ -544,6 +541,29 @@
             background: #5a4a3a;
         }
 
+        /* BOTÃO DE RESET DO QUIZ */
+        .btn-reset-quiz {
+            display: inline-block;
+            padding: 0.7rem 1.8rem;
+            background: transparent;
+            color: #c8b090;
+            border: 1px solid #c8b090;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+            font-family: inherit;
+            letter-spacing: 1px;
+        }
+
+        .btn-reset-quiz:hover {
+            background: #c8b090;
+            color: #0d0a08;
+        }
+
         .ajuda-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -585,7 +605,6 @@
             color: #c08a7a;
         }
 
-        /* NOVA LISTA DE AJUDA */
         .ajuda-lista {
             max-width: 900px;
             margin: 2rem auto 0;
@@ -720,7 +739,6 @@
             color: #c8a0a0;
         }
 
-        /* NOVA SEÇÃO: EQUIPE / CONTATOS DO GRUPO */
         .equipe-lista {
             max-width: 700px;
             margin: 2rem auto 0;
@@ -1005,7 +1023,6 @@
             color: #d0c8b8;
         }
 
-        /* SEÇÃO COMO SE ACALMAR COM GRADIENTE PARA O CLARO */
         #respiro {
             background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%);
         }
@@ -1130,7 +1147,6 @@
 </head>
 <body>
 
-    <!-- Overlay de efeito de ruído / TV antiga -->
     <div id="noise-overlay"></div>
 
     <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
@@ -1349,7 +1365,6 @@
             </div>
         </section>
 
-        <!-- NOVA SEÇÃO: GRAVIDADE DOS SINTOMAS -->
         <section id="gravidade" style="background: #1a1510;">
             <div class="container">
                 <div class="section-titulo">
@@ -1502,7 +1517,8 @@
                     <div id="quizResultado" class="quiz-resultado"></div>
                     <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
                         <button class="btn-quiz" id="btnProximaPergunta" style="display:none;">Próxima pergunta</button>
-                        <button class="btn-quiz" id="btnReiniciarQuiz" style="display:none; background: #4a3a2a;">Refazer autoavaliação</button>
+                        <button class="btn-quiz" id="btnReiniciarQuiz" style="display:none; background: var(--cor-secundaria);">Refazer autoavaliação</button>
+                        <button class="btn-reset-quiz" id="btnResetQuiz" title="Resetar questionário">↺ Resetar questionário</button>
                     </div>
                 </div>
             </div>
@@ -1531,7 +1547,6 @@
             </div>
         </section>
 
-        <!-- SEÇÃO "ONDE BUSCAR AJUDA" REFORMULADA -->
         <section id="ajuda" class="secao-clara">
             <div class="container">
                 <div class="section-titulo">
@@ -1598,7 +1613,6 @@
             </div>
         </section>
 
-        <!-- NOVA SEÇÃO: EQUIPE / CONTATOS DO GRUPO -->
         <section id="equipe" class="secao-clara" style="padding-top: 2rem;">
             <div class="container">
                 <div class="section-titulo">
@@ -1718,26 +1732,19 @@
         function updateNoiseOpacity() {
             if (!ajudaSection || !noiseOverlay) return;
             
-            // Distância do topo da página até a seção "Onde buscar ajuda"
             const targetDistance = ajudaSection.offsetTop;
             const currentScroll = window.scrollY;
             
-            // Calcula a fração de rolagem. Usamos 0.85 para que o efeito desapareça 
-            // completamente um pouco antes de a seção chegar totalmente ao topo, 
-            // garantindo clareza visual ao chegar na parte de ajuda.
             const scrollFraction = Math.min(currentScroll / (targetDistance * 0.85), 1);
             
-            const maxOpacity = 0.8; // Efeito forte no começo
+            const maxOpacity = 0.8;
             const currentOpacity = maxOpacity * (1 - scrollFraction);
             
-            // Atualiza a variável CSS que controla a opacidade
             document.documentElement.style.setProperty('--noise-opacity', currentOpacity.toFixed(3));
         }
 
-        // Ouve o evento de scroll de forma otimizada (passive)
         window.addEventListener('scroll', updateNoiseOpacity, { passive: true });
         window.addEventListener('resize', updateNoiseOpacity);
-        // Chama uma vez no carregamento para garantir o estado inicial correto
         updateNoiseOpacity();
 
         const menuToggle = document.getElementById('menuToggle');
@@ -1795,23 +1802,40 @@
             });
         }
 
+        // ===== AUTOAVALIAÇÃO — 25 PERGUNTAS =====
         const perguntasAutoavaliacao = [
-            "Nas últimas duas semanas, com que frequência você teve pouco interesse ou prazer em fazer as coisas?",
-            "Nas últimas duas semanas, com que frequência você se sentiu triste, deprimido(a) ou sem esperança?",
-            "Nas últimas duas semanas, com que frequência você teve dificuldade para dormir, dormiu demais ou teve um sono pouco reparador?",
-            "Nas últimas duas semanas, com que frequência você se sentiu cansado(a) ou com pouca energia?",
-            "Nas últimas duas semanas, com que frequência você teve pouco apetite ou comeu mais do que o habitual?",
-            "Nas últimas duas semanas, com que frequência você se sentiu mal consigo mesmo(a), como se fosse um fracasso ou tivesse decepcionado as pessoas importantes para você?",
-            "Nas últimas duas semanas, com que frequência você teve dificuldade para se concentrar, por exemplo, ao estudar, ler ou assistir televisão?",
-            "Nas últimas duas semanas, com que frequência você se movimentou ou falou mais devagar do que o habitual, ou ficou inquieto(a) e com dificuldade para permanecer parado(a)?",
-            "Nas últimas duas semanas, com que frequência você teve pensamentos de que seria melhor estar morto(a), não estar vivo(a) ou de se machucar?"
-        ];
+            "Nas últimas semanas, você tem sentido menos vontade ou prazer em fazer coisas que normalmente gosta?",    
+            "Nas últimas semanas, você tem se sentido triste, para baixo ou sem esperança?",
+            "Você tem tido dificuldade para dormir, dormido mais do que o normal ou acordado se sentindo cansado(a)?",
+            "Você tem se sentido sem energia ou muito cansado(a), mesmo sem ter feito muito esforço?",
+            "Você percebeu alguma mudança no seu apetite, como estar comendo muito mais ou muito menos do que costuma?",
+            "Você tem se sentido mal consigo mesmo(a), como se não fosse bom o bastante, tivesse falhado ou estivesse decepcionando alguém?",
+            "Você tem encontrado dificuldade para se concentrar em coisas como estudar, ler, conversar ou até mesmo realizar tarefas simples?",
+            "Você tem se sentido mais inquieto(a) ou agitado(a), ou percebeu que está fazendo as coisas mais devagar do que costumava?",
+            "Você tem pensado que seria melhor não estar aqui, ou sentido vontade de se machucar?",
+            "Você tem preferido ficar em casa ou se afastado de amigos, familiares e atividades que costumava participar?",
+            "Você tem se sentido mais irritado(a), impaciente ou com mais raiva do que costuma sentir?",
+            "Você tem se sentido culpado(a) por coisas pequenas ou por situações pelas quais talvez nem tivesse motivo para se culpar?",
+            "Você tem tido dificuldade para decidir coisas simples do dia a dia, mesmo quando normalmente seriam fáceis para você?",
+            "Você tem se sentido mais ansioso(a), preocupado(a) ou com o coração acelerado sem saber exatamente o motivo?",
+            "Você tem percebido que está chorando mais do que costumava, mesmo por coisas que antes não fariam você chorar?",
+            "Você tem sentido que aquilo que faz não tem valor, importância ou que seus esforços não são reconhecidos?",
+            "Você tem sentido dificuldade para demonstrar carinho, receber afeto ou se sentir conectado(a) às pessoas que estão perto de você?",
+            "Você tem deixado de fazer coisas que gostaria por medo, insegurança ou por sentir que não vai conseguir?",
+            "Você tem se sentido sozinho(a), mesmo quando está perto de outras pessoas?",
+            "Você tem sentido dificuldade para imaginar um futuro melhor ou perdido a esperança de que as coisas possam melhorar?",
+            "Você tem sentido dores no corpo, dores de cabeça ou problemas digestivos sem saber exatamente o que está causando isso?",
+            "À noite, você tem se sentido mais inquieto(a), irritado(a) ou com a cabeça cheia de pensamentos, dificultando o sono?",
+            "Você tem sentido que precisa se esforçar muito para fazer coisas que antes pareciam naturais ou fáceis?",
+            "Você tem se comparado com outras pessoas e acabado se sentindo inferior ou menos capaz?",
+            "Você tem sentido que está apenas seguindo no automático, como se estivesse distante de si mesmo(a) ou do que acontece ao seu redor?"
+];
 
         const opcoesFrequencia = [
-            { texto: "Nunca", valor: 0 },
-            { texto: "Alguns dias", valor: 1 },
-            { texto: "Mais da metade dos dias", valor: 2 },
-            { texto: "Quase todos os dias", valor: 3 }
+            { texto: "Não, isso não tem acontecido comigo", valor: 0 },
+            { texto: "Aconteceu algumas vezes", valor: 1 },
+            { texto: "Tem acontecido com frequência", valor: 2 },
+            { texto: "Tem acontecido bastante comigo", valor: 3 }
         ];
 
         let indicePergunta = 0;
@@ -1824,6 +1848,10 @@
         const quizResultadoEl = document.getElementById('quizResultado');
         const btnProxima = document.getElementById('btnProximaPergunta');
         const btnReiniciar = document.getElementById('btnReiniciarQuiz');
+        const btnReset = document.getElementById('btnResetQuiz');
+
+        // Máximo possível = 25 perguntas × 3 = 75
+        const PONTUACAO_MAXIMA = perguntasAutoavaliacao.length * 3;
 
         function carregarPergunta() {
             quizResultadoEl.style.display = 'none';
@@ -1869,32 +1897,41 @@
             btnProxima.style.display = 'none';
             btnReiniciar.style.display = 'inline-block';
 
+            // Escala adaptada para 25 perguntas (máximo 75)
             let mensagem, classe;
-            if (pontuacaoTotal <= 4) {
-                mensagem = "Seu escore sugere sintomas mínimos de depressão. Continue cuidando da sua saúde mental e procure ajuda se algo mudar.";
+            if (pontuacaoTotal <= 12) {
+                mensagem = "Seu escore sugere sintomas mínimos. Continue cuidando da sua saúde mental e procure ajuda se algo mudar.";
                 classe = 'minima';
-            } else if (pontuacaoTotal <= 9) {
-                mensagem = "Seu escore indica sintomas leves de depressão. Considere conversar com um profissional de saúde mental para avaliação.";
+            } else if (pontuacaoTotal <= 24) {
+                mensagem = "Seu escore indica sintomas leves. Pode ser útil conversar com um profissional de saúde mental para uma avaliação.";
                 classe = 'leve';
-            } else if (pontuacaoTotal <= 14) {
-                mensagem = "Seu escore sugere sintomas moderados de depressão. É importante buscar ajuda profissional o quanto antes.";
+            } else if (pontuacaoTotal <= 39) {
+                mensagem = "Seu escore sugere sintomas moderados. É importante buscar ajuda profissional o quanto antes.";
                 classe = 'moderada';
-            } else if (pontuacaoTotal <= 19) {
+            } else if (pontuacaoTotal <= 54) {
                 mensagem = "Seu escore indica sintomas moderadamente graves. Procure um psiquiatra ou psicólogo para avaliação e acompanhamento.";
                 classe = 'moderada';
             } else {
-                mensagem = "Seu escore sugere sintomas graves de depressão. Busque ajuda profissional imediatamente. Se houver pensamentos de morte, ligue CVV 188 ou vá a um pronto-socorro.";
+                mensagem = "Seu escore sugere sintomas graves. Busque ajuda profissional imediatamente. Se houver pensamentos de morte, ligue CVV 188 ou vá a um pronto-socorro.";
                 classe = 'grave';
             }
 
             quizResultadoEl.style.display = 'block';
             quizResultadoEl.className = 'quiz-resultado ' + classe;
-            quizResultadoEl.innerHTML = `<strong>Pontuação: ${pontuacaoTotal} de 27</strong><br>${mensagem}<br><br>Lembre-se: esta ferramenta não substitui avaliação médica.`;
+            quizResultadoEl.innerHTML = `<strong>Pontuação: ${pontuacaoTotal} de ${PONTUACAO_MAXIMA}</strong><br>${mensagem}<br><br>Lembre-se: esta ferramenta não substitui avaliação médica.`;
         }
 
         btnProxima.addEventListener('click', avancarPergunta);
 
         btnReiniciar.addEventListener('click', () => {
+            indicePergunta = 0;
+            pontuacaoTotal = 0;
+            respostaAtual = null;
+            carregarPergunta();
+        });
+
+        // BOTÃO RESET — volta ao início em qualquer ponto do questionário
+        btnReset.addEventListener('click', () => {
             indicePergunta = 0;
             pontuacaoTotal = 0;
             respostaAtual = null;
