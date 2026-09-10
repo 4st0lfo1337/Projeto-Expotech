@@ -720,6 +720,86 @@
             color: #c8a0a0;
         }
 
+        /* NOVA SEÇÃO: EQUIPE / CONTATOS DO GRUPO */
+        .equipe-lista {
+            max-width: 700px;
+            margin: 2rem auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .membro-card {
+            background: #1e1812;
+            border: 1px solid #3a3028;
+            border-left: 4px solid var(--cor-primaria);
+            border-radius: 2px;
+            padding: 1.2rem 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.2s, box-shadow 0.2s, border-left-color 0.2s;
+        }
+        .membro-card:hover {
+            transform: translateX(5px);
+            border-left-color: var(--cor-secundaria);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+        }
+        .membro-card .membro-nome {
+            font-weight: 700;
+            color: #d0c8b8;
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+        }
+        .membro-card .membro-papel {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--cor-texto-claro);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+        .membro-card .membro-email {
+            color: #c8b090;
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            padding: 0.4rem 0.9rem;
+            border: 1px solid var(--cor-borda);
+            border-radius: 2px;
+            background: #0f0a08;
+            transition: all 0.2s;
+        }
+        .membro-card .membro-email:hover {
+            background: #252018;
+            color: #e8d5a3;
+            border-color: var(--cor-amarelo);
+            text-shadow: 0 0 8px rgba(200,180,150,0.5);
+        }
+        .secao-clara .membro-card {
+            background: #e0d8c8;
+            border-color: #9a8a7a;
+            border-left-color: #5a6a4a;
+        }
+        .secao-clara .membro-card .membro-nome {
+            color: #1a1510;
+        }
+        .secao-clara .membro-card .membro-papel {
+            color: #3a3028;
+        }
+        .secao-clara .membro-card .membro-email {
+            background: #d0c8b8;
+            color: #1a1510;
+            border-color: #9a8a7a;
+        }
+        .secao-clara .membro-card .membro-email:hover {
+            background: #c0b8a8;
+            color: #000;
+            border-color: #6a5a4a;
+        }
+
         footer {
             background: #0f0a08;
             color: #8a7a6a;
@@ -1041,6 +1121,10 @@
             .mapa-container iframe {
                 height: 300px;
             }
+            .membro-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -1072,6 +1156,7 @@
             <li><a href="#ajuda">Ajuda</a></li>
             <li><a href="#mapa">Mapa</a></li>
             <li><a href="#compartilhar">Compartilhar</a></li>
+            <li><a href="#equipe">Equipe</a></li>
             <li><a href="#contato">Contato</a></li>
         </ul>
         <div class="sidebar-footer">
@@ -1513,6 +1598,48 @@
             </div>
         </section>
 
+        <!-- NOVA SEÇÃO: EQUIPE / CONTATOS DO GRUPO -->
+        <section id="equipe" class="secao-clara" style="padding-top: 2rem;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Equipe do Projeto</h2>
+                    <p>Nome e e-mails dos integrantes do trabalho.</p>
+                </div>
+                <div class="equipe-lista">
+                    <div class="membro-card">
+                        <div>
+                            <span class="membro-nome">Christian Biégas</span>
+                        </div>
+                        <a href="mailto:christianInamoto@proton.me" class="membro-email">christianInamoto@proton.me</a>
+                    </div>
+                    <div class="membro-card">
+                        <div>
+                            <span class="membro-nome">Gustavo Lorenzo</span>
+                        </div>
+                        <a href="mailto:gustavo.martins.anjos@escola.pr.gov.br" class="membro-email">gustavo.martins.anjos@escola.pr.gov.br</a>
+                    </div>
+                    <div class="membro-card">
+                        <div>
+                            <span class="membro-nome">Enzo Keiji</span>
+                        </div>
+                        <a href="mailto:marcal.enzo@escola.pr.gov.br" class="membro-email">marcal.enzo@escola.pr.gov.br</a>
+                    </div>
+                    <div class="membro-card">
+                        <div>
+                            <span class="membro-nome">Gabriel Bones</span>
+                        </div>
+                        <a href="mailto:integrante4@email.com" class="membro-email">integrante4@email.com</a>
+                    </div>
+                    <div class="membro-card">
+                        <div>
+                            <span class="membro-nome">Pedro Rafael</span>
+                        </div>
+                        <a href="mailto:integrante5@email.com" class="membro-email">integrante5@email.com</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="contato" class="secao-clara" style="padding-top: 2rem;">
             <div class="container">
                 <div class="section-titulo">
@@ -1565,6 +1692,7 @@
                     <a href="#ajuda">Ajuda</a>
                     <a href="#mapa">Mapa</a>
                     <a href="#compartilhar">Compartilhar</a>
+                    <a href="#equipe">Equipe</a>
                     <a href="#contato">Contato</a>
                 </div>
                 <p>
