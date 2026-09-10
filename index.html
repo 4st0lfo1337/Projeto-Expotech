@@ -521,6 +521,22 @@
             color: #a0b8c8;
         }
 
+        /* AVISO DE QUE O QUESTIONÁRIO NÃO SUBSTITUI AVALIAÇÃO MÉDICA */
+        .aviso-medico {
+            display: block;
+            margin-top: 1rem;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #e74c3c;
+            text-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+            background: rgba(231, 76, 60, 0.08);
+            border: 1px solid rgba(231, 76, 60, 0.4);
+            padding: 0.6rem 1rem;
+            border-radius: 2px;
+        }
+
         .btn-quiz {
             display: inline-block;
             padding: 0.7rem 1.8rem;
@@ -541,8 +557,8 @@
             background: #5a4a3a;
         }
 
-        /* BOTÃO DE RESET DO QUIZ */
-        .btn-reset-quiz {
+        /* BOTÃO DE VOLTAR UMA PERGUNTA */
+        .btn-voltar-quiz {
             display: inline-block;
             padding: 0.7rem 1.8rem;
             background: transparent;
@@ -559,9 +575,14 @@
             letter-spacing: 1px;
         }
 
-        .btn-reset-quiz:hover {
+        .btn-voltar-quiz:hover:not(:disabled) {
             background: #c8b090;
             color: #0d0a08;
+        }
+
+        .btn-voltar-quiz:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
         }
 
         .ajuda-container {
@@ -1518,7 +1539,7 @@
                     <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
                         <button class="btn-quiz" id="btnProximaPergunta" style="display:none;">Próxima pergunta</button>
                         <button class="btn-quiz" id="btnReiniciarQuiz" style="display:none; background: var(--cor-secundaria);">Refazer autoavaliação</button>
-                        <button class="btn-reset-quiz" id="btnResetQuiz" title="Resetar questionário">↺ Resetar questionário</button>
+                        <button class="btn-voltar-quiz" id="btnVoltarQuiz" title="Voltar uma pergunta" disabled>← Voltar uma pergunta</button>
                     </div>
                 </div>
             </div>
@@ -1829,7 +1850,7 @@
             "Você tem sentido que precisa se esforçar muito para fazer coisas que antes pareciam naturais ou fáceis?",
             "Você tem se comparado com outras pessoas e acabado se sentindo inferior ou menos capaz?",
             "Você tem sentido que está apenas seguindo no automático, como se estivesse distante de si mesmo(a) ou do que acontece ao seu redor?"
-];
+        ];
 
         const opcoesFrequencia = [
             { texto: "Não, isso não tem acontecido comigo", valor: 0 },
@@ -1841,6 +1862,8 @@
         let indicePergunta = 0;
         let pontuacaoTotal = 0;
         let respostaAtual = null;
+        // Histórico de respostas para poder voltar
+        let respostasHistorico = [];
 
         const quizContadorEl = document.getElementById('quizContador');
         const quizPerguntaEl = document.getElementById('quizPergunta');
@@ -1848,10 +1871,13 @@
         const quizResultadoEl = document.getElementById('quizResultado');
         const btnProxima = document.getElementById('btnProximaPergunta');
         const btnReiniciar = document.getElementById('btnReiniciarQuiz');
-        const btnReset = document.getElementById('btnResetQuiz');
+        const btnVoltar = document.getElementById('btnVoltarQuiz');
 
         // Máximo possível = 25 perguntas × 3 = 75
         const PONTUACAO_MAXIMA = perguntasAutoavaliacao.length * 3;
+
+        // Texto do aviso médico (grifado em vermelho, caixa alta)
+        const AVISO_MEDICO = "LEMBRE-SE: ESTA FERRAMENTA NÃO SUBSTITUI AVALIAÇÃO MÉDICA.";
 
         function carregarPergunta() {
             quizResultadoEl.style.display = 'none';
@@ -1859,20 +1885,40 @@
             btnReiniciar.style.display = 'none';
             respostaAtual = null;
 
+            // Atualiza estado do botão voltar
+            atualizarBotaoVoltar();
+
             if (indicePergunta < perguntasAutoavaliacao.length) {
                 quizContadorEl.textContent = `Pergunta ${indicePergunta + 1} de ${perguntasAutoavaliacao.length}`;
                 quizPerguntaEl.textContent = perguntasAutoavaliacao[indicePergunta];
                 quizOpcoesEl.innerHTML = '';
+
+                // Se já houver uma resposta salva no histórico para essa pergunta, restaura a seleção
+                const respostaSalva = respostasHistorico[indicePergunta];
                 opcoesFrequencia.forEach((opcao, idx) => {
                     const btn = document.createElement('button');
                     btn.classList.add('quiz-opcao');
                     btn.textContent = opcao.texto;
                     btn.setAttribute('data-valor', opcao.valor);
+                    if (respostaSalva !== undefined && respostaSalva === opcao.valor) {
+                        btn.classList.add('selecionada');
+                        respostaAtual = opcao.valor;
+                        btnProxima.style.display = 'inline-block';
+                    }
                     btn.addEventListener('click', () => selecionarOpcao(idx, btn));
                     quizOpcoesEl.appendChild(btn);
                 });
             } else {
                 mostrarResultado();
+            }
+        }
+
+        function atualizarBotaoVoltar() {
+            // Desabilita o botão voltar quando estivermos na primeira pergunta
+            if (indicePergunta === 0) {
+                btnVoltar.disabled = true;
+            } else {
+                btnVoltar.disabled = false;
             }
         }
 
@@ -1885,8 +1931,21 @@
 
         function avancarPergunta() {
             if (respostaAtual === null) return;
+            // Salva a resposta no histórico
+            respostasHistorico[indicePergunta] = respostaAtual;
             pontuacaoTotal += respostaAtual;
             indicePergunta++;
+            carregarPergunta();
+        }
+
+        function voltarPergunta() {
+            if (indicePergunta === 0) return; // não dá pra voltar além da primeira
+            // Subtrai a pontuação da pergunta atual do histórico (se existir)
+            if (respostasHistorico[indicePergunta] !== undefined) {
+                pontuacaoTotal -= respostasHistorico[indicePergunta];
+                delete respostasHistorico[indicePergunta];
+            }
+            indicePergunta--;
             carregarPergunta();
         }
 
@@ -1896,6 +1955,7 @@
             quizOpcoesEl.innerHTML = '';
             btnProxima.style.display = 'none';
             btnReiniciar.style.display = 'inline-block';
+            btnVoltar.disabled = true;
 
             // Escala adaptada para 25 perguntas (máximo 75)
             let mensagem, classe;
@@ -1918,23 +1978,17 @@
 
             quizResultadoEl.style.display = 'block';
             quizResultadoEl.className = 'quiz-resultado ' + classe;
-            quizResultadoEl.innerHTML = `<strong>Pontuação: ${pontuacaoTotal} de ${PONTUACAO_MAXIMA}</strong><br>${mensagem}<br><br>Lembre-se: esta ferramenta não substitui avaliação médica.`;
+            quizResultadoEl.innerHTML = `<strong>Pontuação: ${pontuacaoTotal} de ${PONTUACAO_MAXIMA}</strong><br>${mensagem}<br><span class="aviso-medico">${AVISO_MEDICO}</span>`;
         }
 
         btnProxima.addEventListener('click', avancarPergunta);
+        btnVoltar.addEventListener('click', voltarPergunta);
 
         btnReiniciar.addEventListener('click', () => {
             indicePergunta = 0;
             pontuacaoTotal = 0;
             respostaAtual = null;
-            carregarPergunta();
-        });
-
-        // BOTÃO RESET — volta ao início em qualquer ponto do questionário
-        btnReset.addEventListener('click', () => {
-            indicePergunta = 0;
-            pontuacaoTotal = 0;
-            respostaAtual = null;
+            respostasHistorico = [];
             carregarPergunta();
         });
 
