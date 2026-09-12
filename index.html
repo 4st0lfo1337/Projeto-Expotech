@@ -437,7 +437,7 @@
             background: #1e1812;
             border-radius: 2px;
             padding: 2rem;
-            max-width: 700px;
+            max-width: 760px;
             margin: 1.5rem auto 0;
             border: 1px solid #3a3028;
             box-shadow: 0 8px 30px rgba(0,0,0,0.7), inset 0 0 20px rgba(50,35,20,0.3);
@@ -452,6 +452,26 @@
             text-transform: uppercase;
             border-bottom: 1px solid #3a3028;
             padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .quiz-contador .barra-progresso {
+            flex: 1 1 100%;
+            height: 6px;
+            background: #0f0a08;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.4rem;
+            border: 1px solid #3a3028;
+        }
+        .quiz-contador .barra-progresso-preenchida {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #6a5a4a, #c8b090);
+            transition: width 0.3s ease;
         }
 
         .quiz-pergunta {
@@ -521,6 +541,58 @@
             color: #a0b8c8;
         }
 
+        .quiz-resultado.moderadamente-grave {
+            background: #2a1818;
+            color: #d0a0a0;
+        }
+
+        /* ALERTA CRÍTICO — quando há resposta positiva em pergunta crítica */
+        .alerta-critico {
+            display: none;
+            background: #3a1414;
+            border: 2px solid #e74c3c;
+            color: #f0d0d0;
+            padding: 1.3rem 1.5rem;
+            border-radius: 3px;
+            margin-top: 1rem;
+            text-align: left;
+            box-shadow: 0 0 25px rgba(231, 76, 60, 0.45), inset 0 0 15px rgba(231, 76, 60, 0.15);
+            animation: pulse-alerta 2s ease-in-out infinite;
+        }
+        .alerta-critico.ativo {
+            display: block;
+        }
+        .alerta-critico strong {
+            color: #ff6b5b;
+            display: block;
+            margin-bottom: 0.6rem;
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .alerta-critico p {
+            margin-bottom: 0.6rem;
+            line-height: 1.6;
+            font-size: 0.98rem;
+        }
+        .alerta-critico .telefone-critico {
+            display: inline-block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ff8a7a;
+            margin: 0.3rem 0.6rem 0.3rem 0;
+            text-decoration: none;
+            border-bottom: 1px dashed #ff8a7a;
+        }
+        .alerta-critico .telefone-critico:hover {
+            color: #ffb0a0;
+        }
+
+        @keyframes pulse-alerta {
+            0%, 100% { box-shadow: 0 0 25px rgba(231, 76, 60, 0.45), inset 0 0 15px rgba(231, 76, 60, 0.15); }
+            50% { box-shadow: 0 0 35px rgba(231, 76, 60, 0.7), inset 0 0 20px rgba(231, 76, 60, 0.25); }
+        }
+
         /* AVISO DE QUE O QUESTIONÁRIO NÃO SUBSTITUI AVALIAÇÃO MÉDICA */
         .aviso-medico {
             display: block;
@@ -535,6 +607,7 @@
             border: 1px solid rgba(231, 76, 60, 0.4);
             padding: 0.6rem 1rem;
             border-radius: 2px;
+            font-size: 0.9rem;
         }
 
         .btn-quiz {
@@ -1163,6 +1236,9 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .quiz-container {
+                padding: 1.3rem;
+            }
         }
     </style>
 </head>
@@ -1444,9 +1520,9 @@
                         melhores são as chances de recuperação completa.
                     </p>
                 </div>
-<div class="container">
-    <img src="https://i.pinimg.com/736x/8f/7f/55/8f7f554e05164594cf86c36787926aae.jpg" alt="Adolescente sentado com expressão de melancolia em ambiente escuro" class="imagem-ilustrativa" style="max-width: 900px;">
-</div>
+                <div class="container">
+                    <img src="https://i.pinimg.com/736x/8f/7f/55/8f7f554e05164594cf86c36787926aae.jpg" alt="Adolescente sentado com expressão de melancolia em ambiente escuro" class="imagem-ilustrativa" style="max-width: 900px;">
+                </div>
             </div>
         </section>
 
@@ -1479,9 +1555,10 @@
             </div>
         </section>
 
-<div class="container">
-    <img src=" https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Adolescente sentado com expressão de melancolia em ambiente escuro" class="imagem-ilustrativa" style="max-width: 600px;">
-</div>
+        <div class="container">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pessoa em ambiente de reflexão" class="imagem-ilustrativa" style="max-width: 600px;">
+        </div>
+
         <section class="citacao">
             <div class="container">
                 <blockquote>
@@ -1527,14 +1604,23 @@
                 <div class="section-titulo">
                     <h2>Autoavaliação: como você tem se sentido?</h2>
                     <p>
-                        Responda com sinceridade pensando nas últimas duas semanas. Esta ferramenta não substitui
-                        uma avaliação profissional, mas pode ajudar a refletir sobre seu estado emocional.
+                        Responda com sinceridade pensando nas <strong>últimas duas semanas</strong>. Esta ferramenta
+                        é apenas um instrumento de reflexão e <strong>não substitui uma avaliação profissional</strong>.
                     </p>
                 </div>
                 <div class="quiz-container">
                     <div id="quizContador" class="quiz-contador"></div>
                     <p id="quizPergunta" class="quiz-pergunta">Carregando pergunta...</p>
                     <div class="quiz-opcoes" id="quizOpcoes"></div>
+                    <div id="alertaCritico" class="alerta-critico">
+                        <strong>⚠ Atenção imediata necessária</strong>
+                        <p>Você indicou pensamentos de morte, autolesão ou de que seria melhor não estar aqui. Esse é um sinal sério de que você precisa de apoio agora — <strong>não fique sozinho(a)</strong>.</p>
+                        <p>
+                            Ligue agora para o <a href="tel:188" class="telefone-critico">CVV — 188</a>
+                            ou para o <a href="tel:192" class="telefone-critico">SAMU — 192</a>.
+                            Se puder, procure alguém de confiança e fique acompanhado(a). Sua vida importa.
+                        </p>
+                    </div>
                     <div id="quizResultado" class="quiz-resultado"></div>
                     <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
                         <button class="btn-quiz" id="btnProximaPergunta" style="display:none;">Próxima pergunta</button>
@@ -1738,7 +1824,7 @@
                     Feito por estudantes de Desenvolvimento de Sistemas - 2ºB DS.
                 </p>
                 <p style="margin-top: 0.5rem; font-size: 0.8rem;">
-                    - Colégio Gastão Vidigal -
+                    - Colégio Gastão Vidal -
                 </p>
             </div>
         </footer>
@@ -1746,21 +1832,22 @@
     </div>
 
     <script>
-        // Lógica do efeito de noise que diminui ao rolar a página
+        // =====================================================
+        // EFEITO DE NOISE (ruído visual) que diminui ao rolar
+        // =====================================================
         const noiseOverlay = document.getElementById('noise-overlay');
         const ajudaSection = document.getElementById('ajuda');
 
         function updateNoiseOpacity() {
             if (!ajudaSection || !noiseOverlay) return;
-            
+
             const targetDistance = ajudaSection.offsetTop;
             const currentScroll = window.scrollY;
-            
             const scrollFraction = Math.min(currentScroll / (targetDistance * 0.85), 1);
-            
+
             const maxOpacity = 0.8;
             const currentOpacity = maxOpacity * (1 - scrollFraction);
-            
+
             document.documentElement.style.setProperty('--noise-opacity', currentOpacity.toFixed(3));
         }
 
@@ -1768,6 +1855,9 @@
         window.addEventListener('resize', updateNoiseOpacity);
         updateNoiseOpacity();
 
+        // =====================================================
+        // SIDEBAR / MENU MOBILE
+        // =====================================================
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -1776,18 +1866,14 @@
             sidebar.classList.add('ativo');
             sidebarOverlay.classList.add('ativo');
         }
-
         function fecharSidebar() {
             sidebar.classList.remove('ativo');
             sidebarOverlay.classList.remove('ativo');
         }
 
         menuToggle.addEventListener('click', () => {
-            if (sidebar.classList.contains('ativo')) {
-                fecharSidebar();
-            } else {
-                abrirSidebar();
-            }
+            if (sidebar.classList.contains('ativo')) fecharSidebar();
+            else abrirSidebar();
         });
 
         sidebarOverlay.addEventListener('click', fecharSidebar);
@@ -1796,6 +1882,9 @@
             link.addEventListener('click', fecharSidebar);
         });
 
+        // =====================================================
+        // MODAL DE EMERGÊNCIA
+        // =====================================================
         const btnAjudaAgora = document.getElementById('btnAjudaAgora');
         const modalEmergencia = document.getElementById('modalEmergencia');
         const btnFecharModal = document.getElementById('btnFecharModal');
@@ -1803,17 +1892,16 @@
         btnAjudaAgora.addEventListener('click', () => {
             modalEmergencia.classList.add('ativo');
         });
-
         btnFecharModal.addEventListener('click', () => {
             modalEmergencia.classList.remove('ativo');
         });
-
         modalEmergencia.addEventListener('click', (e) => {
-            if (e.target === modalEmergencia) {
-                modalEmergencia.classList.remove('ativo');
-            }
+            if (e.target === modalEmergencia) modalEmergencia.classList.remove('ativo');
         });
 
+        // =====================================================
+        // COPIAR LINK
+        // =====================================================
         function copiarLink() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
@@ -1823,33 +1911,54 @@
             });
         }
 
-        // ===== AUTOAVALIAÇÃO — 25 PERGUNTAS =====
+        // =====================================================
+        // AUTOAVALIAÇÃO — VERSÃO APRIMORADA (29 perguntas)
+        // =====================================================
+        // Cada pergunta tem:
+        //   - texto: o enunciado
+        //   - critica: se true, resposta >= 1 dispara alerta de emergência
+        //   - area: agrupamento (humor, cognitivo, físico, comportamental, funcional)
         const perguntasAutoavaliacao = [
-            "Nas últimas semanas, você tem sentido menos vontade ou prazer em fazer coisas que normalmente gosta?",    
-            "Nas últimas semanas, você tem se sentido triste, para baixo ou sem esperança?",
-            "Você tem tido dificuldade para dormir, dormido mais do que o normal ou acordado se sentindo cansado(a)?",
-            "Você tem se sentido sem energia ou muito cansado(a), mesmo sem ter feito muito esforço?",
-            "Você percebeu alguma mudança no seu apetite, como estar comendo muito mais ou muito menos do que costuma?",
-            "Você tem se sentido mal consigo mesmo(a), como se não fosse bom o bastante, tivesse falhado ou estivesse decepcionando alguém?",
-            "Você tem encontrado dificuldade para se concentrar em coisas como estudar, ler, conversar ou até mesmo realizar tarefas simples?",
-            "Você tem se sentido mais inquieto(a) ou agitado(a), ou percebeu que está fazendo as coisas mais devagar do que costumava?",
-            "Você tem pensado que seria melhor não estar aqui, ou sentido vontade de se machucar?",
-            "Você tem preferido ficar em casa ou se afastado de amigos, familiares e atividades que costumava participar?",
-            "Você tem se sentido mais irritado(a), impaciente ou com mais raiva do que costuma sentir?",
-            "Você tem se sentido culpado(a) por coisas pequenas ou por situações pelas quais talvez nem tivesse motivo para se culpar?",
-            "Você tem tido dificuldade para decidir coisas simples do dia a dia, mesmo quando normalmente seriam fáceis para você?",
-            "Você tem se sentido mais ansioso(a), preocupado(a) ou com o coração acelerado sem saber exatamente o motivo?",
-            "Você tem percebido que está chorando mais do que costumava, mesmo por coisas que antes não fariam você chorar?",
-            "Você tem sentido que aquilo que faz não tem valor, importância ou que seus esforços não são reconhecidos?",
-            "Você tem sentido dificuldade para demonstrar carinho, receber afeto ou se sentir conectado(a) às pessoas que estão perto de você?",
-            "Você tem deixado de fazer coisas que gostaria por medo, insegurança ou por sentir que não vai conseguir?",
-            "Você tem se sentido sozinho(a), mesmo quando está perto de outras pessoas?",
-            "Você tem sentido dificuldade para imaginar um futuro melhor ou perdido a esperança de que as coisas possam melhorar?",
-            "Você tem sentido dores no corpo, dores de cabeça ou problemas digestivos sem saber exatamente o que está causando isso?",
-            "À noite, você tem se sentido mais inquieto(a), irritado(a) ou com a cabeça cheia de pensamentos, dificultando o sono?",
-            "Você tem sentido que precisa se esforçar muito para fazer coisas que antes pareciam naturais ou fáceis?",
-            "Você tem se comparado com outras pessoas e acabado se sentindo inferior ou menos capaz?",
-            "Você tem sentido que está apenas seguindo no automático, como se estivesse distante de si mesmo(a) ou do que acontece ao seu redor?"
+            // -------- HAMOR / NÚCLEO DEPRESSIVO --------
+            { texto: "Nas últimas duas semanas, você tem se sentido triste, para baixo ou sem esperança na maior parte do dia?", area: "humor", critica: false },
+            { texto: "Você tem perdido o interesse ou o prazer em atividades que antes eram agradáveis?", area: "humor", critica: false },
+            { texto: "Você tem se sentido mais irritado(a), impaciente ou com mais raiva do que costumava sentir?", area: "humor", critica: false },
+            { texto: "Você tem chorado mais do que costumava, mesmo por coisas que antes não fariam você chorar?", area: "humor", critica: false },
+
+            // -------- SINTOMAS FÍSICOS / VEGETATIVOS --------
+            { texto: "Você tem tido dificuldade para dormir, dormido mais do que o normal ou acordado se sentindo cansado(a)?", area: "fisico", critica: false },
+            { texto: "Você tem se sentido sem energia ou muito cansado(a), mesmo sem ter feito esforço?", area: "fisico", critica: false },
+            { texto: "Você percebeu alguma mudança no seu apetite — comendo muito mais ou muito menos do que costuma?", area: "fisico", critica: false },
+            { texto: "Você tem se sentido mais inquieto(a), agitado(a) ou fazendo as coisas mais devagar do que costumava?", area: "fisico", critica: false },
+            { texto: "Você tem sentido dores no corpo, dores de cabeça ou problemas digestivos sem causa aparente?", area: "fisico", critica: false },
+            { texto: "À noite, você tem se sentido inquieto(a) ou com a cabeça cheia de pensamentos que atrapalham o sono?", area: "fisico", critica: false },
+
+            // -------- COGNITIVOS / EMOCIONAIS --------
+            { texto: "Você tem se sentido mal consigo mesmo(a), como se fosse um fracasso ou estivesse decepcionando alguém?", area: "cognitivo", critica: false },
+            { texto: "Você tem encontrado dificuldade para se concentrar em estudar, ler, conversar ou realizar tarefas simples?", area: "cognitivo", critica: false },
+            { texto: "Você tem se sentido culpado(a) por coisas pequenas ou por situações em que talvez nem tivesse culpa?", area: "cognitivo", critica: false },
+            { texto: "Você tem dificuldade para tomar decisões simples do dia a dia, mesmo quando antes eram fáceis?", area: "cognitivo", critica: false },
+            { texto: "Você sente que aquilo que faz não tem valor, importância, ou que seus esforços são em vão?", area: "cognitivo", critica: false },
+            { texto: "Você tem sentido dificuldade para imaginar um futuro melhor ou perdido a esperança de que as coisas possam melhorar?", area: "cognitivo", critica: false },
+            { texto: "Você tem se comparado com outras pessoas e acabado se sentindo inferior ou menos capaz?", area: "cognitivo", critica: false },
+            { texto: "Você tem sentido que está no \"automático\", como se estivesse distante de si mesmo(a) ou do que acontece ao seu redor?", area: "cognitivo", critica: false },
+            { texto: "Você tem se sentido mais ansioso(a), preocupado(a) ou com o coração acelerado sem motivo claro?", area: "cognitivo", critica: false },
+
+            // -------- COMPORTAMENTAIS / SOCIAIS --------
+            { texto: "Você tem evitado contato com amigos, familiares ou atividades que costumava gostar?", area: "comportamental", critica: false },
+            { texto: "Você tem dificuldade para sentir ou demonstrar carinho por pessoas próximas?", area: "comportamental", critica: false },
+            { texto: "Você tem deixado de fazer coisas que gostaria por medo, insegurança ou por achar que não vai conseguir?", area: "comportamental", critica: false },
+            { texto: "Você tem se sentido sozinho(a), mesmo quando está perto de outras pessoas?", area: "comportamental", critica: false },
+            { texto: "Você tem perdido a vontade de cuidar de si — higiene, aparência, alimentação, descanso?", area: "comportamental", critica: false },
+            { texto: "Você sente que precisa se esforçar muito para fazer coisas que antes pareciam simples ou naturais?", area: "comportamental", critica: false },
+
+            // -------- CRÍTICAS (RISCO) --------
+            { texto: "Você tem pensado que seria melhor não estar aqui ou que as pessoas estariam melhor sem você?", area: "risco", critica: true },
+            { texto: "Você tem sentido vontade de se machucar, de desaparecer ou de fazer mal a si mesmo(a)?", area: "risco", critica: true },
+
+            // -------- DURAÇÃO E IMPACTO FUNCIONAL --------
+            { texto: "Esses sentimentos têm durado a maior parte do dia, quase todos os dias, por duas semanas ou mais?", area: "funcional", critica: false },
+            { texto: "Esses sintomas têm atrapalhado seu desempenho na escola, no trabalho, em casa ou nas suas relações?", area: "funcional", critica: false }
         ];
 
         const opcoesFrequencia = [
@@ -1860,47 +1969,72 @@
         ];
 
         let indicePergunta = 0;
-        let pontuacaoTotal = 0;
         let respostaAtual = null;
-        // Histórico de respostas para poder voltar
-        let respostasHistorico = [];
+        let respostasHistorico = [];   // respostas por índice de pergunta
 
         const quizContadorEl = document.getElementById('quizContador');
         const quizPerguntaEl = document.getElementById('quizPergunta');
         const quizOpcoesEl = document.getElementById('quizOpcoes');
         const quizResultadoEl = document.getElementById('quizResultado');
+        const alertaCriticoEl = document.getElementById('alertaCritico');
         const btnProxima = document.getElementById('btnProximaPergunta');
         const btnReiniciar = document.getElementById('btnReiniciarQuiz');
         const btnVoltar = document.getElementById('btnVoltarQuiz');
 
-        // Máximo possível = 25 perguntas × 3 = 75
         const PONTUACAO_MAXIMA = perguntasAutoavaliacao.length * 3;
-
-        // Texto do aviso médico (grifado em vermelho, caixa alta)
         const AVISO_MEDICO = "LEMBRE-SE: ESTA FERRAMENTA NÃO SUBSTITUI AVALIAÇÃO MÉDICA.";
+
+        // ---- Cálculo de pontuação total (recalculado sempre, evitando bugs) ----
+        function calcularPontuacaoTotal() {
+            return respostasHistorico.reduce((soma, v) => soma + (typeof v === 'number' ? v : 0), 0);
+        }
+
+        // ---- Verifica se alguma pergunta crítica foi respondida com valor >= 1 ----
+        function existeRespostaCritica() {
+            return respostasHistorico.some((v, i) => {
+                const p = perguntasAutoavaliacao[i];
+                return p && p.critica && typeof v === 'number' && v >= 1;
+            });
+        }
+
+        // ---- Atualiza barra de progresso no contador ----
+        function atualizarProgresso() {
+            const respondidas = respostasHistorico.filter(v => typeof v === 'number').length;
+            const pct = (respondidas / perguntasAutoavaliacao.length) * 100;
+            const preenchida = document.getElementById('barraProgresso');
+            if (preenchida) preenchida.style.width = pct.toFixed(1) + '%';
+        }
 
         function carregarPergunta() {
             quizResultadoEl.style.display = 'none';
+            alertaCriticoEl.classList.remove('ativo');
             btnProxima.style.display = 'none';
             btnReiniciar.style.display = 'none';
             respostaAtual = null;
 
-            // Atualiza estado do botão voltar
             atualizarBotaoVoltar();
 
             if (indicePergunta < perguntasAutoavaliacao.length) {
-                quizContadorEl.textContent = `Pergunta ${indicePergunta + 1} de ${perguntasAutoavaliacao.length}`;
-                quizPerguntaEl.textContent = perguntasAutoavaliacao[indicePergunta];
+                const perguntaAtual = perguntasAutoavaliacao[indicePergunta];
+
+                // Contador + barra de progresso
+                quizContadorEl.innerHTML = `
+                    <span>Pergunta ${indicePergunta + 1} de ${perguntasAutoavaliacao.length}</span>
+                    <div class="barra-progresso"><div class="barra-progresso-preenchida" id="barraProgresso"></div></div>
+                `;
+                atualizarProgresso();
+
+                quizPerguntaEl.textContent = perguntaAtual.texto;
                 quizOpcoesEl.innerHTML = '';
 
-                // Se já houver uma resposta salva no histórico para essa pergunta, restaura a seleção
                 const respostaSalva = respostasHistorico[indicePergunta];
                 opcoesFrequencia.forEach((opcao, idx) => {
                     const btn = document.createElement('button');
+                    btn.type = 'button';
                     btn.classList.add('quiz-opcao');
                     btn.textContent = opcao.texto;
                     btn.setAttribute('data-valor', opcao.valor);
-                    if (respostaSalva !== undefined && respostaSalva === opcao.valor) {
+                    if (respostaSalva === opcao.valor) {
                         btn.classList.add('selecionada');
                         respostaAtual = opcao.valor;
                         btnProxima.style.display = 'inline-block';
@@ -1914,12 +2048,7 @@
         }
 
         function atualizarBotaoVoltar() {
-            // Desabilita o botão voltar quando estivermos na primeira pergunta
-            if (indicePergunta === 0) {
-                btnVoltar.disabled = true;
-            } else {
-                btnVoltar.disabled = false;
-            }
+            btnVoltar.disabled = (indicePergunta === 0);
         }
 
         function selecionarOpcao(idx, btn) {
@@ -1931,54 +2060,69 @@
 
         function avancarPergunta() {
             if (respostaAtual === null) return;
-            // Salva a resposta no histórico
             respostasHistorico[indicePergunta] = respostaAtual;
-            pontuacaoTotal += respostaAtual;
             indicePergunta++;
             carregarPergunta();
         }
 
         function voltarPergunta() {
-            if (indicePergunta === 0) return; // não dá pra voltar além da primeira
-            // Subtrai a pontuação da pergunta atual do histórico (se existir)
-            if (respostasHistorico[indicePergunta] !== undefined) {
-                pontuacaoTotal -= respostasHistorico[indicePergunta];
-                delete respostasHistorico[indicePergunta];
-            }
+            if (indicePergunta === 0) return;
             indicePergunta--;
             carregarPergunta();
         }
 
         function mostrarResultado() {
-            quizContadorEl.textContent = '';
-            quizPerguntaEl.textContent = "Resultado da autoavaliação";
+            const pontuacaoTotal = calcularPontuacaoTotal();
+            const percentual = (pontuacaoTotal / PONTUACAO_MAXIMA) * 100;
+
+            quizContadorEl.innerHTML = '';
+            quizPerguntaEl.textContent = "Resultado da sua autoavaliação";
             quizOpcoesEl.innerHTML = '';
             btnProxima.style.display = 'none';
             btnReiniciar.style.display = 'inline-block';
             btnVoltar.disabled = true;
 
-            // Escala adaptada para 25 perguntas (máximo 75)
-            let mensagem, classe;
-            if (pontuacaoTotal <= 12) {
-                mensagem = "Seu escore sugere sintomas mínimos. Continue cuidando da sua saúde mental e procure ajuda se algo mudar.";
+            // ---- Nível de gravidade por porcentagem ----
+            let nivel, mensagem, classe;
+            if (percentual <= 10) {
+                nivel = "Sintomas mínimos ou ausentes";
+                mensagem = "Seu escore está dentro da faixa considerada mínima. Isso não significa que você não possa estar passando por momentos difíceis, mas os sinais atuais de depressão são leves. Continue cuidando de si, mantendo vínculos e observando como se sente nas próximas semanas.";
                 classe = 'minima';
-            } else if (pontuacaoTotal <= 24) {
-                mensagem = "Seu escore indica sintomas leves. Pode ser útil conversar com um profissional de saúde mental para uma avaliação.";
+            } else if (percentual <= 25) {
+                nivel = "Sintomas leves";
+                mensagem = "Seu escore sugere sintomas depressivos leves. Fases assim podem acontecer, mas vale a pena conversar com alguém de confiança e, se os sintomas persistirem por mais de duas semanas ou piorarem, considerar uma avaliação com um profissional de saúde mental.";
                 classe = 'leve';
-            } else if (pontuacaoTotal <= 39) {
-                mensagem = "Seu escore sugere sintomas moderados. É importante buscar ajuda profissional o quanto antes.";
+            } else if (percentual <= 45) {
+                nivel = "Sintomas moderados";
+                mensagem = "Seu escore indica sintomas depressivos moderados. É recomendado buscar apoio profissional para uma avaliação mais completa, especialmente se esses sintomas têm afetado sua rotina, seus estudos, seu trabalho ou suas relações.";
                 classe = 'moderada';
-            } else if (pontuacaoTotal <= 54) {
-                mensagem = "Seu escore indica sintomas moderadamente graves. Procure um psiquiatra ou psicólogo para avaliação e acompanhamento.";
-                classe = 'moderada';
+            } else if (percentual <= 65) {
+                nivel = "Sintomas moderadamente graves";
+                mensagem = "Seu escore sugere sintomas depressivos moderadamente graves. É importante procurar um psicólogo ou psiquiatra para uma avaliação e acompanhamento adequado o quanto antes. Você não precisa enfrentar isso sozinho(a).";
+                classe = 'moderadamente-grave';
             } else {
-                mensagem = "Seu escore sugere sintomas graves. Busque ajuda profissional imediatamente. Se houver pensamentos de morte, ligue CVV 188 ou vá a um pronto-socorro.";
+                nivel = "Sintomas graves";
+                mensagem = "Seu escore sugere sintomas depressivos graves. Busque ajuda profissional imediatamente. Se houver pensamentos de morte ou autolesão, ligue agora para o CVV (188) ou vá a um pronto-socorro. Não enfrente isso sozinho(a) — o apoio existe e faz diferença.";
                 classe = 'grave';
             }
 
             quizResultadoEl.style.display = 'block';
             quizResultadoEl.className = 'quiz-resultado ' + classe;
-            quizResultadoEl.innerHTML = `<strong>Pontuação: ${pontuacaoTotal} de ${PONTUACAO_MAXIMA}</strong><br>${mensagem}<br><span class="aviso-medico">${AVISO_MEDICO}</span>`;
+            quizResultadoEl.innerHTML = `
+                <div style="font-size:1.15rem; letter-spacing:1px; margin-bottom:0.4rem;">${nivel.toUpperCase()}</div>
+                <strong>Pontuação: ${pontuacaoTotal} de ${PONTUACAO_MAXIMA} (${percentual.toFixed(0)}%)</strong><br>
+                <span style="display:block; margin-top:0.6rem; font-weight:400;">${mensagem}</span>
+                <span class="aviso-medico">${AVISO_MEDICO}</span>
+            `;
+
+            // ---- Alerta crítico independente do escore total ----
+            if (existeRespostaCritica()) {
+                alertaCriticoEl.classList.add('ativo');
+                // Rola até o alerta para garantir visibilidade
+                setTimeout(() => {
+                    alertaCriticoEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }
         }
 
         btnProxima.addEventListener('click', avancarPergunta);
@@ -1986,14 +2130,18 @@
 
         btnReiniciar.addEventListener('click', () => {
             indicePergunta = 0;
-            pontuacaoTotal = 0;
             respostaAtual = null;
             respostasHistorico = [];
+            alertaCriticoEl.classList.remove('ativo');
             carregarPergunta();
         });
 
+        // Inicializa o quiz
         carregarPergunta();
 
+        // =====================================================
+        // FORMULÁRIO DE CONTATO
+        // =====================================================
         const formContato = document.getElementById('formContato');
         const formMensagem = document.getElementById('formMensagem');
 
