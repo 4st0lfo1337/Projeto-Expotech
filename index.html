@@ -58,18 +58,14 @@
 
         /* ===================================================== */
         /* EFFECT CRT — APENAS EM DESKTOP/PC                      */
-        /* Em celulares/tablets os elementos ficam display: none  */
-        /* e nenhum listener é atachado (economia de GPU/CPU)     */
         /* ===================================================== */
 
-        /* Escondido por padrão (mobile-first) */
         .crt-overlay,
         .crt-flicker,
         .crt-noise {
             display: none;
         }
 
-        /* Só ativa em dispositivos com mouse/trackpad E tela larga */
         @media (hover: hover) and (pointer: fine) and (min-width: 1025px) {
 
             .crt-overlay {
@@ -86,7 +82,6 @@
                 mix-blend-mode: overlay;
             }
 
-            /* Scanlines */
             .crt-overlay::before {
                 content: '';
                 position: absolute;
@@ -104,7 +99,6 @@
                 animation: scanlineMove 8s linear infinite;
             }
 
-            /* Vignette */
             .crt-overlay::after {
                 content: '';
                 position: absolute;
@@ -121,7 +115,6 @@
                 box-shadow: inset 0 0 220px rgba(0, 0, 0, 0.95);
             }
 
-            /* Flicker */
             .crt-flicker {
                 display: block;
                 position: fixed;
@@ -138,7 +131,6 @@
                 mix-blend-mode: screen;
             }
 
-            /* Noise */
             .crt-noise {
                 display: block;
                 position: fixed;
@@ -156,7 +148,6 @@
             }
         }
 
-        /* Keyframes — globais (inofensivos em mobile pois os elementos estão escondidos) */
         @keyframes scanlineMove {
             0% { transform: translateY(0); }
             100% { transform: translateY(10px); }
@@ -181,7 +172,6 @@
             100% { transform: translate(5%, 0); }
         }
 
-        /* Mantém o #noise-overlay antigo do site (fica por baixo do CRT) */
         #noise-overlay {
             position: fixed;
             top: 0;
@@ -214,6 +204,10 @@
             100% { background-position: 0 0, 5% 5%; }
         }
 
+        /* ===================================================== */
+        /* SIDEBAR — agora pode ser escondida                     */
+        /* ===================================================== */
+
         .sidebar {
             position: fixed;
             top: 0;
@@ -222,7 +216,7 @@
             height: 100vh;
             background: #1e1812;
             box-shadow: 4px 0 20px rgba(0,0,0,0.8), inset -1px 0 0 #3a3028;
-            z-index: 998;
+            z-index: 10000;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -230,9 +224,19 @@
             transition: transform 0.3s ease;
         }
 
+        /* Estado "escondida" — desliza para a esquerda */
+        .sidebar.escondida {
+            transform: translateX(-100%);
+            box-shadow: none;
+        }
+
         .sidebar-header {
-            padding: 1.5rem 1rem;
-            text-align: center;
+            padding: 1.25rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            position: relative;
             border-bottom: 2px solid #3a3028;
             background: #0f0a08;
         }
@@ -246,10 +250,81 @@
             text-transform: uppercase;
             text-shadow: 0 0 10px rgba(200, 160, 100, 0.4);
             display: block;
+            flex: 1;
+            text-align: center;
         }
 
         .sidebar .logo span {
             color: #8a6a4a;
+        }
+
+        /* Botão de esconder a sidebar (fica à direita do logo) */
+        .sidebar-hide-btn {
+            flex: 0 0 auto;
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            border: 1px solid #4a3a2a;
+            border-radius: 2px;
+            color: #c8b090;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1;
+            padding: 0;
+            transition: all 0.2s ease;
+            text-shadow: 0 0 8px rgba(200, 160, 100, 0.3);
+        }
+
+        .sidebar-hide-btn:hover {
+            background: #252018;
+            border-color: #8a6a4a;
+            color: #e8d5a3;
+            text-shadow: 0 0 12px rgba(200, 180, 150, 0.6);
+        }
+
+        .sidebar-hide-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Botão flutuante para REABRIR a sidebar (aparece só quando escondida) */
+        .sidebar-show-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 10005;
+            width: 44px;
+            height: 44px;
+            background: #1e1812;
+            border: 2px solid #3a3028;
+            border-radius: 2px;
+            color: #c8b090;
+            cursor: pointer;
+            display: none; /* escondido por padrão */
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            font-weight: 700;
+            font-family: inherit;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+
+        .sidebar-show-btn:hover {
+            background: #252018;
+            border-color: #8a6a4a;
+            color: #e8d5a3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.85);
+        }
+
+        .sidebar-show-btn.visivel {
+            display: flex;
         }
 
         .sidebar-nav {
@@ -290,7 +365,7 @@
             position: fixed;
             top: 15px;
             left: 15px;
-            z-index: 1000;
+            z-index: 10003;
             background: #1e1812;
             border: 2px solid #3a3028;
             border-radius: 2px;
@@ -315,14 +390,21 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.7);
-            z-index: 997;
+            z-index: 10002;
         }
 
+        /* Conteúdo principal — expande quando a sidebar está escondida */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-largura);
             min-height: 100vh;
             width: calc(100% - var(--sidebar-largura));
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        .main-content.sidebar-oculta {
+            margin-left: 0;
+            width: 100%;
         }
 
         .container {
@@ -647,32 +729,12 @@
             display: none;
         }
 
-        .quiz-resultado.leve {
-            background: #1a2518;
-            color: #a0c0a0;
-        }
+        .quiz-resultado.leve { background: #1a2518; color: #a0c0a0; }
+        .quiz-resultado.moderada { background: #252018; color: #c8b898; }
+        .quiz-resultado.grave { background: #251818; color: #c8a0a0; }
+        .quiz-resultado.minima { background: #181e25; color: #a0b8c8; }
+        .quiz-resultado.moderadamente-grave { background: #2a1818; color: #d0a0a0; }
 
-        .quiz-resultado.moderada {
-            background: #252018;
-            color: #c8b898;
-        }
-
-        .quiz-resultado.grave {
-            background: #251818;
-            color: #c8a0a0;
-        }
-
-        .quiz-resultado.minima {
-            background: #181e25;
-            color: #a0b8c8;
-        }
-
-        .quiz-resultado.moderadamente-grave {
-            background: #2a1818;
-            color: #d0a0a0;
-        }
-
-        /* ALERTA CRÍTICO — quando há resposta positiva em pergunta crítica */
         .alerta-critico {
             display: none;
             background: #3a1414;
@@ -685,9 +747,7 @@
             box-shadow: 0 0 25px rgba(231, 76, 60, 0.45), inset 0 0 15px rgba(231, 76, 60, 0.15);
             animation: pulse-alerta 2s ease-in-out infinite;
         }
-        .alerta-critico.ativo {
-            display: block;
-        }
+        .alerta-critico.ativo { display: block; }
         .alerta-critico strong {
             color: #ff6b5b;
             display: block;
@@ -710,16 +770,13 @@
             text-decoration: none;
             border-bottom: 1px dashed #ff8a7a;
         }
-        .alerta-critico .telefone-critico:hover {
-            color: #ffb0a0;
-        }
+        .alerta-critico .telefone-critico:hover { color: #ffb0a0; }
 
         @keyframes pulse-alerta {
             0%, 100% { box-shadow: 0 0 25px rgba(231, 76, 60, 0.45), inset 0 0 15px rgba(231, 76, 60, 0.15); }
             50% { box-shadow: 0 0 35px rgba(231, 76, 60, 0.7), inset 0 0 20px rgba(231, 76, 60, 0.25); }
         }
 
-        /* AVISO DE QUE O QUESTIONÁRIO NÃO SUBSTITUI AVALIAÇÃO MÉDICA */
         .aviso-medico {
             display: block;
             margin-top: 1rem;
@@ -751,12 +808,8 @@
             font-family: inherit;
             letter-spacing: 1px;
         }
+        .btn-quiz:hover { background: #5a4a3a; }
 
-        .btn-quiz:hover {
-            background: #5a4a3a;
-        }
-
-        /* BOTÃO DE VOLTAR UMA PERGUNTA */
         .btn-voltar-quiz {
             display: inline-block;
             padding: 0.7rem 1.8rem;
@@ -773,12 +826,10 @@
             font-family: inherit;
             letter-spacing: 1px;
         }
-
         .btn-voltar-quiz:hover:not(:disabled) {
             background: #c8b090;
             color: #0d0a08;
         }
-
         .btn-voltar-quiz:disabled {
             opacity: 0.35;
             cursor: not-allowed;
@@ -799,19 +850,16 @@
             border: 1px solid #3a3028;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-
         .ajuda-card h3 {
             color: #c8b898;
             margin-bottom: 0.8rem;
             letter-spacing: 1px;
         }
-
         .ajuda-card p {
             color: #a09890;
             font-size: 0.95rem;
             margin-bottom: 1rem;
         }
-
         .ajuda-card .telefone {
             font-size: 1.4rem;
             font-weight: 700;
@@ -820,10 +868,7 @@
             margin-bottom: 0.5rem;
             text-shadow: 0 0 8px rgba(200,160,100,0.3);
         }
-
-        .ajuda-card .destaque-vermelho {
-            color: #c08a7a;
-        }
+        .ajuda-card .destaque-vermelho { color: #c08a7a; }
 
         .ajuda-lista {
             max-width: 900px;
@@ -840,12 +885,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             text-align: left;
         }
-        .ajuda-item:nth-child(2) {
-            border-left-color: var(--cor-secundaria);
-        }
-        .ajuda-item:nth-child(3) {
-            border-left-color: var(--cor-alerta);
-        }
+        .ajuda-item:nth-child(2) { border-left-color: var(--cor-secundaria); }
+        .ajuda-item:nth-child(3) { border-left-color: var(--cor-alerta); }
         .ajuda-item h3 {
             color: #1a1510;
             margin-bottom: 0.5rem;
@@ -866,9 +907,7 @@
             margin-right: 1rem;
             text-shadow: none;
         }
-        .ajuda-item .destaque-vermelho {
-            color: #8a5a4a;
-        }
+        .ajuda-item .destaque-vermelho { color: #8a5a4a; }
 
         .form-container {
             background: #1e1812;
@@ -880,9 +919,7 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.6);
         }
 
-        .form-grupo {
-            margin-bottom: 1.2rem;
-        }
+        .form-grupo { margin-bottom: 1.2rem; }
 
         .form-grupo label {
             display: block;
@@ -933,10 +970,7 @@
             letter-spacing: 2px;
             text-transform: uppercase;
         }
-
-        .btn-enviar:hover {
-            background: #5a4a3a;
-        }
+        .btn-enviar:hover { background: #5a4a3a; }
 
         .form-mensagem {
             text-align: center;
@@ -946,13 +980,11 @@
             font-weight: 600;
             display: none;
         }
-
         .form-mensagem.sucesso {
             display: block;
             background: #1a2518;
             color: #a0c0a0;
         }
-
         .form-mensagem.erro {
             display: block;
             background: #251818;
@@ -991,14 +1023,6 @@
             font-size: 1.05rem;
             letter-spacing: 1px;
         }
-        .membro-card .membro-papel {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--cor-texto-claro);
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
         .membro-card .membro-email {
             color: #c8b090;
             text-decoration: none;
@@ -1021,12 +1045,7 @@
             border-color: #9a8a7a;
             border-left-color: #5a6a4a;
         }
-        .secao-clara .membro-card .membro-nome {
-            color: #1a1510;
-        }
-        .secao-clara .membro-card .membro-papel {
-            color: #3a3028;
-        }
+        .secao-clara .membro-card .membro-nome { color: #1a1510; }
         .secao-clara .membro-card .membro-email {
             background: #d0c8b8;
             color: #1a1510;
@@ -1061,10 +1080,7 @@
             font-size: 0.9rem;
             letter-spacing: 1px;
         }
-
-        footer .links-footer a:hover {
-            color: #c8b898;
-        }
+        footer .links-footer a:hover { color: #c8b898; }
 
         .secao-clara {
             background-color: #d0c8b8;
@@ -1072,47 +1088,22 @@
             background-image: 
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(80,60,40,0.05) 2px, rgba(80,60,40,0.05) 4px);
         }
-        .secao-clara .section-titulo h2 {
-            color: #1a1510;
-            text-shadow: none;
-        }
-        .secao-clara .section-titulo p {
-            color: #3a3028;
-        }
-        .secao-clara .texto-corrido {
-            color: #3a3028;
-        }
-        .secao-clara .texto-corrido strong {
-            color: #1a1510;
-        }
+        .secao-clara .section-titulo h2 { color: #1a1510; text-shadow: none; }
+        .secao-clara .section-titulo p { color: #3a3028; }
+        .secao-clara .texto-corrido { color: #3a3028; }
+        .secao-clara .texto-corrido strong { color: #1a1510; }
         .secao-clara .card {
             background: #e0d8c8;
             border-color: #9a8a7a;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .secao-clara .card h3 {
-            color: #1a1510;
-        }
-        .secao-clara .card p {
-            color: #3a3028;
-        }
-        .secao-clara .ajuda-card {
-            background: #e0d8c8;
-            border-color: #9a8a7a;
-        }
-        .secao-clara .ajuda-card h3 {
-            color: #1a1510;
-        }
-        .secao-clara .ajuda-card p {
-            color: #3a3028;
-        }
-        .secao-clara .form-container {
-            background: #e0d8c8;
-            border-color: #9a8a7a;
-        }
-        .secao-clara .form-grupo label {
-            color: #3a3028;
-        }
+        .secao-clara .card h3 { color: #1a1510; }
+        .secao-clara .card p { color: #3a3028; }
+        .secao-clara .ajuda-card { background: #e0d8c8; border-color: #9a8a7a; }
+        .secao-clara .ajuda-card h3 { color: #1a1510; }
+        .secao-clara .ajuda-card p { color: #3a3028; }
+        .secao-clara .form-container { background: #e0d8c8; border-color: #9a8a7a; }
+        .secao-clara .form-grupo label { color: #3a3028; }
         .secao-clara .form-grupo input,
         .secao-clara .form-grupo textarea,
         .secao-clara .form-grupo select {
@@ -1120,13 +1111,8 @@
             border-color: #9a8a7a;
             color: #1a1510;
         }
-        .secao-clara .btn-enviar {
-            background: #6a5a4a;
-            border-color: #4a3a2a;
-        }
-        .secao-clara .btn-enviar:hover {
-            background: #7a6a5a;
-        }
+        .secao-clara .btn-enviar { background: #6a5a4a; border-color: #4a3a2a; }
+        .secao-clara .btn-enviar:hover { background: #7a6a5a; }
 
         .mapa-container {
             max-width: 100%;
@@ -1148,7 +1134,7 @@
             bottom: 30px;
             right: 30px;
             left: auto;
-            z-index: 1000;
+            z-index: 10001;
         }
         .botao-ajuda-flutuante button {
             background: #6a3a2a;
@@ -1180,14 +1166,12 @@
             width: 100%;
             height: 100%;
             background: rgba(10,5,0,0.9);
-            z-index: 1001;
+            z-index: 10004;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        .modal-emergencia.ativo {
-            display: flex;
-        }
+        .modal-emergencia.ativo { display: flex; }
         .modal-conteudo {
             background: #1e1812;
             border-radius: 2px;
@@ -1219,9 +1203,7 @@
             color: #c8b090;
             text-decoration: none;
         }
-        .modal-conteudo .telefone-grande a:hover {
-            text-decoration: underline;
-        }
+        .modal-conteudo .telefone-grande a:hover { text-decoration: underline; }
         .modal-conteudo p {
             color: #b0a898;
             margin-bottom: 0.8rem;
@@ -1239,9 +1221,7 @@
             border: none;
             font-weight: 700;
         }
-        .modal-fechar:hover {
-            color: #d0c8b8;
-        }
+        .modal-fechar:hover { color: #d0c8b8; }
 
         #respiro {
             background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%);
@@ -1250,9 +1230,7 @@
             color: #d0c8b8;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
         }
-        #respiro .section-titulo p {
-            color: #b0a898;
-        }
+        #respiro .section-titulo p { color: #b0a898; }
         .respiro-container {
             max-width: 600px;
             margin: 2rem auto;
@@ -1270,9 +1248,7 @@
             text-decoration: underline;
             margin-bottom: 0.5rem;
         }
-        .respiro-passo strong {
-            color: #d0c8b8;
-        }
+        .respiro-passo strong { color: #d0c8b8; }
         .respiro-grounding {
             margin-top: 1.5rem;
             color: #1a1510;
@@ -1307,22 +1283,10 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
-        .btn-whatsapp {
-            background: #2a3a2a;
-            border-color: #4a5a4a;
-        }
-        .btn-facebook {
-            background: #1a2a3a;
-            border-color: #3a4a5a;
-        }
-        .btn-twitter {
-            background: #1a1a2a;
-            border-color: #3a3a4a;
-        }
-        .btn-link {
-            background: #3a3a3a;
-            border-color: #5a5a5a;
-        }
+        .btn-whatsapp { background: #2a3a2a; border-color: #4a5a4a; }
+        .btn-facebook { background: #1a2a3a; border-color: #3a4a5a; }
+        .btn-twitter { background: #1a1a2a; border-color: #3a3a4a; }
+        .btn-link { background: #3a3a3a; border-color: #5a5a5a; }
 
         @media (max-width: 1024px) {
             .sidebar {
@@ -1330,6 +1294,13 @@
             }
             .sidebar.ativo {
                 transform: translateX(0);
+            }
+            /* Em mobile, o botão de esconder não faz sentido (a sidebar já está fechada) */
+            .sidebar-hide-btn {
+                display: none;
+            }
+            .sidebar-show-btn {
+                display: none !important;
             }
             .menu-toggle {
                 display: block;
@@ -1344,9 +1315,7 @@
         }
 
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 1.8rem;
-            }
+            .hero h1 { font-size: 1.8rem; }
             .botao-ajuda-flutuante {
                 right: 20px;
                 bottom: 20px;
@@ -1355,16 +1324,12 @@
                 padding: 0.8rem 1.2rem;
                 font-size: 0.9rem;
             }
-            .mapa-container iframe {
-                height: 300px;
-            }
+            .mapa-container iframe { height: 300px; }
             .membro-card {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .quiz-container {
-                padding: 1.3rem;
-            }
+            .quiz-container { padding: 1.3rem; }
         }
     </style>
 </head>
@@ -1379,8 +1344,14 @@
 
     <div id="noise-overlay"></div>
 
+    <!-- Botão hamburguer (só aparece em mobile) -->
     <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
         <span></span><span></span><span></span>
+    </button>
+
+    <!-- Botão flutuante para reabrir a sidebar (só aparece quando ela está escondida, em desktop) -->
+    <button class="sidebar-show-btn" id="sidebarShowBtn" aria-label="Mostrar menu lateral" title="Mostrar menu">
+        ☰
     </button>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -1388,6 +1359,9 @@
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#inicio" class="logo">voce<span>importa</span></a>
+            <button class="sidebar-hide-btn" id="sidebarHideBtn" aria-label="Esconder menu lateral" title="Esconder menu">
+                ×
+            </button>
         </div>
         <ul class="sidebar-nav">
             <li><a href="#sobre">O que é</a></li>
@@ -1410,7 +1384,7 @@
         </div>
     </nav>
 
-    <div class="main-content">
+    <div class="main-content" id="mainContent">
 
         <div class="botao-ajuda-flutuante">
             <button id="btnAjudaAgora" aria-label="Preciso de ajuda agora">
@@ -1962,9 +1936,42 @@
 
     <script>
         // =====================================================
+        // SIDEBAR — ESCONDER / MOSTRAR
+        // =====================================================
+        const sidebar = document.getElementById('sidebar');
+        const sidebarHideBtn = document.getElementById('sidebarHideBtn');
+        const sidebarShowBtn = document.getElementById('sidebarShowBtn');
+        const mainContent = document.getElementById('mainContent');
+
+        function esconderSidebar() {
+            sidebar.classList.add('escondida');
+            mainContent.classList.add('sidebar-oculta');
+            sidebarShowBtn.classList.add('visivel');
+            try { localStorage.setItem('voceimporta_sidebar_oculta', '1'); } catch (e) {}
+        }
+
+        function mostrarSidebar() {
+            sidebar.classList.remove('escondida');
+            mainContent.classList.remove('sidebar-oculta');
+            sidebarShowBtn.classList.remove('visivel');
+            try { localStorage.setItem('voceimporta_sidebar_oculta', '0'); } catch (e) {}
+        }
+
+        sidebarHideBtn.addEventListener('click', esconderSidebar);
+        sidebarShowBtn.addEventListener('click', mostrarSidebar);
+
+        // Restaura o estado salvo ao carregar
+        try {
+            if (localStorage.getItem('voceimporta_sidebar_oculta') === '1') {
+                // Só aplica em desktop (em mobile a sidebar já fica oculta por padrão)
+                if (window.matchMedia('(min-width: 1025px)').matches) {
+                    esconderSidebar();
+                }
+            }
+        } catch (e) {}
+
+        // =====================================================
         // CRT EFFECT — FADE BASEADO NO SCROLL
-        // Só roda em desktop/PC (detecção por media query)
-        // Em mobile/tablet o CRT é pulado por completo.
         // =====================================================
         const crtOverlay = document.getElementById('crtOverlay');
         const crtFlicker = document.getElementById('crtFlicker');
@@ -1972,7 +1979,6 @@
         const respiroSection = document.getElementById('respiro');
         const ajudaSection = document.getElementById('ajuda');
 
-        // Media query que define "é um PC/desktop com mouse/trackpad e tela larga"
         const desktopMedia = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1025px)');
 
         function updateCRTEffect() {
@@ -1984,17 +1990,14 @@
             const ajudaTop = ajudaSection.offsetTop;
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-            // Fade começa 500px antes da seção "Como se acalmar"
             const fadeStart = respiroTop - 500;
             const fadeEnd = ajudaTop;
 
             let opacity = 1;
 
             if (scrollTop >= fadeEnd) {
-                // Esconde completamente ao chegar em "Onde buscar ajuda"
                 opacity = 0;
             } else if (scrollTop >= fadeStart) {
-                // Fade gradual entre fadeStart e fadeEnd
                 const progress = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
                 opacity = Math.max(0, 1 - progress);
             }
@@ -2015,14 +2018,10 @@
             window.removeEventListener('resize', updateCRTEffect);
         }
 
-        // Inicializa somente se for desktop
         if (desktopMedia.matches) {
             enableCRT();
         }
 
-        // Reage a mudanças de viewport (ex.: girar o celular, redimensionar janela)
-        // addEventListener('change') é suportado em todos os navegadores modernos;
-        // se quiser máxima compatibilidade (Safari < 14), adicione fallback com addListener.
         if (typeof desktopMedia.addEventListener === 'function') {
             desktopMedia.addEventListener('change', (e) => {
                 if (e.matches) enableCRT();
@@ -2058,10 +2057,9 @@
         updateNoiseOpacity();
 
         // =====================================================
-        // SIDEBAR / MENU MOBILE
+        // SIDEBAR / MENU MOBILE (hamburguer)
         // =====================================================
         const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
 
         function abrirSidebar() {
@@ -2117,13 +2115,11 @@
         // AUTOAVALIAÇÃO — VERSÃO APRIMORADA (29 perguntas)
         // =====================================================
         const perguntasAutoavaliacao = [
-            // -------- HUMOR / NÚCLEO DEPRESSIVO --------
             { texto: "Nas últimas duas semanas, você tem se sentido triste, para baixo ou sem esperança na maior parte do dia?", area: "humor", critica: false },
             { texto: "Você tem perdido o interesse ou o prazer em atividades que antes eram agradáveis?", area: "humor", critica: false },
             { texto: "Você tem se sentido mais irritado(a), impaciente ou com mais raiva do que costumava sentir?", area: "humor", critica: false },
             { texto: "Você tem chorado mais do que costumava, mesmo por coisas que antes não fariam você chorar?", area: "humor", critica: false },
 
-            // -------- SINTOMAS FÍSICOS / VEGETATIVOS --------
             { texto: "Você tem tido dificuldade para dormir, dormido mais do que o normal ou acordado se sentindo cansado(a)?", area: "fisico", critica: false },
             { texto: "Você tem se sentido sem energia ou muito cansado(a), mesmo sem ter feito esforço?", area: "fisico", critica: false },
             { texto: "Você percebeu alguma mudança no seu apetite — comendo muito mais ou muito menos do que costuma?", area: "fisico", critica: false },
@@ -2131,7 +2127,6 @@
             { texto: "Você tem sentido dores no corpo, dores de cabeça ou problemas digestivos sem causa aparente?", area: "fisico", critica: false },
             { texto: "À noite, você tem se sentido inquieto(a) ou com a cabeça cheia de pensamentos que atrapalham o sono?", area: "fisico", critica: false },
 
-            // -------- COGNITIVOS / EMOCIONAIS --------
             { texto: "Você tem se sentido mal consigo mesmo(a), como se fosse um fracasso ou estivesse decepcionando alguém?", area: "cognitivo", critica: false },
             { texto: "Você tem encontrado dificuldade para se concentrar em estudar, ler, conversar ou realizar tarefas simples?", area: "cognitivo", critica: false },
             { texto: "Você tem se sentido culpado(a) por coisas pequenas ou por situações em que talvez nem tivesse culpa?", area: "cognitivo", critica: false },
@@ -2142,7 +2137,6 @@
             { texto: "Você tem sentido que está no \"automático\", como se estivesse distante de si mesmo(a) ou do que acontece ao seu redor?", area: "cognitivo", critica: false },
             { texto: "Você tem se sentido mais ansioso(a), preocupado(a) ou com o coração acelerado sem motivo claro?", area: "cognitivo", critica: false },
 
-            // -------- COMPORTAMENTAIS / SOCIAIS --------
             { texto: "Você tem evitado contato com amigos, familiares ou atividades que costumava gostar?", area: "comportamental", critica: false },
             { texto: "Você tem dificuldade para sentir ou demonstrar carinho por pessoas próximas?", area: "comportamental", critica: false },
             { texto: "Você tem deixado de fazer coisas que gostaria por medo, insegurança ou por achar que não vai conseguir?", area: "comportamental", critica: false },
@@ -2150,11 +2144,9 @@
             { texto: "Você tem perdido a vontade de cuidar de si — higiene, aparência, alimentação, descanso?", area: "comportamental", critica: false },
             { texto: "Você sente que precisa se esforçar muito para fazer coisas que antes pareciam simples ou naturais?", area: "comportamental", critica: false },
 
-            // -------- CRÍTICAS (RISCO) --------
             { texto: "Você tem pensado que seria melhor não estar aqui ou que as pessoas estariam melhor sem você?", area: "risco", critica: true },
             { texto: "Você tem sentido vontade de se machucar, de desaparecer ou de fazer mal a si mesmo(a)?", area: "risco", critica: true },
 
-            // -------- DURAÇÃO E IMPACTO FUNCIONAL --------
             { texto: "Esses sentimentos têm durado a maior parte do dia, quase todos os dias, por duas semanas ou mais?", area: "funcional", critica: false },
             { texto: "Esses sintomas têm atrapalhado seu desempenho na escola, no trabalho, em casa ou nas suas relações?", area: "funcional", critica: false }
         ];
@@ -2360,6 +2352,10 @@
                 }, 4000);
             }
         });
+
+        document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !sidebar.classList.contains('escondida')) esconderSidebar();
+});
     </script>
 </body>
 </html>
