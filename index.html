@@ -56,6 +56,122 @@
             display: flex;
         }
 
+        /* ===================================================== */
+        /* EFFECT CRT — overlays de tela (scanlines + flicker + noise + vignette) */
+        /* Adaptado ao tom escuro/âmbar do site                              */
+        /* ===================================================== */
+
+        /* Overlay principal: scanlines + vignette */
+/* ===================================================== */
+/* EFFECT CRT — VERSAO FORTE                             */
+/* ===================================================== */
+
+.crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    mix-blend-mode: overlay;
+}
+
+/* Scanlines mais grossas e escuras */
+.crt-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.65) 0px,
+        rgba(0, 0, 0, 0.65) 2px,
+        transparent 2px,
+        transparent 3px
+    );
+    animation: scanlineMove 8s linear infinite;
+}
+
+/* Vignette pesada */
+.crt-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        transparent 45%,
+        rgba(0, 0, 0, 0.8) 100%
+    );
+    box-shadow: inset 0 0 220px rgba(0, 0, 0, 0.95);
+}
+
+/* Flicker mais perceptível e rápido */
+.crt-flicker {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+    background: rgba(200, 176, 144, 0.08);
+    animation: flicker 0.09s infinite;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    mix-blend-mode: screen;
+}
+
+/* Noise mais intenso e agitado */
+.crt-noise {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    z-index: 9997;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E");
+    animation: noiseMove 0.1s steps(10) infinite;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    mix-blend-mode: overlay;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 0.08; }
+    50%      { opacity: 0.18; }
+}
+
+        @keyframes scanlineMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+
+        @keyframes noiseMove {
+            0%   { transform: translate(0, 0); }
+            10%  { transform: translate(-5%, -5%); }
+            20%  { transform: translate(-10%, 5%); }
+            30%  { transform: translate(5%, -10%); }
+            40%  { transform: translate(-5%, 15%); }
+            50%  { transform: translate(-10%, 5%); }
+            60%  { transform: translate(15%, 0); }
+            70%  { transform: translate(0, 10%); }
+            80%  { transform: translate(-15%, 0); }
+            90%  { transform: translate(10%, 5%); }
+            100% { transform: translate(5%, 0); }
+        }
+
+        /* Mantém o #noise-overlay antigo do site (fica por baixo do CRT) */
         #noise-overlay {
             position: fixed;
             top: 0;
@@ -63,7 +179,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 9000;
             opacity: var(--noise-opacity);
             background-image: 
                 repeating-linear-gradient(
@@ -1244,6 +1360,13 @@
 </head>
 <body>
 
+    <!-- ===================================================== -->
+    <!-- CRT EFFECT — overlays fixos de scanlines, flicker e noise -->
+    <!-- ===================================================== -->
+    <div class="crt-overlay" id="crtOverlay"></div>
+    <div class="crt-flicker" id="crtFlicker"></div>
+    <div class="crt-noise" id="crtNoise"></div>
+
     <div id="noise-overlay"></div>
 
     <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
@@ -1555,9 +1678,7 @@
             </div>
         </section>
 
-        <div class="container">
-            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Pessoa em ambiente de reflexão" class="imagem-ilustrativa" style="max-width: 600px;">
-        </div>
+
 
         <section class="citacao">
             <div class="container">
@@ -1833,10 +1954,51 @@
 
     <script>
         // =====================================================
+        // CRT EFFECT — FADE BASEADO NO SCROLL
+        // Fade começa 500px antes de #respiro e termina em #ajuda
+        // =====================================================
+        const crtOverlay = document.getElementById('crtOverlay');
+        const crtFlicker = document.getElementById('crtFlicker');
+        const crtNoise = document.getElementById('crtNoise');
+
+        const respiroSection = document.getElementById('respiro');
+        const ajudaSection = document.getElementById('ajuda');
+
+        function updateCRTEffect() {
+            if (!respiroSection || !ajudaSection) return;
+
+            const respiroTop = respiroSection.offsetTop;
+            const ajudaTop = ajudaSection.offsetTop;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            // Fade começa 500px antes da seção "Como se acalmar"
+            const fadeStart = respiroTop - 500;
+            const fadeEnd = ajudaTop;
+
+            let opacity = 1;
+
+            if (scrollTop >= fadeEnd) {
+                // Esconde completamente ao chegar em "Onde buscar ajuda"
+                opacity = 0;
+            } else if (scrollTop >= fadeStart) {
+                // Fade gradual entre fadeStart e fadeEnd
+                const progress = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
+                opacity = Math.max(0, 1 - progress);
+            }
+
+            crtOverlay.style.opacity = opacity;
+            crtFlicker.style.opacity = opacity;
+            crtNoise.style.opacity = opacity;
+        }
+
+        window.addEventListener('scroll', updateCRTEffect, { passive: true });
+        window.addEventListener('resize', updateCRTEffect);
+        updateCRTEffect();
+
+        // =====================================================
         // EFEITO DE NOISE (ruído visual) que diminui ao rolar
         // =====================================================
         const noiseOverlay = document.getElementById('noise-overlay');
-        const ajudaSection = document.getElementById('ajuda');
 
         function updateNoiseOpacity() {
             if (!ajudaSection || !noiseOverlay) return;
@@ -1914,12 +2076,8 @@
         // =====================================================
         // AUTOAVALIAÇÃO — VERSÃO APRIMORADA (29 perguntas)
         // =====================================================
-        // Cada pergunta tem:
-        //   - texto: o enunciado
-        //   - critica: se true, resposta >= 1 dispara alerta de emergência
-        //   - area: agrupamento (humor, cognitivo, físico, comportamental, funcional)
         const perguntasAutoavaliacao = [
-            // -------- HAMOR / NÚCLEO DEPRESSIVO --------
+            // -------- HUMOR / NÚCLEO DEPRESSIVO --------
             { texto: "Nas últimas duas semanas, você tem se sentido triste, para baixo ou sem esperança na maior parte do dia?", area: "humor", critica: false },
             { texto: "Você tem perdido o interesse ou o prazer em atividades que antes eram agradáveis?", area: "humor", critica: false },
             { texto: "Você tem se sentido mais irritado(a), impaciente ou com mais raiva do que costumava sentir?", area: "humor", critica: false },
@@ -1970,7 +2128,7 @@
 
         let indicePergunta = 0;
         let respostaAtual = null;
-        let respostasHistorico = [];   // respostas por índice de pergunta
+        let respostasHistorico = [];
 
         const quizContadorEl = document.getElementById('quizContador');
         const quizPerguntaEl = document.getElementById('quizPergunta');
@@ -1984,12 +2142,10 @@
         const PONTUACAO_MAXIMA = perguntasAutoavaliacao.length * 3;
         const AVISO_MEDICO = "LEMBRE-SE: ESTA FERRAMENTA NÃO SUBSTITUI AVALIAÇÃO MÉDICA.";
 
-        // ---- Cálculo de pontuação total (recalculado sempre, evitando bugs) ----
         function calcularPontuacaoTotal() {
             return respostasHistorico.reduce((soma, v) => soma + (typeof v === 'number' ? v : 0), 0);
         }
 
-        // ---- Verifica se alguma pergunta crítica foi respondida com valor >= 1 ----
         function existeRespostaCritica() {
             return respostasHistorico.some((v, i) => {
                 const p = perguntasAutoavaliacao[i];
@@ -1997,7 +2153,6 @@
             });
         }
 
-        // ---- Atualiza barra de progresso no contador ----
         function atualizarProgresso() {
             const respondidas = respostasHistorico.filter(v => typeof v === 'number').length;
             const pct = (respondidas / perguntasAutoavaliacao.length) * 100;
@@ -2017,7 +2172,6 @@
             if (indicePergunta < perguntasAutoavaliacao.length) {
                 const perguntaAtual = perguntasAutoavaliacao[indicePergunta];
 
-                // Contador + barra de progresso
                 quizContadorEl.innerHTML = `
                     <span>Pergunta ${indicePergunta + 1} de ${perguntasAutoavaliacao.length}</span>
                     <div class="barra-progresso"><div class="barra-progresso-preenchida" id="barraProgresso"></div></div>
@@ -2082,7 +2236,6 @@
             btnReiniciar.style.display = 'inline-block';
             btnVoltar.disabled = true;
 
-            // ---- Nível de gravidade por porcentagem ----
             let nivel, mensagem, classe;
             if (percentual <= 10) {
                 nivel = "Sintomas mínimos ou ausentes";
@@ -2115,10 +2268,8 @@
                 <span class="aviso-medico">${AVISO_MEDICO}</span>
             `;
 
-            // ---- Alerta crítico independente do escore total ----
             if (existeRespostaCritica()) {
                 alertaCriticoEl.classList.add('ativo');
-                // Rola até o alerta para garantir visibilidade
                 setTimeout(() => {
                     alertaCriticoEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 200);
@@ -2136,7 +2287,6 @@
             carregarPergunta();
         });
 
-        // Inicializa o quiz
         carregarPergunta();
 
         // =====================================================
