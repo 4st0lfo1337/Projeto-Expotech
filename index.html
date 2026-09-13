@@ -114,7 +114,6 @@
                     transparent 45%,
                     rgba(0, 0, 0, 0.8) 100%
                 );
-                /* OTIMIZAÇÃO: inset shadow reduzido de 220px para 100px */
                 box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
             }
 
@@ -135,7 +134,6 @@
                 will-change: opacity;
             }
 
-            /* OTIMIZAÇÃO: área reduzida de 200% para 150%, SVG com numOctaves=2 */
             .crt-noise {
                 display: block;
                 position: fixed;
@@ -198,7 +196,6 @@
                 url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.9'/%3E%3C/svg%3E");
             background-size: 100% 4px, 200px 200px;
             mix-blend-mode: overlay;
-            /* OTIMIZAÇÃO: 0.15s → 0.4s (menos repaint por segundo) */
             animation: noise-anim 0.4s steps(4) infinite;
             transition: opacity 0.1s linear;
         }
@@ -461,7 +458,6 @@
 
         /* ===================================================== */
         /* HERO H1 — TEXTO COM BRILHO BRANCO ACIMA DO CRT          */
-        /* OTIMIZAÇÃO: blur removido, anima apenas opacidade      */
         /* ===================================================== */
         .hero h1 {
             font-size: var(--tamanho-h1);
@@ -487,7 +483,6 @@
             will-change: text-shadow;
         }
 
-        /* OTIMIZAÇÃO: sem filter blur — gradiente radial puro, anima só opacidade */
         .hero h1::before {
             content: '';
             position: absolute;
@@ -530,7 +525,6 @@
             }
         }
 
-        /* OTIMIZAÇÃO: apenas opacidade (sem transform scale) */
         @keyframes aura-hero {
             0%, 100% { opacity: 0.85; }
             50%      { opacity: 1; }
@@ -575,8 +569,6 @@
             padding: 3.5rem 0;
         }
 
-        /* OTIMIZAÇÃO: navegador pula renderização de seções fora da tela */
-        /* (exceto o hero, que está sempre visível) */
         section:not(#inicio) {
             content-visibility: auto;
             contain-intrinsic-size: auto 800px;
@@ -2014,7 +2006,7 @@
                 </div>
                 <p>
                     Projeto <strong>voceimporta</strong> — Conscientização sobre Depressão para a Expotech 2026.<br>
-                    Fontes: OMS, Ministério da Saúde, Principais inspirações: silent hill e COF. ABP — Se precisar de ajuda, ligue CVV 188.
+                    Fontes: OMS, Ministério da Saúde, ABP — Se precisar de ajuda, ligue CVV 188.
                 </p>
                 <p style="margin-top: 0.5rem; font-size: 0.8rem;">
                     Feito por estudantes de Desenvolvimento de Sistemas - 2ºB DS.
@@ -2304,9 +2296,10 @@
             });
         }
 
+        // CORREÇÃO DO BUG: a barra reflete a posição atual no fluxo
+        // (indicePergunta), então ela recua corretamente ao "Voltar".
         function atualizarProgresso() {
-            const respondidas = respostasHistorico.filter(v => typeof v === 'number').length;
-            const pct = (respondidas / perguntasAutoavaliacao.length) * 100;
+            const pct = (indicePergunta / perguntasAutoavaliacao.length) * 100;
             const preenchida = document.getElementById('barraProgresso');
             if (preenchida) preenchida.style.width = pct.toFixed(1) + '%';
         }
