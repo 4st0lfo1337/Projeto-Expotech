@@ -58,6 +58,7 @@
 
         /* ===================================================== */
         /* EFFECT CRT — APENAS EM DESKTOP/PC                      */
+        /* OTIMIZADO: numOctaves reduzido, área do noise menor    */
         /* ===================================================== */
 
         .crt-overlay,
@@ -80,6 +81,7 @@
                 opacity: 1;
                 transition: opacity 0.3s ease;
                 mix-blend-mode: overlay;
+                will-change: opacity;
             }
 
             .crt-overlay::before {
@@ -112,7 +114,8 @@
                     transparent 45%,
                     rgba(0, 0, 0, 0.8) 100%
                 );
-                box-shadow: inset 0 0 220px rgba(0, 0, 0, 0.95);
+                /* OTIMIZAÇÃO: inset shadow reduzido de 220px para 100px */
+                box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
             }
 
             .crt-flicker {
@@ -129,22 +132,25 @@
                 opacity: 1;
                 transition: opacity 0.3s ease;
                 mix-blend-mode: screen;
+                will-change: opacity;
             }
 
+            /* OTIMIZAÇÃO: área reduzida de 200% para 150%, SVG com numOctaves=2 */
             .crt-noise {
                 display: block;
                 position: fixed;
-                top: -50%;
-                left: -50%;
-                width: 200%;
-                height: 200%;
+                top: -25%;
+                left: -25%;
+                width: 150%;
+                height: 150%;
                 pointer-events: none;
                 z-index: 9997;
-                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E");
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E");
                 animation: noiseMove 0.1s steps(10) infinite;
                 opacity: 1;
                 transition: opacity 0.3s ease;
                 mix-blend-mode: overlay;
+                will-change: opacity;
             }
         }
 
@@ -192,7 +198,8 @@
                 url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.9'/%3E%3C/svg%3E");
             background-size: 100% 4px, 200px 200px;
             mix-blend-mode: overlay;
-            animation: noise-anim 0.15s steps(4) infinite;
+            /* OTIMIZAÇÃO: 0.15s → 0.4s (menos repaint por segundo) */
+            animation: noise-anim 0.4s steps(4) infinite;
             transition: opacity 0.1s linear;
         }
 
@@ -454,6 +461,7 @@
 
         /* ===================================================== */
         /* HERO H1 — TEXTO COM BRILHO BRANCO ACIMA DO CRT          */
+        /* OTIMIZAÇÃO: blur removido, anima apenas opacidade      */
         /* ===================================================== */
         .hero h1 {
             font-size: var(--tamanho-h1);
@@ -463,11 +471,9 @@
             line-height: 1.2;
             text-transform: uppercase;
 
-            /* Coloca o título ACIMA do shader CRT */
             position: relative;
             z-index: 10001;
 
-            /* Texto branco puro com múltiplas camadas de brilho */
             color: #ffffff;
             text-shadow: 
                 0 0 8px rgba(255, 255, 255, 0.95),
@@ -478,9 +484,10 @@
                 3px 3px 8px rgba(0, 0, 0, 0.85);
 
             animation: brilho-hero 4s ease-in-out infinite;
+            will-change: text-shadow;
         }
 
-        /* Overlay branco difuso atrás do texto (luz envolta) */
+        /* OTIMIZAÇÃO: sem filter blur — gradiente radial puro, anima só opacidade */
         .hero h1::before {
             content: '';
             position: absolute;
@@ -496,13 +503,12 @@
                 rgba(255, 255, 255, 0.03) 55%,
                 transparent 75%
             );
-            filter: blur(18px);
             pointer-events: none;
             z-index: -1;
             animation: aura-hero 4s ease-in-out infinite;
+            will-change: opacity;
         }
 
-        /* Pulsar do brilho do texto */
         @keyframes brilho-hero {
             0%, 100% {
                 text-shadow: 
@@ -524,19 +530,12 @@
             }
         }
 
-        /* Pulsar da aura de fundo */
+        /* OTIMIZAÇÃO: apenas opacidade (sem transform scale) */
         @keyframes aura-hero {
-            0%, 100% {
-                opacity: 0.85;
-                transform: translate(-50%, -50%) scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.08);
-            }
+            0%, 100% { opacity: 0.85; }
+            50%      { opacity: 1; }
         }
 
-        /* Acessibilidade: respeita quem prefere menos movimento */
         @media (prefers-reduced-motion: reduce) {
             .hero h1 { animation: none; }
             .hero h1::before { animation: none; }
@@ -574,6 +573,13 @@
 
         section {
             padding: 3.5rem 0;
+        }
+
+        /* OTIMIZAÇÃO: navegador pula renderização de seções fora da tela */
+        /* (exceto o hero, que está sempre visível) */
+        section:not(#inicio) {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 800px;
         }
 
         .card-grid {
@@ -1492,7 +1498,10 @@
         </section>
 
         <div class="container">
-            <img src="https://i.pinimg.com/736x/ee/5c/fa/ee5cfa3a82ba02e59b5fce02956cbe37.jpg" alt="Pessoa olhando pela janela em momento de reflexão" class="imagem-ilustrativa">
+            <img src="https://i.pinimg.com/736x/ee/5c/fa/ee5cfa3a82ba02e59b5fce02956cbe37.jpg"
+                 alt="Pessoa olhando pela janela em momento de reflexão"
+                 class="imagem-ilustrativa"
+                 loading="lazy" decoding="async" width="700" height="467">
         </div>
 
         <section id="sobre">
@@ -1521,7 +1530,10 @@
         </section>
 
         <div class="container">
-            <img src="https://i.pinimg.com/1200x/61/4a/77/614a7793a4377f2ec6896f1ceba83ae6.jpg" alt="Mãos dadas em sinal de apoio" class="imagem-ilustrativa">
+            <img src="https://i.pinimg.com/1200x/61/4a/77/614a7793a4377f2ec6896f1ceba83ae6.jpg"
+                 alt="Mãos dadas em sinal de apoio"
+                 class="imagem-ilustrativa"
+                 loading="lazy" decoding="async" width="700" height="467">
         </div>
 
         <section id="tabu" style="background: #1a1510;">
@@ -1613,7 +1625,10 @@
         </section>
 
         <div class="container">
-            <img src="https://preview.redd.it/sh3-lighting-composition-is-unmatched-some-shots-in-this-v0-dheuqavdaz5d1.jpg?width=640&crop=smart&auto=webp&s=e384f79e4f5eb28c756c9e7cb37fe59074e22a77" alt="Pessoa sentada sozinha em um banco, representando solidão" class="imagem-ilustrativa">
+            <img src="https://preview.redd.it/sh3-lighting-composition-is-unmatched-some-shots-in-this-v0-dheuqavdaz5d1.jpg?width=640&crop=smart&auto=webp&s=e384f79e4f5eb28c756c9e7cb37fe59074e22a77"
+                 alt="Pessoa sentada sozinha em um banco, representando solidão"
+                 class="imagem-ilustrativa"
+                 loading="lazy" decoding="async" width="700" height="467">
         </div>
 
         <section id="citacoes" style="background: #0f0a08;">
@@ -1698,7 +1713,11 @@
                     </p>
                 </div>
                 <div class="container">
-                    <img src="https://i.pinimg.com/736x/8f/7f/55/8f7f554e05164594cf86c36787926aae.jpg" alt="Adolescente sentado com expressão de melancolia em ambiente escuro" class="imagem-ilustrativa" style="max-width: 900px;">
+                    <img src="https://i.pinimg.com/736x/8f/7f/55/8f7f554e05164594cf86c36787926aae.jpg"
+                         alt="Adolescente sentado com expressão de melancolia em ambiente escuro"
+                         class="imagem-ilustrativa"
+                         style="max-width: 900px;"
+                         loading="lazy" decoding="async" width="900" height="600">
                 </div>
             </div>
         </section>
@@ -1862,7 +1881,11 @@
                     <p>Mapa com CAPS, UBS e hospitais em Maringá, Paraná.</p>
                 </div>
                 <div class="mapa-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d117099.56589632138!2d-51.9888!3d-23.4210!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sCAPS%20Maring%C3%A1%20PR!5e0!3m2!1spt-BR!2sbr!4v1715000000000!5m2!1spt-BR!2sbr" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d117099.56589632138!2d-51.9888!3d-23.4210!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sCAPS%20Maring%C3%A1%20PR!5e0!3m2!1spt-BR!2sbr!4v1715000000000!5m2!1spt-BR!2sbr"
+                            width="100%" height="400" style="border:0;"
+                            allowfullscreen="" loading="lazy"
+                            title="Mapa de CAPS, UBS e hospitais em Maringá, Paraná"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <p style="text-align:center; font-size:0.9rem; color:#2a3a4a; margin-top:1rem;">
                     Dica: substitua o mapa acima pelo endereço da sua cidade, pesquisando por "CAPS", "UBS" ou "hospital psiquiátrico".
@@ -2005,6 +2028,34 @@
     </div>
 
     <script>
+        // =====================================================
+        // OTIMIZAÇÃO: pausa animações quando a aba está oculta
+        // =====================================================
+        const elementosComAnimacao = [];
+
+        function registrarAnimacoes() {
+            const overlay = document.getElementById('crtOverlay');
+            const flicker = document.getElementById('crtFlicker');
+            const noise = document.getElementById('crtNoise');
+            const noiseAntigo = document.getElementById('noise-overlay');
+            const heroH1 = document.querySelector('.hero h1');
+            const heroAura = heroH1 ? heroH1 : null;
+
+            [overlay, flicker, noise, noiseAntigo, heroAura].forEach(el => {
+                if (el && !elementosComAnimacao.includes(el)) {
+                    elementosComAnimacao.push(el);
+                }
+            });
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            registrarAnimacoes();
+            const estado = document.hidden ? 'paused' : 'running';
+            elementosComAnimacao.forEach(el => {
+                if (el) el.style.animationPlayState = estado;
+            });
+        });
+
         // =====================================================
         // SIDEBAR — ESCONDER / MOSTRAR
         // =====================================================
