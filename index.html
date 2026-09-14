@@ -58,7 +58,6 @@
 
         /* ===================================================== */
         /* EFFECT CRT — APENAS EM DESKTOP/PC                      */
-        /* OTIMIZADO: numOctaves reduzido, área do noise menor    */
         /* ===================================================== */
 
         .crt-overlay,
@@ -207,10 +206,6 @@
             75% { background-position: 0 0, -5% -5%; }
             100% { background-position: 0 0, 5% 5%; }
         }
-
-        /* ===================================================== */
-        /* SIDEBAR — agora pode ser escondida                     */
-        /* ===================================================== */
 
         .sidebar {
             position: fixed;
@@ -456,9 +451,6 @@
             pointer-events: none;
         }
 
-        /* ===================================================== */
-        /* HERO H1 — TEXTO COM BRILHO BRANCO ACIMA DO CRT          */
-        /* ===================================================== */
         .hero h1 {
             font-size: var(--tamanho-h1);
             margin-bottom: 1.2rem;
@@ -619,6 +611,21 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.8), 0 0 0 2px #3a3028;
             filter: grayscale(0.7) sepia(0.4) contrast(1.1);
             border: 1px solid #4a3a2a;
+        }
+
+        .imagem-placeholder:hover {
+            border-color: #8a6a4a;
+            color: #a89060;
+        }
+        .imagem-placeholder .icone {
+            font-size: 2.2rem;
+            line-height: 1;
+        }
+        .imagem-placeholder small {
+            font-size: 0.75rem;
+            color: #5a4a3a;
+            letter-spacing: 0.5px;
+            font-style: italic;
         }
 
         .estatisticas {
@@ -1437,6 +1444,7 @@
             <li><a href="#sintomas">Sintomas</a></li>
             <li><a href="#gravidade">Gravidade</a></li>
             <li><a href="#adolescentes">Adolescentes</a></li>
+            <li><a href="#redes-sociais">Redes sociais</a></li>
             <li><a href="#tratamentos">Tratamentos</a></li>
             <li><a href="#ajudar">Como ajudar</a></li>
             <li><a href="#autoavaliacao">Autoavaliação</a></li>
@@ -1710,6 +1718,86 @@
                          class="imagem-ilustrativa"
                          style="max-width: 900px;"
                          loading="lazy" decoding="async" width="900" height="600">
+                </div>
+            </div>
+        </section>
+
+        <section id="redes-sociais" style="background: #0f0a08;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Redes sociais e depressão</h2>
+                    <p>Entre a conexão e o isolamento — o impacto das telas na saúde mental.</p>
+                </div>
+                <div class="texto-corrido">
+                    <p>
+                        As redes sociais se tornaram parte da vida cotidiana. Para muitos, são espaços de
+                        informação, entretenimento e contato com amigos. Mas o uso excessivo e sem
+                        crítica pode ter um impacto profundo na saúde mental, especialmente entre
+                        adolescentes e jovens adultos. A exposição constante a uma vitrine de vidas
+                        "perfeitas" cria comparações irreais e um sentimento persistente de que nunca
+                        se é suficiente — fatores que alimentam quadros de ansiedade e depressão.
+                    </p>
+                    <p>
+                        Um dos efeitos mais nocivos é a <strong>comparação social</strong>. Ao ver apenas os
+                        melhores momentos alheios — viagens, conquistas, relacionamentos — a pessoa tende
+                        a subestimar a própria vida. Esse contraste contínuo pode levar a sentimentos de
+                        inferioridade, baixa autoestima e desesperança. Para quem já tem predisposição à
+                        depressão, esse ciclo pode ser devastador.
+                    </p>
+                    <p>
+                        Outro fator é a <strong>privação de sono</strong>. A luz azul das telas e o estímulo
+                        mental constante atrapalham o descanso. A falta de sono adequado é um gatilho
+                        conhecido para crises depressivas e ansiosas. Além disso, o uso noturno tende a
+                        virar um hábito compulsivo difícil de quebrar: quanto mais cansada a pessoa fica,
+                        mais ela recorre às redes para se "distrair" — e o ciclo só piora.
+                    </p>
+                    <p>
+                        A <strong>dopamina barata</strong> também merece atenção. Curtidas, notificações e
+                        vídeos curtos oferecem prazeres rápidos e recompensas instantâneas que vão
+                        dessensibilizando o cérebro. Atividades que exigem esforço e tempo (estudar, se
+                        exercitar, conversar de verdade) passam a parecer sem graça. Isso reduz a
+                        tolerância ao tédio, mina a motivação e contribui para o vazio que caracteriza
+                        muitos quadros depressivos.
+                    </p>
+                    <p>
+                        Existe ainda o fenômeno do <strong>cyberbullying</strong>. Comentários ofensivos,
+                        exposição humilhante e o medo constante de julgamento público podem causar
+                        traumas profundos. Entre jovens, esse tipo de violência digital está fortemente
+                        associado ao aumento de casos de automutilação e ideação suicida. O anonimato
+                        na internet frequentemente encoraja crueldade que a pessoa jamais cometeria
+                        pessoalmente.
+                    </p>
+                    <p>
+                        É importante lembrar: as redes sociais <strong>não são vilãs por si só</strong>. Elas
+                        podem ser ferramentas valiosas de apoio, informação e acolhimento — inclusive para
+                        quem enfrenta depressão. O problema está no uso compulsivo, no consumo passivo e
+                        na ausência de limites. <strong>Perceber como você se sente depois de usar as redes
+                        é o primeiro passo</strong> para reequilibrar sua relação com elas.
+                    </p>
+                </div>
+
+                     <img src="https://i.pinimg.com/736x/ff/64/db/ff64dbc8fa042b6704ce9836bb7c2612.jpg"
+                          alt="descrição da imagem"
+                         class="imagem-ilustrativa"
+                        loading="lazy" decoding="async"
+                        width="700" height="467">
+
+                <div class="texto-corrido">
+                    <p>
+                        <strong>Como usar as redes de forma mais saudável:</strong>
+                    </p>
+                    <p>
+                        Estabeleça horários para usar o celular, especialmente longe da hora de dormir.
+                        Faça pausas regulares — o famoso <em>detox digital</em> — e observe como seu humor
+                        reage. Deixe de seguir perfis que te fazem mal ou que promovem comparações
+                        constantes. Prefira conteúdos que informem, ensinem ou tragam leveza de verdade.
+                        E lembre-se: <strong>a vida real acontece fora da tela.</strong>
+                    </p>
+                    <p>
+                        Se você perceber que o uso das redes tem intensificado sintomas de tristeza, vazio
+                        ou ansiedade, procure conversar com um profissional. Às vezes, mudar a relação com
+                        o celular é uma parte importante do tratamento — e pode fazer toda a diferença.
+                    </p>
                 </div>
             </div>
         </section>
@@ -1994,6 +2082,7 @@
                     <a href="#sintomas">Sintomas</a>
                     <a href="#gravidade">Gravidade</a>
                     <a href="#adolescentes">Adolescentes</a>
+                    <a href="#redes-sociais">Redes sociais</a>
                     <a href="#tratamentos">Tratamentos</a>
                     <a href="#ajudar">Como ajudar</a>
                     <a href="#autoavaliacao">Autoavaliação</a>
@@ -2020,9 +2109,6 @@
     </div>
 
     <script>
-        // =====================================================
-        // OTIMIZAÇÃO: pausa animações quando a aba está oculta
-        // =====================================================
         const elementosComAnimacao = [];
 
         function registrarAnimacoes() {
@@ -2048,9 +2134,6 @@
             });
         });
 
-        // =====================================================
-        // SIDEBAR — ESCONDER / MOSTRAR
-        // =====================================================
         const sidebar = document.getElementById('sidebar');
         const sidebarHideBtn = document.getElementById('sidebarHideBtn');
         const sidebarShowBtn = document.getElementById('sidebarShowBtn');
@@ -2081,9 +2164,6 @@
             }
         } catch (e) {}
 
-        // =====================================================
-        // CRT EFFECT — FADE BASEADO NO SCROLL
-        // =====================================================
         const crtOverlay = document.getElementById('crtOverlay');
         const crtFlicker = document.getElementById('crtFlicker');
         const crtNoise = document.getElementById('crtNoise');
@@ -2145,9 +2225,6 @@
             });
         }
 
-        // =====================================================
-        // EFEITO DE NOISE (ruído visual) que diminui ao rolar
-        // =====================================================
         const noiseOverlay = document.getElementById('noise-overlay');
 
         function updateNoiseOpacity() {
@@ -2167,9 +2244,6 @@
         window.addEventListener('resize', updateNoiseOpacity);
         updateNoiseOpacity();
 
-        // =====================================================
-        // SIDEBAR / MENU MOBILE (hamburguer)
-        // =====================================================
         const menuToggle = document.getElementById('menuToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
 
@@ -2193,9 +2267,6 @@
             link.addEventListener('click', fecharSidebar);
         });
 
-        // =====================================================
-        // MODAL DE EMERGÊNCIA
-        // =====================================================
         const btnAjudaAgora = document.getElementById('btnAjudaAgora');
         const modalEmergencia = document.getElementById('modalEmergencia');
         const btnFecharModal = document.getElementById('btnFecharModal');
@@ -2210,9 +2281,6 @@
             if (e.target === modalEmergencia) modalEmergencia.classList.remove('ativo');
         });
 
-        // =====================================================
-        // COPIAR LINK
-        // =====================================================
         function copiarLink() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
@@ -2222,9 +2290,6 @@
             });
         }
 
-        // =====================================================
-        // AUTOAVALIAÇÃO — VERSÃO APRIMORADA (29 perguntas)
-        // =====================================================
         const perguntasAutoavaliacao = [
             { texto: "Nas últimas duas semanas, você tem se sentido triste, para baixo ou sem esperança na maior parte do dia?", area: "humor", critica: false },
             { texto: "Você tem perdido o interesse ou o prazer em atividades que antes eram agradáveis?", area: "humor", critica: false },
@@ -2296,8 +2361,6 @@
             });
         }
 
-        // CORREÇÃO DO BUG: a barra reflete a posição atual no fluxo
-        // (indicePergunta), então ela recua corretamente ao "Voltar".
         function atualizarProgresso() {
             const pct = (indicePergunta / perguntasAutoavaliacao.length) * 100;
             const preenchida = document.getElementById('barraProgresso');
@@ -2433,9 +2496,6 @@
 
         carregarPergunta();
 
-        // =====================================================
-        // FORMULÁRIO DE CONTATO
-        // =====================================================
         const formContato = document.getElementById('formContato');
         const formMensagem = document.getElementById('formMensagem');
 
