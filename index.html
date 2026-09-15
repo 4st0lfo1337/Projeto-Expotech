@@ -613,21 +613,6 @@
             border: 1px solid #4a3a2a;
         }
 
-        .imagem-placeholder:hover {
-            border-color: #8a6a4a;
-            color: #a89060;
-        }
-        .imagem-placeholder .icone {
-            font-size: 2.2rem;
-            line-height: 1;
-        }
-        .imagem-placeholder small {
-            font-size: 0.75rem;
-            color: #5a4a3a;
-            letter-spacing: 0.5px;
-            font-style: italic;
-        }
-
         .estatisticas {
             background: #1a1510;
             padding: 3rem 0;
@@ -965,9 +950,23 @@
             padding: 1.5rem 2rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             text-align: left;
+            /* ADICIONADO: transição suave para o hover */
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-left-color 0.2s ease;
         }
         .ajuda-item:nth-child(2) { border-left-color: var(--cor-secundaria); }
         .ajuda-item:nth-child(3) { border-left-color: var(--cor-alerta); }
+
+        /* ADICIONADO: efeito "selecionado" igual ao dos membros da equipe */
+        .ajuda-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            border-left-color: #5a6a4a;
+        }
+        /* Mantém a identidade visual do item de emergência no hover */
+        .ajuda-item:nth-child(3):hover {
+            border-left-color: #a86a5a;
+        }
+
         .ajuda-item h3 {
             color: #1a1510;
             margin-bottom: 0.5rem;
