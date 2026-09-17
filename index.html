@@ -28,6 +28,9 @@
             --tamanho-h3: clamp(1.2rem, 2vw, 1.5rem);
             --tamanho-texto: clamp(1rem, 1.2vw, 1.1rem);
             --sidebar-largura: 260px;
+            --tree-rail: #5a4a3a;
+            --tree-rail-dim: #4a3a2a;
+            --tree-row-h: 22px;
         }
 
         * {
@@ -56,7 +59,6 @@
             display: flex;
         }
 
-        /* Trava de scroll durante o boot — html E body, com touch-action */
         html.boot-lock,
         body.boot-lock {
             overflow: hidden !important;
@@ -140,7 +142,7 @@
 
         #bootOutput {
             flex: 1 1 auto;
-            min-height: 0; /* CRÍTICO: permite que flex child faça scroll */
+            min-height: 0;
             overflow-y: auto;
             overflow-x: hidden;
             white-space: pre-wrap;
@@ -207,7 +209,6 @@
             50%      { opacity: 1; }
         }
 
-        /* Ajustes finos para telas pequenas (mobile) */
         @media (max-width: 640px), (max-height: 640px) {
             #bootScreen {
                 font-size: 11.5px;
@@ -226,7 +227,6 @@
             #bootOutput > div { animation: none; }
         }
 
-        /* Telas MUITO pequenas — reduz ainda mais */
         @media (max-width: 380px) {
             #bootScreen {
                 font-size: 10.5px;
@@ -394,6 +394,10 @@
             100% { background-position: 0 0, 5% 5%; }
         }
 
+        /* ===================================================== */
+        /* SIDEBAR — ESTILO WINDOWS EXPLORER (TREE VIEW)          */
+        /* ===================================================== */
+
         .sidebar {
             position: fixed;
             top: 0;
@@ -405,9 +409,10 @@
             z-index: 10000;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            overflow: hidden;
             border-right: 3px solid #3a3028;
             transition: transform 0.3s ease;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         .sidebar.escondida {
@@ -415,66 +420,253 @@
             box-shadow: none;
         }
 
+        /* ---------- Barra de título estilo Explorer ---------- */
         .sidebar-header {
-            padding: 1.25rem 1rem;
+            flex: 0 0 auto;
+            padding: 5px 6px 5px 8px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
+            gap: 6px;
             position: relative;
             border-bottom: 2px solid #3a3028;
             background: #0f0a08;
+            min-height: 28px;
         }
 
-        .sidebar .logo {
-            font-size: 1.4rem;
+        .sidebar-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(200,160,100,0.08) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .explorer-icon {
+            flex: 0 0 auto;
+            font-size: 0.95rem;
+            line-height: 1;
+            filter: sepia(0.7) saturate(0.8) brightness(0.95);
+            text-shadow: 0 0 4px rgba(200,160,100,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .explorer-title {
+            flex: 1;
+            font-size: 0.76rem;
             font-weight: 700;
             color: #c8b090;
-            text-decoration: none;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(200, 160, 100, 0.4);
-            display: block;
-            flex: 1;
-            text-align: center;
-        }
-
-        .sidebar .logo span {
-            color: #8a6a4a;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 6px rgba(200, 160, 100, 0.35);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: default;
+            position: relative;
+            z-index: 1;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         .sidebar-hide-btn {
             flex: 0 0 auto;
-            width: 32px;
-            height: 32px;
-            background: transparent;
-            border: 1px solid #4a3a2a;
-            border-radius: 2px;
+            width: 20px;
+            height: 18px;
+            background: #252018;
+            border: 1px solid;
+            border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
+            border-radius: 0;
             color: #c8b090;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: inherit;
-            font-size: 1.15rem;
+            font-size: 0.85rem;
             font-weight: 700;
             line-height: 1;
             padding: 0;
-            transition: all 0.2s ease;
-            text-shadow: 0 0 8px rgba(200, 160, 100, 0.3);
+            transition: all 0.1s ease;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.06);
+            position: relative;
+            z-index: 1;
         }
 
         .sidebar-hide-btn:hover {
-            background: #252018;
-            border-color: #8a6a4a;
+            background: #3a2a1a;
             color: #e8d5a3;
-            text-shadow: 0 0 12px rgba(200, 180, 150, 0.6);
         }
 
         .sidebar-hide-btn:active {
-            transform: scale(0.95);
+            border-color: #1a1008 #5a4a3a #5a4a3a #1a1008;
+            box-shadow: inset -1px -1px 0 rgba(255,255,255,0.06);
         }
 
+        /* ---------- Container da árvore ---------- */
+        .tree-container {
+            flex: 1 1 auto;
+            min-height: 0;
+            padding: 6px 0 10px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #3a3028 #0f0a08;
+        }
+
+        .tree-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tree-container::-webkit-scrollbar-track {
+            background: #0f0a08;
+        }
+
+        .tree-container::-webkit-scrollbar-thumb {
+            background: #3a3028;
+            border: 1px solid #1a1008;
+        }
+
+        /* ---------- Listas ---------- */
+        .tree-root,
+        .tree-children {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tree-root {
+            margin: 0 8px;
+        }
+
+        .tree-children {
+            margin: 0 0 0 12px;
+        }
+
+        /* ---------- Nós da árvore ---------- */
+        .tree-node {
+            position: relative;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Linha vertical pontilhada */
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            border-left: 1px dotted var(--tree-rail);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Último filho: linha para na metade (altura da linha do item) */
+        .tree-node:last-child::before {
+            height: calc(var(--tree-row-h) / 2);
+        }
+
+        /* ---------- Linhas (row = pasta, item = arquivo) ---------- */
+        .tree-row,
+        .tree-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 6px 0 16px;
+            min-height: var(--tree-row-h);
+            font-size: 0.78rem;
+            color: #b0a890;
+            letter-spacing: 0.4px;
+            text-decoration: none;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.55);
+            white-space: nowrap;
+            overflow: hidden;
+            transition: background 0.1s, color 0.1s;
+            font-family: 'Courier New', Courier, monospace;
+            z-index: 2;
+        }
+
+        /* Traço horizontal pontilhado (conector em L) */
+        .tree-row::before,
+        .tree-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 12px;
+            border-top: 1px dotted var(--tree-rail);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Pasta */
+        .tree-folder {
+            color: #d0c8b8;
+            font-weight: 700;
+            cursor: default;
+            user-select: none;
+        }
+
+        /* Arquivo (link) */
+        .tree-item {
+            cursor: pointer;
+        }
+
+        .tree-item:hover {
+            color: #e8d5a3;
+            background: #252018;
+        }
+
+        .tree-item:hover .tree-label {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .tree-item:active {
+            background: #1a1008;
+            color: #c8b090;
+        }
+
+        /* ---------- Ícones ---------- */
+        .tree-icon {
+            flex: 0 0 auto;
+            font-size: 0.92rem;
+            line-height: 1;
+            display: inline-block;
+            width: 1.1em;
+            text-align: center;
+            filter: sepia(0.7) saturate(0.6) brightness(0.95);
+            text-shadow: 0 0 4px rgba(200,160,100,0.25);
+        }
+
+        /* ---------- Labels ---------- */
+        .tree-label {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ---------- Rodapé ---------- */
+        .sidebar-footer {
+            flex: 0 0 auto;
+            padding: 8px;
+            text-align: center;
+            border-top: 2px solid #3a3028;
+            font-size: 0.7rem;
+            color: #8a7a6a;
+            letter-spacing: 1px;
+            background: #0f0a08;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* ---------- Botões de toggle mobile ---------- */
         .sidebar-show-btn {
             position: fixed;
             top: 15px;
@@ -510,39 +702,6 @@
             display: flex;
         }
 
-        .sidebar-nav {
-            list-style: none;
-            padding: 1rem 0;
-            flex: 1;
-        }
-
-        .sidebar-nav li a {
-            display: block;
-            padding: 0.7rem 1.5rem;
-            color: #b0a890;
-            text-decoration: none;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
-            font-weight: 500;
-        }
-
-        .sidebar-nav li a:hover {
-            color: #d0c8b8;
-            background: #252018;
-            border-left-color: #8a6a4a;
-            text-shadow: 0 0 8px rgba(200,180,150,0.5);
-        }
-
-        .sidebar-footer {
-            padding: 1rem;
-            text-align: center;
-            border-top: 2px solid #3a3028;
-            font-size: 0.75rem;
-            color: #8a7a6a;
-        }
-
         .menu-toggle {
             display: none;
             position: fixed;
@@ -575,6 +734,10 @@
             background: rgba(0,0,0,0.7);
             z-index: 10002;
         }
+
+        /* ===================================================== */
+        /* RESTO DO SITE (inalterado)                             */
+        /* ===================================================== */
 
         .main-content {
             flex: 1;
@@ -645,10 +808,8 @@
             letter-spacing: -0.5px;
             line-height: 1.2;
             text-transform: uppercase;
-
             position: relative;
             z-index: 10001;
-
             color: #ffffff;
             text-shadow: 
                 0 0 8px rgba(255, 255, 255, 0.95),
@@ -657,7 +818,6 @@
                 0 0 70px rgba(255, 255, 255, 0.35),
                 0 0 110px rgba(255, 245, 230, 0.25),
                 3px 3px 8px rgba(0, 0, 0, 0.85);
-
             animation: brilho-hero 4s ease-in-out infinite;
             will-change: text-shadow;
         }
@@ -1593,6 +1753,16 @@
                 align-items: flex-start;
             }
             .quiz-container { padding: 1.3rem; }
+
+            /* Tree ligeiramente maior em telas touch */
+            .tree-row,
+            .tree-item {
+                min-height: 28px;
+                font-size: 0.82rem;
+            }
+            .tree-node:last-child::before {
+                height: 14px;
+            }
         }
     </style>
 </head>
@@ -1622,30 +1792,167 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- ===================================================== -->
+    <!-- SIDEBAR — ESTILO WINDOWS EXPLORER (TREE VIEW)         -->
+    <!-- ===================================================== -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <a href="#inicio" class="logo">voce<span>importa</span></a>
-            <button class="sidebar-hide-btn" id="sidebarHideBtn" aria-label="Esconder menu lateral" title="Esconder menu">
-                ×
-            </button>
+            <span class="explorer-icon" aria-hidden="true">📁</span>
+            <span class="explorer-title">/mnt/voceimporta</span>
+            <button class="sidebar-hide-btn" id="sidebarHideBtn" aria-label="Esconder menu lateral" title="Esconder menu">×</button>
         </div>
-        <ul class="sidebar-nav">
-            <li><a href="#sobre">O que é</a></li>
-            <li><a href="#tabu">Quebrando o tabu</a></li>
-            <li><a href="#sintomas">Sintomas</a></li>
-            <li><a href="#gravidade">Gravidade</a></li>
-            <li><a href="#adolescentes">Adolescentes</a></li>
-            <li><a href="#redes-sociais">Redes sociais</a></li>
-            <li><a href="#tratamentos">Tratamentos</a></li>
-            <li><a href="#ajudar">Como ajudar</a></li>
-            <li><a href="#autoavaliacao">Autoavaliação</a></li>
-            <li><a href="#respiro">Como se acalmar</a></li>
-            <li><a href="#ajuda">Ajuda</a></li>
-            <li><a href="#mapa">Mapa</a></li>
-            <li><a href="#compartilhar">Compartilhar</a></li>
-            <li><a href="#equipe">Equipe</a></li>
-            <li><a href="#contato">Contato</a></li>
-        </ul>
+
+        <div class="tree-container">
+            <ul class="sidebar-nav tree-root">
+                <li class="tree-node tree-group">
+                    <div class="tree-row tree-folder">
+                        <span class="tree-icon" aria-hidden="true">📁</span>
+                        <span class="tree-label">voceimporta</span>
+                    </div>
+                    <ul class="tree-children">
+                        <li class="tree-node tree-group">
+                            <div class="tree-row tree-folder">
+                                <span class="tree-icon" aria-hidden="true">📁</span>
+                                <span class="tree-label">entender</span>
+                            </div>
+                            <ul class="tree-children">
+                                <li class="tree-node">
+                                    <a href="#sobre" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">o que é</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#tabu" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">quebrando o tabu</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#sintomas" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">sintomas</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#gravidade" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">gravidade</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="tree-node tree-group">
+                            <div class="tree-row tree-folder">
+                                <span class="tree-icon" aria-hidden="true">📁</span>
+                                <span class="tree-label">contextos</span>
+                            </div>
+                            <ul class="tree-children">
+                                <li class="tree-node">
+                                    <a href="#adolescentes" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">adolescentes</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#redes-sociais" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">redes sociais</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="tree-node tree-group">
+                            <div class="tree-row tree-folder">
+                                <span class="tree-icon" aria-hidden="true">📁</span>
+                                <span class="tree-label">caminhos</span>
+                            </div>
+                            <ul class="tree-children">
+                                <li class="tree-node">
+                                    <a href="#tratamentos" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">tratamentos</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#ajudar" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">como ajudar</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="tree-node tree-group">
+                            <div class="tree-row tree-folder">
+                                <span class="tree-icon" aria-hidden="true">📁</span>
+                                <span class="tree-label">ferramentas</span>
+                            </div>
+                            <ul class="tree-children">
+                                <li class="tree-node">
+                                    <a href="#autoavaliacao" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">autoavaliação</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#respiro" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">como se acalmar</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="tree-node tree-group">
+                            <div class="tree-row tree-folder">
+                                <span class="tree-icon" aria-hidden="true">📁</span>
+                                <span class="tree-label">recursos</span>
+                            </div>
+                            <ul class="tree-children">
+                                <li class="tree-node">
+                                    <a href="#ajuda" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">ajuda</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#mapa" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">mapa</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#compartilhar" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">compartilhar</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="tree-node tree-group">
+                            <div class="tree-row tree-folder">
+                                <span class="tree-icon" aria-hidden="true">📁</span>
+                                <span class="tree-label">projeto</span>
+                            </div>
+                            <ul class="tree-children">
+                                <li class="tree-node">
+                                    <a href="#equipe" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">equipe</span>
+                                    </a>
+                                </li>
+                                <li class="tree-node">
+                                    <a href="#contato" class="tree-item">
+                                        <span class="tree-icon" aria-hidden="true">📄</span>
+                                        <span class="tree-label">contato</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
         <div class="sidebar-footer">
             Expotech 2026
         </div>
@@ -2309,16 +2616,13 @@
             const bootOutput = document.getElementById('bootOutput');
             if (!bootScreen || !bootOutput) return;
 
-            // Detecta dispositivo móvel
             const isMobile =
                 (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches) ||
                 window.innerWidth <= 768;
 
-            // Detecta preferência de movimento reduzido (não pula o boot, só encurta)
             const prefereSemAnimacao =
                 window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            // Checa sessão — usa try/catch porque iOS em modo privado joga exceção
             let jaBootou = false;
             try {
                 jaBootou = sessionStorage.getItem('voceimporta_booted') === '1';
@@ -2326,7 +2630,6 @@
                 jaBootou = false;
             }
 
-            // Se já rodou nessa sessão, remove a tela imediatamente
             if (jaBootou) {
                 try {
                     if (bootScreen.parentNode) bootScreen.parentNode.removeChild(bootScreen);
@@ -2334,19 +2637,14 @@
                 return;
             }
 
-            // Trava scroll no html E body (mobile precisa dos dois)
             document.documentElement.classList.add('boot-lock');
             document.body.classList.add('boot-lock');
 
-            // Estado do boot
             let finalizado = false;
             let timeoutAtual = null;
             let failsafeId = null;
             let idx = 0;
 
-            // ---------------------------------------------------
-            // FINALIZAÇÃO (com failsafe embutido)
-            // ---------------------------------------------------
             function finalizar() {
                 if (finalizado) return;
                 finalizado = true;
@@ -2356,16 +2654,13 @@
 
                 try { sessionStorage.setItem('voceimporta_booted', '1'); } catch (e) {}
 
-                // Remove travas de scroll
                 document.documentElement.classList.remove('boot-lock');
                 document.body.classList.remove('boot-lock');
 
-                // Fade-out
                 try {
                     bootScreen.classList.add('fade-out');
                 } catch (e) {}
 
-                // Remove do DOM depois do fade
                 setTimeout(() => {
                     try {
                         if (bootScreen && bootScreen.parentNode) {
@@ -2375,21 +2670,13 @@
                 }, 950);
             }
 
-            // ---------------------------------------------------
-            // FAILSAFE: se por qualquer motivo não terminar em 12s,
-            // força a saída (evita "fica preso pra sempre")
-            // ---------------------------------------------------
             failsafeId = setTimeout(() => {
                 if (!finalizado) {
-                    // Log discreto (não bloqueia)
                     try { console.warn('[boot] failsafe acionado — encerrando forçadamente.'); } catch (e) {}
                     finalizar();
                 }
             }, 12000);
 
-            // ---------------------------------------------------
-            // SEQUÊNCIA DE LINHAS
-            // ---------------------------------------------------
             const linhasDesktop = [
                 { texto: "voceimporta bootloader v2.026 (Expotech 2026)", classe: "accent", delay: 260 },
                 { texto: "", delay: 80 },
@@ -2426,7 +2713,6 @@
                 { texto: "", delay: 260 }
             ];
 
-            // No mobile, versão mais curta e com delays reduzidos
             const linhasMobile = [
                 { texto: "voceimporta bootloader v2.026", classe: "accent", delay: 200 },
                 { texto: "", delay: 60 },
@@ -2455,16 +2741,10 @@
 
             const linhas = isMobile ? linhasMobile : linhasDesktop;
 
-            // ---------------------------------------------------
-            // CURSOR
-            // ---------------------------------------------------
             const cursor = document.createElement('span');
             cursor.id = 'bootCursor';
             cursor.setAttribute('aria-hidden', 'true');
 
-            // ---------------------------------------------------
-            // HELPERS DE RENDER
-            // ---------------------------------------------------
             function appendLinha(texto, classe) {
                 const div = document.createElement('div');
                 if (classe) div.className = classe;
@@ -2474,7 +2754,6 @@
                     div.textContent = texto;
                 }
                 bootOutput.appendChild(div);
-                // Auto-scroll (com fallback silencioso)
                 try {
                     bootOutput.scrollTop = bootOutput.scrollHeight;
                 } catch (e) {}
@@ -2491,9 +2770,6 @@
                 } catch (e) {}
             }
 
-            // ---------------------------------------------------
-            // SKIP / PULAR
-            // ---------------------------------------------------
             let skipHandled = false;
             function pular() {
                 if (finalizado || skipHandled) return;
@@ -2503,13 +2779,9 @@
 
                 renderizarTudo();
 
-                // Pequena pausa pra ver o "render final" antes do fade
                 timeoutAtual = setTimeout(finalizar, isMobile ? 300 : 450);
             }
 
-            // ---------------------------------------------------
-            // LOOP DE RENDERIZAÇÃO PASSO A PASSO
-            // ---------------------------------------------------
             function proximaLinha() {
                 if (finalizado) return;
                 try {
@@ -2521,46 +2793,33 @@
                     const l = linhas[idx];
                     const div = appendLinha(l.texto, l.classe);
 
-                    // Cursor acompanha a última linha
                     try { div.appendChild(cursor); } catch (e) {}
 
                     idx++;
                     timeoutAtual = setTimeout(proximaLinha, l.delay || 70);
                 } catch (err) {
-                    // Se algo der errado, não deixa o boot preso
                     try { console.error('[boot] erro na sequência:', err); } catch (e) {}
                     finalizar();
                 }
             }
 
-            // ---------------------------------------------------
-            // HANDLERS DE SKIP
-            // ---------------------------------------------------
             function onKey()  { pular(); }
             function onClick() { pular(); }
             function onTouch(e) {
-                // Não bloqueia o evento — só dispara o skip
                 pular();
             }
 
             document.addEventListener('keydown', onKey);
             bootScreen.addEventListener('click', onClick);
             bootScreen.addEventListener('touchstart', onTouch, { passive: true });
-            // Alguns browsers mobile não disparam touchstart confiável — adiciona pointerdown
             if (window.PointerEvent) {
                 bootScreen.addEventListener('pointerdown', onClick);
             }
 
-            // ---------------------------------------------------
-            // INÍCIO
-            // ---------------------------------------------------
             if (prefereSemAnimacao) {
-                // Modo "sem animação": renderiza tudo de uma vez,
-                // deixa visível por um instante e sai.
                 renderizarTudo();
                 timeoutAtual = setTimeout(finalizar, 1400);
             } else {
-                // Modo normal: animação linha por linha
                 timeoutAtual = setTimeout(proximaLinha, isMobile ? 250 : 350);
             }
         })();
