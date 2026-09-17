@@ -31,6 +31,7 @@
             --tree-rail: #5a4a3a;
             --tree-rail-dim: #4a3a2a;
             --tree-row-h: 22px;
+            --sticky-bar-h: 42px;
         }
 
         * {
@@ -75,6 +76,92 @@
         body.crt-off .crt-noise,
         body.crt-off #noise-overlay {
             display: none !important;
+        }
+
+        /* ===================================================== */
+        /* STICKY BAR — "VOCÊ NÃO ESTÁ SOZINHO"                  */
+        /* ===================================================== */
+
+        .sticky-bar {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-largura);
+            right: 0;
+            height: var(--sticky-bar-h);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9990;
+            background: transparent;
+            color: transparent;
+            font-family: var(--fonte-principal);
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            padding: 0 20px;
+            border-bottom: 1px solid transparent;
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease, text-shadow 0.5s ease;
+            pointer-events: none;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: none;
+        }
+
+        .sticky-bar span {
+            display: block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Estado visível — fundo escuro (paleta escura do site) */
+        .sticky-bar.visivel {
+            background: rgba(15, 10, 8, 0.94);
+            border-bottom-color: #3a3028;
+            color: #d0c8b8;
+            text-shadow: 0 0 10px rgba(200, 176, 144, 0.45);
+        }
+
+        /* Estado claro — quando passa de "Como se acalmar" */
+        .sticky-bar.visivel.bar-clara {
+            background: rgba(224, 216, 200, 0.96);
+            border-bottom-color: #9a8a7a;
+            color: #1a1510;
+            text-shadow: none;
+        }
+
+        /* Ajusta a posição quando a sidebar está oculta */
+        body.sidebar-oculta-body .sticky-bar {
+            left: 0;
+        }
+
+        /* Garante que âncoras não fiquem embaixo da barra */
+        section[id] {
+            scroll-margin-top: calc(var(--sticky-bar-h) + 13px);
+        }
+
+        @media (max-width: 1024px) {
+            .sticky-bar {
+                left: 0;
+                font-size: 0.72rem;
+                letter-spacing: 2.5px;
+                height: 38px;
+                padding-left: 66px;
+                padding-right: 15px;
+            }
+            section[id] {
+                scroll-margin-top: 51px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sticky-bar {
+                transition: none;
+            }
         }
 
         /* ===================================================== */
@@ -430,7 +517,6 @@
             box-shadow: none;
         }
 
-        /* ---------- Barra de título estilo Explorer ---------- */
         .sidebar-header {
             flex: 0 0 auto;
             padding: 5px 6px 5px 8px;
@@ -514,7 +600,6 @@
             box-shadow: inset -1px -1px 0 rgba(255,255,255,0.06);
         }
 
-        /* ---------- Container da árvore ---------- */
         .tree-container {
             flex: 1 1 auto;
             min-height: 0;
@@ -539,7 +624,6 @@
             border: 1px solid #1a1008;
         }
 
-        /* ---------- Listas ---------- */
         .tree-root,
         .tree-children {
             list-style: none;
@@ -555,7 +639,6 @@
             margin: 0 0 0 12px;
         }
 
-        /* ---------- Nós da árvore ---------- */
         .tree-node {
             position: relative;
             list-style: none;
@@ -563,7 +646,6 @@
             margin: 0;
         }
 
-        /* Linha vertical pontilhada */
         .tree-node::before {
             content: '';
             position: absolute;
@@ -575,12 +657,10 @@
             z-index: 1;
         }
 
-        /* Último filho: linha para na metade (altura da linha do item) */
         .tree-node:last-child::before {
             height: calc(var(--tree-row-h) / 2);
         }
 
-        /* ---------- Linhas (row = pasta, item = arquivo) ---------- */
         .tree-row,
         .tree-item {
             position: relative;
@@ -601,7 +681,6 @@
             z-index: 2;
         }
 
-        /* Traço horizontal pontilhado (conector em L) */
         .tree-row::before,
         .tree-item::before {
             content: '';
@@ -614,7 +693,6 @@
             z-index: 1;
         }
 
-        /* Pasta */
         .tree-folder {
             color: #d0c8b8;
             font-weight: 700;
@@ -622,7 +700,6 @@
             user-select: none;
         }
 
-        /* Arquivo (link) */
         .tree-item {
             cursor: pointer;
         }
@@ -642,7 +719,6 @@
             color: #c8b090;
         }
 
-        /* ---------- Ícones ---------- */
         .tree-icon {
             flex: 0 0 auto;
             font-size: 0.92rem;
@@ -654,7 +730,6 @@
             text-shadow: 0 0 4px rgba(200,160,100,0.25);
         }
 
-        /* ---------- Labels ---------- */
         .tree-label {
             flex: 1;
             overflow: hidden;
@@ -662,7 +737,6 @@
             white-space: nowrap;
         }
 
-        /* ---------- Rodapé ---------- */
         .sidebar-footer {
             flex: 0 0 auto;
             padding: 8px;
@@ -683,7 +757,6 @@
             text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
         }
 
-        /* ---------- Botão de toggle do CRT ---------- */
         .crt-toggle-btn {
             display: flex;
             align-items: center;
@@ -749,7 +822,6 @@
             text-overflow: ellipsis;
         }
 
-        /* ---------- Botões de toggle mobile ---------- */
         .sidebar-show-btn {
             position: fixed;
             top: 15px;
@@ -819,7 +891,7 @@
         }
 
         /* ===================================================== */
-        /* RESTO DO SITE (inalterado)                             */
+        /* RESTO DO SITE                                          */
         /* ===================================================== */
 
         .main-content {
@@ -1837,7 +1909,6 @@
             }
             .quiz-container { padding: 1.3rem; }
 
-            /* Tree ligeiramente maior em telas touch */
             .tree-row,
             .tree-item {
                 min-height: 28px;
@@ -1850,6 +1921,13 @@
     </style>
 </head>
 <body>
+
+    <!-- ===================================================== -->
+    <!-- STICKY BAR — -->
+    <!-- ===================================================== -->
+    <div class="sticky-bar" id="stickyBar" aria-hidden="true">
+        <span>sua saúde mental importa</span>
+    </div>
 
     <!-- ===================================================== -->
     <!-- BOOT SCREEN — ESTILO ARCH LINUX / TERMINAL            -->
@@ -2696,7 +2774,6 @@
     <script>
         /* ========================================================= */
         /* BOOT SCREEN — SEQUÊNCIA ESTILO ARCH LINUX                 */
-        /* Versão mobile-friendly com failsafe e fallback            */
         /* ========================================================= */
         (function iniciarBoot() {
             const bootScreen = document.getElementById('bootScreen');
@@ -2941,6 +3018,53 @@
         });
 
         /* ========================================================= */
+        /* STICKY BAR — "VOCÊ NÃO ESTÁ SOZINHO"                     */
+        /* Mostra a barra ao rolar, escurece entre "o que é" e      */
+        /* "como se acalmar", clareia após "como se acalmar"        */
+        /* ========================================================= */
+        const stickyBar = document.getElementById('stickyBar');
+        const ajudaSecaoEl = document.getElementById('ajuda');
+        let stickyRafPending = false;
+
+        function updateStickyBarNow() {
+            stickyRafPending = false;
+            if (!stickyBar) return;
+
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+            // Visibilidade: aparece após o título do hero sair de cena
+            if (scrollY > 70) {
+                stickyBar.classList.add('visivel');
+            } else {
+                stickyBar.classList.remove('visivel');
+            }
+
+            // Troca de cor: escuro até "como se acalmar", claro depois
+            if (ajudaSecaoEl) {
+                const rect = ajudaSecaoEl.getBoundingClientRect();
+                const ajudaTop = rect.top + scrollY;
+                // +50 leva em conta a altura da própria barra
+                if (scrollY + 50 >= ajudaTop) {
+                    stickyBar.classList.add('bar-clara');
+                } else {
+                    stickyBar.classList.remove('bar-clara');
+                }
+            }
+        }
+
+        function scheduleStickyUpdate() {
+            if (stickyRafPending) return;
+            stickyRafPending = true;
+            requestAnimationFrame(updateStickyBarNow);
+        }
+
+        window.addEventListener('scroll', scheduleStickyUpdate, { passive: true });
+        window.addEventListener('resize', scheduleStickyUpdate, { passive: true });
+        window.addEventListener('load', scheduleStickyUpdate);
+        // Chamada inicial
+        updateStickyBarNow();
+
+        /* ========================================================= */
         /* TOGGLE DO EFEITO CRT                                      */
         /* ========================================================= */
         const crtToggleBtn = document.getElementById('crtToggleBtn');
@@ -2992,7 +3116,6 @@
             });
         }
 
-        // Aplica o estado salvo assim que o script roda
         aplicarEstadoCRT();
 
         /* ========================================================= */
@@ -3007,14 +3130,18 @@
             sidebar.classList.add('escondida');
             mainContent.classList.add('sidebar-oculta');
             sidebarShowBtn.classList.add('visivel');
+            document.body.classList.add('sidebar-oculta-body');
             try { localStorage.setItem('voceimporta_sidebar_oculta', '1'); } catch (e) {}
+            scheduleStickyUpdate();
         }
 
         function mostrarSidebar() {
             sidebar.classList.remove('escondida');
             mainContent.classList.remove('sidebar-oculta');
             sidebarShowBtn.classList.remove('visivel');
+            document.body.classList.remove('sidebar-oculta-body');
             try { localStorage.setItem('voceimporta_sidebar_oculta', '0'); } catch (e) {}
+            scheduleStickyUpdate();
         }
 
         sidebarHideBtn.addEventListener('click', esconderSidebar);
