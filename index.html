@@ -68,6 +68,16 @@
         }
 
         /* ===================================================== */
+        /* DESATIVAR EFEITOS CRT (via body.crt-off)               */
+        /* ===================================================== */
+        body.crt-off .crt-overlay,
+        body.crt-off .crt-flicker,
+        body.crt-off .crt-noise,
+        body.crt-off #noise-overlay {
+            display: none !important;
+        }
+
+        /* ===================================================== */
         /* BOOT SCREEN — ESTILO ARCH LINUX / TERMINAL             */
         /* ===================================================== */
 
@@ -656,14 +666,87 @@
         .sidebar-footer {
             flex: 0 0 auto;
             padding: 8px;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: stretch;
             border-top: 2px solid #3a3028;
+            background: #0f0a08;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .sidebar-footer-text {
+            text-align: center;
             font-size: 0.7rem;
             color: #8a7a6a;
             letter-spacing: 1px;
-            background: #0f0a08;
             text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
-            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* ---------- Botão de toggle do CRT ---------- */
+        .crt-toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 6px;
+            padding: 5px 8px;
+            background: #252018;
+            border: 1px solid;
+            border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
+            border-radius: 0;
+            color: #c8b090;
+            font-family: inherit;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+            transition: background 0.1s ease, color 0.1s ease;
+            text-transform: uppercase;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.06);
+            line-height: 1.2;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .crt-toggle-btn:hover {
+            background: #3a2a1a;
+            color: #e8d5a3;
+        }
+
+        .crt-toggle-btn:active {
+            border-color: #1a1008 #5a4a3a #5a4a3a #1a1008;
+            box-shadow: inset -1px -1px 0 rgba(255,255,255,0.06);
+        }
+
+        .crt-toggle-btn:focus-visible {
+            outline: 1px dotted #c8b090;
+            outline-offset: 2px;
+        }
+
+        .crt-toggle-indicator {
+            display: inline-block;
+            flex: 0 0 auto;
+            width: 8px;
+            height: 8px;
+            background: #7ac87a;
+            border: 1px solid #1a1008;
+            box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 5px rgba(120, 200, 120, 0.55);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .crt-toggle-btn.crt-off .crt-toggle-indicator {
+            background: #8a3a3a;
+            box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 4px rgba(180, 60, 60, 0.4);
+        }
+
+        .crt-toggle-label {
+            flex: 1;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* ---------- Botões de toggle mobile ---------- */
@@ -1954,7 +2037,11 @@
         </div>
 
         <div class="sidebar-footer">
-            Expotech 2026
+            <button class="crt-toggle-btn" id="crtToggleBtn" type="button" aria-pressed="true" title="Ativar/desativar efeito CRT">
+                <span class="crt-toggle-indicator" aria-hidden="true"></span>
+                <span class="crt-toggle-label">CRT: Ativo</span>
+            </button>
+            <div class="sidebar-footer-text">Expotech 2026</div>
         </div>
     </nav>
 
@@ -2853,6 +2940,64 @@
             });
         });
 
+        /* ========================================================= */
+        /* TOGGLE DO EFEITO CRT                                      */
+        /* ========================================================= */
+        const crtToggleBtn = document.getElementById('crtToggleBtn');
+
+        function aplicarEstadoCRT() {
+            let crtAtivo = true;
+            try {
+                crtAtivo = localStorage.getItem('voceimporta_crt_ativo') !== '0';
+            } catch (e) {
+                crtAtivo = true;
+            }
+
+            const label = crtToggleBtn ? crtToggleBtn.querySelector('.crt-toggle-label') : null;
+
+            if (crtAtivo) {
+                document.body.classList.remove('crt-off');
+                if (crtToggleBtn) {
+                    crtToggleBtn.classList.remove('crt-off');
+                    crtToggleBtn.setAttribute('aria-pressed', 'true');
+                    crtToggleBtn.setAttribute('title', 'Desativar efeito CRT');
+                }
+                if (label) label.textContent = 'CRT: Ativo';
+            } else {
+                document.body.classList.add('crt-off');
+                if (crtToggleBtn) {
+                    crtToggleBtn.classList.add('crt-off');
+                    crtToggleBtn.setAttribute('aria-pressed', 'false');
+                    crtToggleBtn.setAttribute('title', 'Ativar efeito CRT');
+                }
+                if (label) label.textContent = 'CRT: Inativo';
+            }
+        }
+
+        if (crtToggleBtn) {
+            crtToggleBtn.addEventListener('click', () => {
+                let crtAtivo = true;
+                try {
+                    crtAtivo = localStorage.getItem('voceimporta_crt_ativo') !== '0';
+                } catch (e) {
+                    crtAtivo = true;
+                }
+
+                const novoEstado = !crtAtivo;
+                try {
+                    localStorage.setItem('voceimporta_crt_ativo', novoEstado ? '1' : '0');
+                } catch (e) {}
+
+                aplicarEstadoCRT();
+            });
+        }
+
+        // Aplica o estado salvo assim que o script roda
+        aplicarEstadoCRT();
+
+        /* ========================================================= */
+        /* SIDEBAR                                                   */
+        /* ========================================================= */
         const sidebar = document.getElementById('sidebar');
         const sidebarHideBtn = document.getElementById('sidebarHideBtn');
         const sidebarShowBtn = document.getElementById('sidebarShowBtn');
