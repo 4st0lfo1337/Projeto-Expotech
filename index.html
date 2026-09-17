@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>voceimporta - Depressão: Você não está sozinho | Expotech 2026</title>
     <style>
         :root {
@@ -56,8 +56,13 @@
             display: flex;
         }
 
+        /* Trava de scroll durante o boot — html E body, com touch-action */
+        html.boot-lock,
         body.boot-lock {
             overflow: hidden !important;
+            height: 100% !important;
+            touch-action: none;
+            overscroll-behavior: none;
         }
 
         /* ===================================================== */
@@ -66,15 +71,24 @@
 
         #bootScreen {
             position: fixed;
-            inset: 0;
-            width: 100vw;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
             height: 100vh;
+            height: 100dvh;
+            max-height: 100dvh;
             background: #050403;
             color: #c8b090;
             font-family: 'Courier New', Courier, monospace;
             font-size: 14px;
-            line-height: 1.6;
-            padding: 24px 32px 14px;
+            line-height: 1.55;
+            padding: 22px 26px 12px;
+            padding-top: max(22px, env(safe-area-inset-top));
+            padding-right: max(26px, env(safe-area-inset-right));
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            padding-left: max(26px, env(safe-area-inset-left));
             z-index: 99999;
             display: flex;
             flex-direction: column;
@@ -82,6 +96,12 @@
             transition: opacity 0.9s ease;
             cursor: default;
             text-shadow: 0 0 6px rgba(200, 176, 144, 0.25);
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            box-sizing: border-box;
         }
 
         #bootScreen::after {
@@ -119,15 +139,17 @@
         }
 
         #bootOutput {
-            flex: 1;
+            flex: 1 1 auto;
+            min-height: 0; /* CRÍTICO: permite que flex child faça scroll */
             overflow-y: auto;
             overflow-x: hidden;
             white-space: pre-wrap;
             word-break: break-word;
             scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
             position: relative;
             z-index: 1;
-            padding-right: 6px;
+            padding-right: 4px;
         }
 
         #bootOutput::-webkit-scrollbar {
@@ -135,7 +157,7 @@
         }
 
         #bootOutput > div {
-            min-height: 1.6em;
+            min-height: 1.55em;
             animation: boot-line-appear 0.18s ease-out;
         }
 
@@ -185,18 +207,40 @@
             50%      { opacity: 1; }
         }
 
-        @media (max-width: 600px) {
+        /* Ajustes finos para telas pequenas (mobile) */
+        @media (max-width: 640px), (max-height: 640px) {
             #bootScreen {
-                font-size: 11px;
-                padding: 16px 14px 10px;
+                font-size: 11.5px;
+                line-height: 1.5;
+                padding: 14px 14px 10px;
+                padding-top: max(14px, env(safe-area-inset-top));
+                padding-right: max(14px, env(safe-area-inset-right));
+                padding-bottom: max(10px, env(safe-area-inset-bottom));
+                padding-left: max(14px, env(safe-area-inset-left));
             }
-            #bootHint { font-size: 10px; }
+            #bootCursor {
+                width: 6px;
+                height: 12px;
+            }
+            #bootHint { font-size: 10px; letter-spacing: 0.5px; }
+            #bootOutput > div { animation: none; }
+        }
+
+        /* Telas MUITO pequenas — reduz ainda mais */
+        @media (max-width: 380px) {
+            #bootScreen {
+                font-size: 10.5px;
+                padding: 12px 10px 8px;
+                padding-top: max(12px, env(safe-area-inset-top));
+                padding-bottom: max(8px, env(safe-area-inset-bottom));
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
             #bootOutput > div { animation: none; }
             #bootCursor { animation: none; }
             #bootHint { animation: none; }
+            #bootScreen { transition: opacity 0.4s ease; }
         }
 
         /* ===================================================== */
@@ -1559,7 +1603,7 @@
     <!-- ===================================================== -->
     <div id="bootScreen" role="presentation" aria-hidden="true">
         <div id="bootOutput"></div>
-        <div id="bootHint">[ pressione qualquer tecla para pular ]</div>
+        <div id="bootHint">[ toque ou pressione qualquer tecla para pular ]</div>
     </div>
 
     <div class="crt-overlay" id="crtOverlay"></div>
@@ -2258,80 +2302,169 @@
     <script>
         /* ========================================================= */
         /* BOOT SCREEN — SEQUÊNCIA ESTILO ARCH LINUX                 */
+        /* Versão mobile-friendly com failsafe e fallback            */
         /* ========================================================= */
         (function iniciarBoot() {
             const bootScreen = document.getElementById('bootScreen');
             const bootOutput = document.getElementById('bootOutput');
             if (!bootScreen || !bootOutput) return;
 
-            const prefereSemAnimacao = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            // Detecta dispositivo móvel
+            const isMobile =
+                (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches) ||
+                window.innerWidth <= 768;
 
-            function encerrarBoot() {
-                try { sessionStorage.setItem('voceimporta_booted', '1'); } catch (e) {}
-                bootScreen.classList.add('fade-out');
-                document.body.classList.remove('boot-lock');
-                setTimeout(() => {
-                    if (bootScreen && bootScreen.parentNode) {
-                        bootScreen.parentNode.removeChild(bootScreen);
-                    }
-                }, 950);
+            // Detecta preferência de movimento reduzido (não pula o boot, só encurta)
+            const prefereSemAnimacao =
+                window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // Checa sessão — usa try/catch porque iOS em modo privado joga exceção
+            let jaBootou = false;
+            try {
+                jaBootou = sessionStorage.getItem('voceimporta_booted') === '1';
+            } catch (e) {
+                jaBootou = false;
             }
 
-            // Se já bootou nessa sessão, ou prefere sem animação, pula direto
-            let jaBootou = false;
-            try { jaBootou = sessionStorage.getItem('voceimporta_booted') === '1'; } catch (e) {}
-
-            if (jaBootou || prefereSemAnimacao) {
-                if (bootScreen.parentNode) bootScreen.parentNode.removeChild(bootScreen);
+            // Se já rodou nessa sessão, remove a tela imediatamente
+            if (jaBootou) {
+                try {
+                    if (bootScreen.parentNode) bootScreen.parentNode.removeChild(bootScreen);
+                } catch (e) {}
                 return;
             }
 
+            // Trava scroll no html E body (mobile precisa dos dois)
+            document.documentElement.classList.add('boot-lock');
             document.body.classList.add('boot-lock');
 
-            const linhas = [
-                { texto: "voceimporta bootloader v2.026 (Expotech 2026)", classe: "accent", delay: 260 },
-                { texto: "", delay: 80 },
-                { texto: "Loading kernel: /vmlinuz-acolhimento ...", classe: "info", delay: 240 },
-                { texto: "Loading initramfs: /initramfs-empatia.img ...", classe: "info", delay: 280 },
-                { texto: "", delay: 120 },
-                { texto: "[    0.000000] voceimporta: kernel booting...", classe: "dim", delay: 100 },
-                { texto: "[    0.000214] CPU0: escuta-ativa @ 4.20GHz", classe: "dim", delay: 80 },
-                { texto: "[    0.000512] Memory: 8GB de compreensão disponível", classe: "dim", delay: 80 },
-                { texto: "[    0.001002] ACPI: Core revision 20260101", classe: "dim", delay: 80 },
-                { texto: "[    0.001488] checking fs /dev/saude-mental ... OK", classe: "ok", delay: 100 },
-                { texto: "[    0.002001] mounting /mnt/sem-julgamentos ... OK", classe: "ok", delay: 90 },
-                { texto: "[    0.002547] mounting /mnt/rede-de-apoio ... OK", classe: "ok", delay: 90 },
-                { texto: "[    0.003012] loading module autocompaixao.ko ... OK", classe: "ok", delay: 100 },
-                { texto: "[    0.003546] loading module escuta_ativa.ko ... OK", classe: "ok", delay: 100 },
-                { texto: "[    0.004001] loading module empatia.ko ... OK", classe: "ok", delay: 100 },
-                { texto: "", delay: 150 },
-                { texto: "[  OK  ] Started Journal Service.", classe: "ok", delay: 130 },
-                { texto: "[  OK  ] Started udev Kernel Device Manager.", classe: "ok", delay: 130 },
-                { texto: "[  OK  ] Reached target Basic System.", classe: "ok", delay: 130 },
-                { texto: "[  OK  ] Started suporte-emocional.service", classe: "ok", delay: 150 },
-                { texto: "[  OK  ] Started cvv-188.service", classe: "ok", delay: 150 },
-                { texto: "[  OK  ] Started caps-sus.service", classe: "ok", delay: 150 },
-                { texto: "[  OK  ] Started ajuda-flutuante.service", classe: "ok", delay: 150 },
-                { texto: "[  OK  ] Reached target Multi-User System.", classe: "ok", delay: 140 },
-                { texto: "[  OK  ] Reached target Ninguém Está Sozinho.", classe: "accent", delay: 220 },
-                { texto: "", delay: 220 },
-                { texto: "voceimporta login: visitante", classe: "accent", delay: 260 },
-                { texto: "password: ********", classe: "dim", delay: 320 },
-                { texto: "Last login: hoje, agora — de um momento difícil.", classe: "dim", delay: 260 },
-                { texto: "", delay: 240 },
-                { texto: "Bem-vindo(a). Você importa.", classe: "accent", delay: 420 },
-                { texto: "Iniciando sessão...", classe: "info", delay: 420 },
-                { texto: "", delay: 320 }
-            ];
-
-            let idx = 0;
+            // Estado do boot
             let finalizado = false;
             let timeoutAtual = null;
+            let failsafeId = null;
+            let idx = 0;
 
-            // Insere cursor piscante no fim
+            // ---------------------------------------------------
+            // FINALIZAÇÃO (com failsafe embutido)
+            // ---------------------------------------------------
+            function finalizar() {
+                if (finalizado) return;
+                finalizado = true;
+
+                if (timeoutAtual) { clearTimeout(timeoutAtual); timeoutAtual = null; }
+                if (failsafeId)   { clearTimeout(failsafeId);  failsafeId = null; }
+
+                try { sessionStorage.setItem('voceimporta_booted', '1'); } catch (e) {}
+
+                // Remove travas de scroll
+                document.documentElement.classList.remove('boot-lock');
+                document.body.classList.remove('boot-lock');
+
+                // Fade-out
+                try {
+                    bootScreen.classList.add('fade-out');
+                } catch (e) {}
+
+                // Remove do DOM depois do fade
+                setTimeout(() => {
+                    try {
+                        if (bootScreen && bootScreen.parentNode) {
+                            bootScreen.parentNode.removeChild(bootScreen);
+                        }
+                    } catch (e) {}
+                }, 950);
+            }
+
+            // ---------------------------------------------------
+            // FAILSAFE: se por qualquer motivo não terminar em 12s,
+            // força a saída (evita "fica preso pra sempre")
+            // ---------------------------------------------------
+            failsafeId = setTimeout(() => {
+                if (!finalizado) {
+                    // Log discreto (não bloqueia)
+                    try { console.warn('[boot] failsafe acionado — encerrando forçadamente.'); } catch (e) {}
+                    finalizar();
+                }
+            }, 12000);
+
+            // ---------------------------------------------------
+            // SEQUÊNCIA DE LINHAS
+            // ---------------------------------------------------
+            const linhasDesktop = [
+                { texto: "voceimporta bootloader v2.026 (Expotech 2026)", classe: "accent", delay: 260 },
+                { texto: "", delay: 80 },
+                { texto: "Loading kernel: /vmlinuz-acolhimento ...", classe: "info", delay: 220 },
+                { texto: "Loading initramfs: /initramfs-empatia.img ...", classe: "info", delay: 260 },
+                { texto: "", delay: 100 },
+                { texto: "[    0.000000] voceimporta: kernel booting...", classe: "dim", delay: 90 },
+                { texto: "[    0.000214] CPU0: escuta-ativa @ 4.20GHz", classe: "dim", delay: 70 },
+                { texto: "[    0.000512] Memory: 8GB de compreensão disponível", classe: "dim", delay: 70 },
+                { texto: "[    0.001002] ACPI: Core revision 20260101", classe: "dim", delay: 70 },
+                { texto: "[    0.001488] checking fs /dev/saude-mental ... OK", classe: "ok", delay: 90 },
+                { texto: "[    0.002001] mounting /mnt/sem-julgamentos ... OK", classe: "ok", delay: 80 },
+                { texto: "[    0.002547] mounting /mnt/rede-de-apoio ... OK", classe: "ok", delay: 80 },
+                { texto: "[    0.003012] loading module autocompaixao.ko ... OK", classe: "ok", delay: 90 },
+                { texto: "[    0.003546] loading module escuta_ativa.ko ... OK", classe: "ok", delay: 90 },
+                { texto: "[    0.004001] loading module empatia.ko ... OK", classe: "ok", delay: 90 },
+                { texto: "", delay: 130 },
+                { texto: "[  OK  ] Started Journal Service.", classe: "ok", delay: 110 },
+                { texto: "[  OK  ] Started udev Kernel Device Manager.", classe: "ok", delay: 110 },
+                { texto: "[  OK  ] Reached target Basic System.", classe: "ok", delay: 110 },
+                { texto: "[  OK  ] Started suporte-emocional.service", classe: "ok", delay: 130 },
+                { texto: "[  OK  ] Started cvv-188.service", classe: "ok", delay: 130 },
+                { texto: "[  OK  ] Started caps-sus.service", classe: "ok", delay: 130 },
+                { texto: "[  OK  ] Started ajuda-flutuante.service", classe: "ok", delay: 130 },
+                { texto: "[  OK  ] Reached target Multi-User System.", classe: "ok", delay: 120 },
+                { texto: "[  OK  ] Reached target Ninguém Está Sozinho.", classe: "accent", delay: 200 },
+                { texto: "", delay: 180 },
+                { texto: "voceimporta login: visitante", classe: "accent", delay: 220 },
+                { texto: "password: ********", classe: "dim", delay: 280 },
+                { texto: "Last login: hoje, agora — de um momento difícil.", classe: "dim", delay: 220 },
+                { texto: "", delay: 200 },
+                { texto: "Bem-vindo(a). Você importa.", classe: "accent", delay: 360 },
+                { texto: "Iniciando sessão...", classe: "info", delay: 360 },
+                { texto: "", delay: 260 }
+            ];
+
+            // No mobile, versão mais curta e com delays reduzidos
+            const linhasMobile = [
+                { texto: "voceimporta bootloader v2.026", classe: "accent", delay: 200 },
+                { texto: "", delay: 60 },
+                { texto: "Loading kernel: /vmlinuz-acolhimento ...", classe: "info", delay: 180 },
+                { texto: "Loading initramfs: /initramfs-empatia.img ...", classe: "info", delay: 200 },
+                { texto: "", delay: 80 },
+                { texto: "[    0.000000] kernel booting...", classe: "dim", delay: 70 },
+                { texto: "[    0.001488] /dev/saude-mental ... OK", classe: "ok", delay: 80 },
+                { texto: "[    0.002001] /mnt/sem-julgamentos ... OK", classe: "ok", delay: 70 },
+                { texto: "[    0.003012] autocompaixao.ko ... OK", classe: "ok", delay: 80 },
+                { texto: "[    0.003546] escuta_ativa.ko ... OK", classe: "ok", delay: 80 },
+                { texto: "[    0.004001] empatia.ko ... OK", classe: "ok", delay: 80 },
+                { texto: "", delay: 100 },
+                { texto: "[  OK  ] Started suporte-emocional.service", classe: "ok", delay: 110 },
+                { texto: "[  OK  ] Started cvv-188.service", classe: "ok", delay: 110 },
+                { texto: "[  OK  ] Started caps-sus.service", classe: "ok", delay: 110 },
+                { texto: "[  OK  ] Reached target Ninguém Está Sozinho.", classe: "accent", delay: 160 },
+                { texto: "", delay: 120 },
+                { texto: "voceimporta login: visitante", classe: "accent", delay: 160 },
+                { texto: "password: ********", classe: "dim", delay: 200 },
+                { texto: "", delay: 140 },
+                { texto: "Bem-vindo(a). Você importa.", classe: "accent", delay: 260 },
+                { texto: "Iniciando sessão...", classe: "info", delay: 260 },
+                { texto: "", delay: 180 }
+            ];
+
+            const linhas = isMobile ? linhasMobile : linhasDesktop;
+
+            // ---------------------------------------------------
+            // CURSOR
+            // ---------------------------------------------------
             const cursor = document.createElement('span');
             cursor.id = 'bootCursor';
+            cursor.setAttribute('aria-hidden', 'true');
 
+            // ---------------------------------------------------
+            // HELPERS DE RENDER
+            // ---------------------------------------------------
             function appendLinha(texto, classe) {
                 const div = document.createElement('div');
                 if (classe) div.className = classe;
@@ -2341,55 +2474,95 @@
                     div.textContent = texto;
                 }
                 bootOutput.appendChild(div);
-                bootOutput.scrollTop = bootOutput.scrollHeight;
+                // Auto-scroll (com fallback silencioso)
+                try {
+                    bootOutput.scrollTop = bootOutput.scrollHeight;
+                } catch (e) {}
                 return div;
             }
 
             function renderizarTudo() {
-                bootOutput.innerHTML = '';
-                linhas.forEach(l => appendLinha(l.texto, l.classe));
-                const ultima = bootOutput.lastElementChild;
-                if (ultima) ultima.appendChild(cursor);
-                bootOutput.scrollTop = bootOutput.scrollHeight;
+                try {
+                    bootOutput.innerHTML = '';
+                    linhas.forEach(l => appendLinha(l.texto, l.classe));
+                    const ultima = bootOutput.lastElementChild;
+                    if (ultima) ultima.appendChild(cursor);
+                    bootOutput.scrollTop = bootOutput.scrollHeight;
+                } catch (e) {}
             }
 
-            function finalizar() {
-                if (finalizado) return;
-                finalizado = true;
-                if (timeoutAtual) clearTimeout(timeoutAtual);
-                encerrarBoot();
+            // ---------------------------------------------------
+            // SKIP / PULAR
+            // ---------------------------------------------------
+            let skipHandled = false;
+            function pular() {
+                if (finalizado || skipHandled) return;
+                skipHandled = true;
+
+                if (timeoutAtual) { clearTimeout(timeoutAtual); timeoutAtual = null; }
+
+                renderizarTudo();
+
+                // Pequena pausa pra ver o "render final" antes do fade
+                timeoutAtual = setTimeout(finalizar, isMobile ? 300 : 450);
             }
 
+            // ---------------------------------------------------
+            // LOOP DE RENDERIZAÇÃO PASSO A PASSO
+            // ---------------------------------------------------
             function proximaLinha() {
                 if (finalizado) return;
-                if (idx >= linhas.length) {
-                    timeoutAtual = setTimeout(finalizar, 900);
-                    return;
+                try {
+                    if (idx >= linhas.length) {
+                        timeoutAtual = setTimeout(finalizar, isMobile ? 650 : 900);
+                        return;
+                    }
+
+                    const l = linhas[idx];
+                    const div = appendLinha(l.texto, l.classe);
+
+                    // Cursor acompanha a última linha
+                    try { div.appendChild(cursor); } catch (e) {}
+
+                    idx++;
+                    timeoutAtual = setTimeout(proximaLinha, l.delay || 70);
+                } catch (err) {
+                    // Se algo der errado, não deixa o boot preso
+                    try { console.error('[boot] erro na sequência:', err); } catch (e) {}
+                    finalizar();
                 }
-                const l = linhas[idx];
-                const div = appendLinha(l.texto, l.classe);
-                // Cursor acompanha a última linha
-                div.appendChild(cursor);
-                idx++;
-                timeoutAtual = setTimeout(proximaLinha, l.delay || 70);
             }
 
-            function pular() {
-                if (finalizado) return;
-                finalizado = true;
-                if (timeoutAtual) clearTimeout(timeoutAtual);
-                renderizarTudo();
-                setTimeout(finalizar, 450);
+            // ---------------------------------------------------
+            // HANDLERS DE SKIP
+            // ---------------------------------------------------
+            function onKey()  { pular(); }
+            function onClick() { pular(); }
+            function onTouch(e) {
+                // Não bloqueia o evento — só dispara o skip
+                pular();
             }
 
-            // Handlers de skip
-            const onKey = () => { pular(); document.removeEventListener('keydown', onKey); };
             document.addEventListener('keydown', onKey);
-            bootScreen.addEventListener('click', pular);
-            bootScreen.addEventListener('touchstart', pular, { passive: true });
+            bootScreen.addEventListener('click', onClick);
+            bootScreen.addEventListener('touchstart', onTouch, { passive: true });
+            // Alguns browsers mobile não disparam touchstart confiável — adiciona pointerdown
+            if (window.PointerEvent) {
+                bootScreen.addEventListener('pointerdown', onClick);
+            }
 
-            // Inicia
-            setTimeout(proximaLinha, 350);
+            // ---------------------------------------------------
+            // INÍCIO
+            // ---------------------------------------------------
+            if (prefereSemAnimacao) {
+                // Modo "sem animação": renderiza tudo de uma vez,
+                // deixa visível por um instante e sai.
+                renderizarTudo();
+                timeoutAtual = setTimeout(finalizar, 1400);
+            } else {
+                // Modo normal: animação linha por linha
+                timeoutAtual = setTimeout(proximaLinha, isMobile ? 250 : 350);
+            }
         })();
 
         /* ========================================================= */
