@@ -68,6 +68,11 @@
             overscroll-behavior: none;
         }
 
+        html.terminal-lock,
+        body.terminal-lock {
+            overflow: hidden !important;
+        }
+
         /* ===================================================== */
         /* DESATIVAR EFEITOS CRT (via body.crt-off)               */
         /* ===================================================== */
@@ -79,7 +84,7 @@
         }
 
         /* ===================================================== */
-        /* STICKY BAR — "VOCÊ NÃO ESTÁ SOZINHO"                  */
+        /* STICKY BAR — COM MARQUEE                              */
         /* ===================================================== */
 
         .sticky-bar {
@@ -90,7 +95,7 @@
             height: var(--sticky-bar-h);
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             z-index: 9990;
             background: transparent;
             color: transparent;
@@ -99,26 +104,36 @@
             letter-spacing: 4px;
             text-transform: uppercase;
             font-size: 0.9rem;
-            padding: 0 20px;
+            padding: 0;
             border-bottom: 1px solid transparent;
             transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease, text-shadow 0.5s ease;
             pointer-events: none;
-            text-align: center;
-            white-space: nowrap;
+            text-align: left;
             overflow: hidden;
-            text-overflow: ellipsis;
             text-shadow: none;
         }
 
-        .sticky-bar span {
-            display: block;
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .sticky-bar-marquee {
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
+            white-space: nowrap;
+            animation: sticky-marquee 90s linear infinite;
+            will-change: transform;
+        }
+
+        .sticky-bar-marquee > span {
+            display: inline-block;
+            padding: 0 1.5em;
             white-space: nowrap;
         }
 
-        /* Estado visível — fundo escuro (paleta escura do site) */
+        @keyframes sticky-marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* Estado visível — fundo escuro */
         .sticky-bar.visivel {
             background: rgba(15, 10, 8, 0.94);
             border-bottom-color: #3a3028;
@@ -150,8 +165,8 @@
                 font-size: 0.72rem;
                 letter-spacing: 2.5px;
                 height: 38px;
-                padding-left: 66px;
-                padding-right: 15px;
+                padding-left: 58px;
+                padding-right: 0;
             }
             section[id] {
                 scroll-margin-top: 51px;
@@ -161,6 +176,14 @@
         @media (prefers-reduced-motion: reduce) {
             .sticky-bar {
                 transition: none;
+                justify-content: center;
+                padding: 0 20px;
+            }
+            .sticky-bar-marquee {
+                animation: none;
+            }
+            .sticky-bar-marquee > span:nth-child(2) {
+                display: none;
             }
         }
 
@@ -1802,6 +1825,176 @@
         }
         .modal-fechar:hover { color: #d0c8b8; }
 
+        /* ===================================================== */
+        /* TERMINAL (EASTER EGG "ajuda")                          */
+        /* ===================================================== */
+
+        .terminal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(5, 4, 3, 0.88);
+            z-index: 9996;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .terminal-overlay.ativo {
+            display: flex;
+        }
+
+        .terminal-window {
+            width: 100%;
+            max-width: 640px;
+            max-height: 75vh;
+            background: #0a0704;
+            border: 2px solid #3a3028;
+            box-shadow: 0 0 40px rgba(200, 160, 100, 0.22), 0 10px 50px rgba(0,0,0,0.95);
+            display: flex;
+            flex-direction: column;
+            font-family: 'Courier New', Courier, monospace;
+            color: #c8b090;
+            animation: terminalIn 0.25s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes terminalIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .terminal-titlebar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            background: #0f0a08;
+            border-bottom: 2px solid #3a3028;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #c8b090;
+            text-shadow: 0 0 6px rgba(200,160,100,0.35);
+            flex: 0 0 auto;
+        }
+
+        .terminal-titlebar::before {
+            content: '▣';
+            font-size: 0.9rem;
+            color: #8a7a6a;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
+        }
+
+        .terminal-title-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .terminal-close {
+            width: 20px;
+            height: 18px;
+            background: #252018;
+            border: 1px solid;
+            border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
+            color: #c8b090;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            line-height: 1;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .terminal-close:hover {
+            background: #3a2a1a;
+            color: #e8d5a3;
+        }
+
+        .terminal-close:active {
+            border-color: #1a1008 #5a4a3a #5a4a3a #1a1008;
+        }
+
+        .terminal-body {
+            flex: 1 1 auto;
+            min-height: 160px;
+            overflow-y: auto;
+            padding: 14px 16px;
+            font-size: 0.82rem;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            word-break: break-word;
+            scrollbar-width: thin;
+            scrollbar-color: #3a3028 #0f0a08;
+        }
+
+        .terminal-body::-webkit-scrollbar { width: 8px; }
+        .terminal-body::-webkit-scrollbar-track { background: #0f0a08; }
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: #3a3028;
+            border: 1px solid #1a1008;
+        }
+
+        .terminal-body .t-line {
+            min-height: 1.5em;
+            animation: t-line-in 0.15s ease-out;
+        }
+
+        @keyframes t-line-in {
+            from { opacity: 0; transform: translateX(-3px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .t-prompt-line { color: #8a7a6a; }
+        .t-ok          { color: #8ac88a; }
+        .t-info        { color: #8ab0d0; }
+        .t-warn        { color: #d0a860; }
+        .t-accent      { color: #e0cba0; font-weight: 700; }
+        .t-err         { color: #d07a6a; }
+        .t-dim         { color: #6a5a4a; }
+
+        .terminal-input-row {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-top: 1px solid #2a2018;
+            background: #050403;
+        }
+
+        .terminal-prompt {
+            color: #8ac88a;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #c8b090;
+            font-family: inherit;
+            font-size: 0.82rem;
+            outline: none;
+            padding: 0;
+            letter-spacing: 0.5px;
+            caret-color: #c8b090;
+        }
+
+        .terminal-input::placeholder {
+            color: #5a4a3a;
+            font-style: italic;
+        }
+
         #respiro {
             background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%);
         }
@@ -1917,16 +2110,29 @@
             .tree-node:last-child::before {
                 height: 14px;
             }
+
+            .terminal-window {
+                max-height: 85vh;
+            }
+            .terminal-body {
+                font-size: 0.75rem;
+            }
+            .terminal-input {
+                font-size: 0.78rem;
+            }
         }
     </style>
 </head>
 <body>
 
     <!-- ===================================================== -->
-    <!-- STICKY BAR — -->
+    <!-- STICKY BAR — MARQUEE                                  -->
     <!-- ===================================================== -->
     <div class="sticky-bar" id="stickyBar" aria-hidden="true">
-        <span>sua saúde mental importa</span>
+        <div class="sticky-bar-marquee">
+            <span>sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;</span>
+            <span aria-hidden="true">sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;</span>
+        </div>
     </div>
 
     <!-- ===================================================== -->
@@ -2145,6 +2351,23 @@
                 </div>
                 <p style="font-size:0.9rem; color:#a09080;">Em caso de risco imediato, ligue para o SAMU ou vá ao pronto-socorro mais próximo. Não fique sozinho.</p>
                 <p style="font-size:0.9rem; color:#8a7a6a; margin-top:1rem;"><em>Respire fundo. Você é importante. Há pessoas que se importam com você.</em></p>
+            </div>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- TERMINAL (EASTER EGG "ajuda")                          -->
+        <!-- ===================================================== -->
+        <div class="terminal-overlay" id="terminalOverlay" role="dialog" aria-modal="true" aria-label="Terminal de ajuda">
+            <div class="terminal-window">
+                <div class="terminal-titlebar">
+                    <span class="terminal-title-text">ajuda.exe — voceimporta terminal</span>
+                    <button class="terminal-close" id="terminalClose" aria-label="Fechar terminal">×</button>
+                </div>
+                <div class="terminal-body" id="terminalBody"></div>
+                <div class="terminal-input-row">
+                    <span class="terminal-prompt" aria-hidden="true">&gt;</span>
+                    <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" placeholder="digite um comando (ex: ajuda)">
+                </div>
             </div>
         </div>
 
@@ -2774,6 +2997,7 @@
     <script>
         /* ========================================================= */
         /* BOOT SCREEN — SEQUÊNCIA ESTILO ARCH LINUX                 */
+        /* Com personalidade + dica do easter egg                    */
         /* ========================================================= */
         (function iniciarBoot() {
             const bootScreen = document.getElementById('bootScreen');
@@ -2839,7 +3063,14 @@
                     try { console.warn('[boot] failsafe acionado — encerrando forçadamente.'); } catch (e) {}
                     finalizar();
                 }
-            }, 12000);
+            }, 18000);
+
+            // Saudação conforme hora do dia
+            const horaAtual = new Date().getHours();
+            let saudacao;
+            if (horaAtual >= 5 && horaAtual < 12) saudacao = "Bom dia";
+            else if (horaAtual >= 12 && horaAtual < 18) saudacao = "Boa tarde";
+            else saudacao = "Boa noite";
 
             const linhasDesktop = [
                 { texto: "voceimporta bootloader v2.026 (Expotech 2026)", classe: "accent", delay: 260 },
@@ -2874,7 +3105,13 @@
                 { texto: "", delay: 200 },
                 { texto: "Bem-vindo(a). Você importa.", classe: "accent", delay: 360 },
                 { texto: "Iniciando sessão...", classe: "info", delay: 360 },
-                { texto: "", delay: 260 }
+                { texto: "", delay: 220 },
+                { texto: `[  OK  ] Sessão iniciada. ${saudacao}, visitante.`, classe: "ok", delay: 340 },
+                { texto: "[ INFO ] Analisando estado emocional... não é binário.", classe: "info", delay: 360 },
+                { texto: "[ WARN ] Lembrete: você não precisa ter tudo resolvido hoje.", classe: "warn", delay: 420 },
+                { texto: "[ INFO ] Dica: digite 'ajuda' em qualquer lugar da página.", classe: "info", delay: 380 },
+                { texto: "[  OK  ] Pronto. Role a página no seu tempo.", classe: "accent", delay: 340 },
+                { texto: "", delay: 220 }
             ];
 
             const linhasMobile = [
@@ -2900,7 +3137,12 @@
                 { texto: "", delay: 140 },
                 { texto: "Bem-vindo(a). Você importa.", classe: "accent", delay: 260 },
                 { texto: "Iniciando sessão...", classe: "info", delay: 260 },
-                { texto: "", delay: 180 }
+                { texto: "", delay: 160 },
+                { texto: `[  OK  ] ${saudacao}, visitante.`, classe: "ok", delay: 280 },
+                { texto: "[ WARN ] Você não precisa ter tudo resolvido hoje.", classe: "warn", delay: 340 },
+                { texto: "[ INFO ] Digite 'ajuda' em qualquer lugar.", classe: "info", delay: 300 },
+                { texto: "[  OK  ] Pronto. Role no seu tempo.", classe: "accent", delay: 300 },
+                { texto: "", delay: 200 }
             ];
 
             const linhas = isMobile ? linhasMobile : linhasDesktop;
@@ -3018,9 +3260,7 @@
         });
 
         /* ========================================================= */
-        /* STICKY BAR — "VOCÊ NÃO ESTÁ SOZINHO"                     */
-        /* Mostra a barra ao rolar, escurece entre "o que é" e      */
-        /* "como se acalmar", clareia após "como se acalmar"        */
+        /* STICKY BAR                                                */
         /* ========================================================= */
         const stickyBar = document.getElementById('stickyBar');
         const ajudaSecaoEl = document.getElementById('ajuda');
@@ -3032,18 +3272,15 @@
 
             const scrollY = window.pageYOffset || document.documentElement.scrollTop;
 
-            // Visibilidade: aparece após o título do hero sair de cena
             if (scrollY > 70) {
                 stickyBar.classList.add('visivel');
             } else {
                 stickyBar.classList.remove('visivel');
             }
 
-            // Troca de cor: escuro até "como se acalmar", claro depois
             if (ajudaSecaoEl) {
                 const rect = ajudaSecaoEl.getBoundingClientRect();
                 const ajudaTop = rect.top + scrollY;
-                // +50 leva em conta a altura da própria barra
                 if (scrollY + 50 >= ajudaTop) {
                     stickyBar.classList.add('bar-clara');
                 } else {
@@ -3061,7 +3298,6 @@
         window.addEventListener('scroll', scheduleStickyUpdate, { passive: true });
         window.addEventListener('resize', scheduleStickyUpdate, { passive: true });
         window.addEventListener('load', scheduleStickyUpdate);
-        // Chamada inicial
         updateStickyBarNow();
 
         /* ========================================================= */
@@ -3281,6 +3517,232 @@
             });
         }
 
+        /* ========================================================= */
+        /* EASTER EGG: DIGITAR "ajuda" ABRE O TERMINAL               */
+        /* ========================================================= */
+        const terminalOverlay = document.getElementById('terminalOverlay');
+        const terminalBody    = document.getElementById('terminalBody');
+        const terminalInput   = document.getElementById('terminalInput');
+        const terminalClose   = document.getElementById('terminalClose');
+
+        let keystrokeBuffer = '';
+        let terminalAberto = false;
+
+        function appendTerminalLinha(texto, classe) {
+            if (!terminalBody) return;
+            const div = document.createElement('div');
+            div.className = 't-line' + (classe ? ' ' + classe : '');
+            if (texto === '') {
+                div.innerHTML = '&nbsp;';
+            } else {
+                div.textContent = texto;
+            }
+            terminalBody.appendChild(div);
+            try { terminalBody.scrollTop = terminalBody.scrollHeight; } catch (e) {}
+        }
+
+        function renderizarBoasVindasTerminal() {
+            if (!terminalBody) return;
+            terminalBody.innerHTML = '';
+            appendTerminalLinha("voceimporta terminal v1.0", "t-accent");
+            appendTerminalLinha("Um pequeno espaço seguro, no meio da página.", "t-dim");
+            appendTerminalLinha("");
+            appendTerminalLinha("Digite 'ajuda' para ver os comandos disponíveis.", "t-info");
+            appendTerminalLinha("");
+        }
+
+        function abrirTerminal() {
+            if (!terminalOverlay || terminalAberto) return;
+            terminalAberto = true;
+            renderizarBoasVindasTerminal();
+            terminalOverlay.classList.add('ativo');
+            document.documentElement.classList.add('terminal-lock');
+            document.body.classList.add('terminal-lock');
+            setTimeout(() => {
+                try { terminalInput.focus(); } catch (e) {}
+            }, 60);
+        }
+
+        function fecharTerminal() {
+            if (!terminalOverlay || !terminalAberto) return;
+            terminalAberto = false;
+            terminalOverlay.classList.remove('ativo');
+            document.documentElement.classList.remove('terminal-lock');
+            document.body.classList.remove('terminal-lock');
+        }
+
+        function rolarPara(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                fecharTerminal();
+                setTimeout(() => {
+                    try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+                }, 120);
+            }
+        }
+
+        function executarComando(raw) {
+            const entrada = (raw || '').trim();
+            const cmd = entrada.toLowerCase();
+
+            if (!entrada) return;
+
+            appendTerminalLinha('> ' + entrada, 't-prompt-line');
+
+            switch (cmd) {
+                case 'ajuda':
+                case 'help':
+                case '?':
+                    appendTerminalLinha("Comandos disponíveis:", "t-accent");
+                    appendTerminalLinha("  ajuda      — mostra esta lista");
+                    appendTerminalLinha("  sobre      — o que é o voceimporta");
+                    appendTerminalLinha("  cvv        — apoio 24h gratuito");
+                    appendTerminalLinha("  caps       — atendimento pelo SUS");
+                    appendTerminalLinha("  samu       — emergência médica");
+                    appendTerminalLinha("  respirar   — ir para a seção de respiração");
+                    appendTerminalLinha("  cuidar     — uma mensagem pra você");
+                    appendTerminalLinha("  limpar     — limpa a tela");
+                    appendTerminalLinha("  fechar     — fecha o terminal");
+                    appendTerminalLinha("");
+                    break;
+
+                case 'sobre':
+                case 'about':
+                    appendTerminalLinha("voceimporta — projeto de conscientização", "t-accent");
+                    appendTerminalLinha("sobre depressão, feito pra Expotech 2026.", "t-info");
+                    appendTerminalLinha("Sem julgamentos. Sem pressa. No seu tempo.", "t-dim");
+                    appendTerminalLinha("");
+                    break;
+
+                case 'cvv':
+                case '188':
+                    appendTerminalLinha("CVV — Centro de Valorização da Vida", "t-accent");
+                    appendTerminalLinha("Telefone: 188", "t-ok");
+                    appendTerminalLinha("Gratuito. Sigiloso. 24h por dia, todos os dias.", "t-info");
+                    appendTerminalLinha("Você não precisa estar em crise pra ligar.", "t-dim");
+                    appendTerminalLinha("");
+                    break;
+
+                case 'caps':
+                    appendTerminalLinha("CAPS — Centro de Atenção Psicossocial", "t-accent");
+                    appendTerminalLinha("Acompanhamento psicológico e psiquiátrico", "t-info");
+                    appendTerminalLinha("gratuito pelo SUS. Procure a UBS mais próxima", "t-info");
+                    appendTerminalLinha("e peça encaminhamento.", "t-dim");
+                    appendTerminalLinha("");
+                    break;
+
+                case 'samu':
+                case '192':
+                    appendTerminalLinha("SAMU — 192", "t-accent");
+                    appendTerminalLinha("Emergência médica. Ligue se houver risco", "t-warn");
+                    appendTerminalLinha("imediato à vida. Não hesite.", "t-warn");
+                    appendTerminalLinha("");
+                    break;
+
+                case 'respirar':
+                case 'respira':
+                case 'respiro':
+                    appendTerminalLinha("Indo para a seção de respiração...", "t-info");
+                    appendTerminalLinha("Respire fundo uma vez antes.", "t-dim");
+                    appendTerminalLinha("");
+                    setTimeout(() => rolarPara('respiro'), 500);
+                    break;
+
+                case 'cuidar':
+                case 'cuidado':
+                    appendTerminalLinha("Você está aqui, digitando comandos", "t-info");
+                    appendTerminalLinha("num terminal simbólico às " + String(new Date().getHours()).padStart(2,'0') + "h.", "t-dim");
+                    appendTerminalLinha("Isso já é um pequeno ato de cuidado com você.", "t-accent");
+                    appendTerminalLinha("");
+                    appendTerminalLinha("Tome um copo de água. Solte os ombros.", "t-ok");
+                    appendTerminalLinha("Você está fazendo o melhor que dá hoje.", "t-ok");
+                    appendTerminalLinha("");
+                    break;
+
+                case 'limpar':
+                case 'clear':
+                case 'cls':
+                    terminalBody.innerHTML = '';
+                    appendTerminalLinha("terminal limpo.", "t-dim");
+                    appendTerminalLinha("");
+                    break;
+
+                case 'fechar':
+                case 'sair':
+                case 'exit':
+                case 'quit':
+                    appendTerminalLinha("até logo. cuide-se.", "t-accent");
+                    appendTerminalLinha("");
+                    setTimeout(fecharTerminal, 450);
+                    break;
+
+                default:
+                    appendTerminalLinha("comando não reconhecido: " + cmd, "t-err");
+                    appendTerminalLinha("digite 'ajuda' para ver os comandos.", "t-dim");
+                    appendTerminalLinha("");
+                    break;
+            }
+        }
+
+        // Buffer de teclas — detecta "ajuda" em qualquer lugar
+        document.addEventListener('keydown', (e) => {
+            // Ignorar durante o boot
+            if (document.getElementById('bootScreen')) return;
+            // Ignorar se o terminal já está aberto
+            if (terminalAberto) return;
+            // Ignorar se está digitando em input/textarea/select
+            const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+            // Ignorar combinações com modificadores
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            // Ignorar teclas funcionais
+            if (typeof e.key !== 'string' || e.key.length !== 1) {
+                if (e.key === 'Escape') keystrokeBuffer = '';
+                return;
+            }
+
+            keystrokeBuffer = (keystrokeBuffer + e.key.toLowerCase()).slice(-10);
+            if (keystrokeBuffer.indexOf('ajuda') !== -1) {
+                keystrokeBuffer = '';
+                abrirTerminal();
+            }
+        });
+
+        // Enter/ESC dentro do input do terminal
+        if (terminalInput) {
+            terminalInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    executarComando(terminalInput.value);
+                    terminalInput.value = '';
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    fecharTerminal();
+                }
+            });
+        }
+
+        if (terminalClose) {
+            terminalClose.addEventListener('click', fecharTerminal);
+        }
+
+        if (terminalOverlay) {
+            terminalOverlay.addEventListener('click', (e) => {
+                if (e.target === terminalOverlay) fecharTerminal();
+            });
+        }
+
+        // ESC global — fecha o terminal com prioridade (capture phase)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && terminalAberto) {
+                e.stopPropagation();
+                fecharTerminal();
+            }
+        }, true);
+
+        /* ========================================================= */
+        /* QUIZ DE AUTOAVALIAÇÃO                                     */
+        /* ========================================================= */
         const perguntasAutoavaliacao = [
             { texto: "Nas últimas duas semanas, você tem se sentido triste, para baixo ou sem esperança na maior parte do dia?", area: "humor", critica: false },
             { texto: "Você tem perdido o interesse ou o prazer em atividades que antes eram agradáveis?", area: "humor", critica: false },
