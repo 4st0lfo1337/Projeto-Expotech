@@ -56,6 +56,149 @@
             display: flex;
         }
 
+        body.boot-lock {
+            overflow: hidden !important;
+        }
+
+        /* ===================================================== */
+        /* BOOT SCREEN — ESTILO ARCH LINUX / TERMINAL             */
+        /* ===================================================== */
+
+        #bootScreen {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #050403;
+            color: #c8b090;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 24px 32px 14px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: opacity 0.9s ease;
+            cursor: default;
+            text-shadow: 0 0 6px rgba(200, 176, 144, 0.25);
+        }
+
+        #bootScreen::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.38) 0px,
+                rgba(0, 0, 0, 0.38) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            z-index: 2;
+        }
+
+        #bootScreen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                transparent 55%,
+                rgba(0, 0, 0, 0.75) 100%
+            );
+            z-index: 3;
+        }
+
+        #bootScreen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #bootOutput {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            white-space: pre-wrap;
+            word-break: break-word;
+            scrollbar-width: none;
+            position: relative;
+            z-index: 1;
+            padding-right: 6px;
+        }
+
+        #bootOutput::-webkit-scrollbar {
+            display: none;
+        }
+
+        #bootOutput > div {
+            min-height: 1.6em;
+            animation: boot-line-appear 0.18s ease-out;
+        }
+
+        @keyframes boot-line-appear {
+            from { opacity: 0; transform: translateX(-4px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        #bootOutput .ok      { color: #8ac88a; }
+        #bootOutput .warn    { color: #d0a860; }
+        #bootOutput .info    { color: #8ab0d0; }
+        #bootOutput .dim     { color: #6a5a4a; }
+        #bootOutput .accent  { color: #e0cba0; font-weight: 700; }
+        #bootOutput .error   { color: #d07a6a; }
+
+        #bootCursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #c8b090;
+            animation: boot-blink 1s steps(1) infinite;
+            vertical-align: text-bottom;
+            margin-left: 2px;
+            box-shadow: 0 0 8px rgba(200, 176, 144, 0.7);
+        }
+
+        @keyframes boot-blink {
+            0%, 50%       { opacity: 1; }
+            50.01%, 100%  { opacity: 0; }
+        }
+
+        #bootHint {
+            flex: 0 0 auto;
+            text-align: right;
+            font-size: 12px;
+            color: #5a4a3a;
+            padding-top: 10px;
+            border-top: 1px solid #2a2018;
+            animation: boot-hint-pulse 2.4s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        @keyframes boot-hint-pulse {
+            0%, 100% { opacity: 0.45; }
+            50%      { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            #bootScreen {
+                font-size: 11px;
+                padding: 16px 14px 10px;
+            }
+            #bootHint { font-size: 10px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #bootOutput > div { animation: none; }
+            #bootCursor { animation: none; }
+            #bootHint { animation: none; }
+        }
+
         /* ===================================================== */
         /* EFFECT CRT — APENAS EM DESKTOP/PC                      */
         /* ===================================================== */
@@ -950,19 +1093,16 @@
             padding: 1.5rem 2rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             text-align: left;
-            /* ADICIONADO: transição suave para o hover */
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-left-color 0.2s ease;
         }
         .ajuda-item:nth-child(2) { border-left-color: var(--cor-secundaria); }
         .ajuda-item:nth-child(3) { border-left-color: var(--cor-alerta); }
 
-        /* ADICIONADO: efeito "selecionado" igual ao dos membros da equipe */
         .ajuda-item:hover {
             transform: translateX(5px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
             border-left-color: #5a6a4a;
         }
-        /* Mantém a identidade visual do item de emergência no hover */
         .ajuda-item:nth-child(3):hover {
             border-left-color: #a86a5a;
         }
@@ -1413,6 +1553,14 @@
     </style>
 </head>
 <body>
+
+    <!-- ===================================================== -->
+    <!-- BOOT SCREEN — ESTILO ARCH LINUX / TERMINAL            -->
+    <!-- ===================================================== -->
+    <div id="bootScreen" role="presentation" aria-hidden="true">
+        <div id="bootOutput"></div>
+        <div id="bootHint">[ pressione qualquer tecla para pular ]</div>
+    </div>
 
     <div class="crt-overlay" id="crtOverlay"></div>
     <div class="crt-flicker" id="crtFlicker"></div>
@@ -2108,6 +2256,146 @@
     </div>
 
     <script>
+        /* ========================================================= */
+        /* BOOT SCREEN — SEQUÊNCIA ESTILO ARCH LINUX                 */
+        /* ========================================================= */
+        (function iniciarBoot() {
+            const bootScreen = document.getElementById('bootScreen');
+            const bootOutput = document.getElementById('bootOutput');
+            if (!bootScreen || !bootOutput) return;
+
+            const prefereSemAnimacao = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function encerrarBoot() {
+                try { sessionStorage.setItem('voceimporta_booted', '1'); } catch (e) {}
+                bootScreen.classList.add('fade-out');
+                document.body.classList.remove('boot-lock');
+                setTimeout(() => {
+                    if (bootScreen && bootScreen.parentNode) {
+                        bootScreen.parentNode.removeChild(bootScreen);
+                    }
+                }, 950);
+            }
+
+            // Se já bootou nessa sessão, ou prefere sem animação, pula direto
+            let jaBootou = false;
+            try { jaBootou = sessionStorage.getItem('voceimporta_booted') === '1'; } catch (e) {}
+
+            if (jaBootou || prefereSemAnimacao) {
+                if (bootScreen.parentNode) bootScreen.parentNode.removeChild(bootScreen);
+                return;
+            }
+
+            document.body.classList.add('boot-lock');
+
+            const linhas = [
+                { texto: "voceimporta bootloader v2.026 (Expotech 2026)", classe: "accent", delay: 260 },
+                { texto: "", delay: 80 },
+                { texto: "Loading kernel: /vmlinuz-acolhimento ...", classe: "info", delay: 240 },
+                { texto: "Loading initramfs: /initramfs-empatia.img ...", classe: "info", delay: 280 },
+                { texto: "", delay: 120 },
+                { texto: "[    0.000000] voceimporta: kernel booting...", classe: "dim", delay: 100 },
+                { texto: "[    0.000214] CPU0: escuta-ativa @ 4.20GHz", classe: "dim", delay: 80 },
+                { texto: "[    0.000512] Memory: 8GB de compreensão disponível", classe: "dim", delay: 80 },
+                { texto: "[    0.001002] ACPI: Core revision 20260101", classe: "dim", delay: 80 },
+                { texto: "[    0.001488] checking fs /dev/saude-mental ... OK", classe: "ok", delay: 100 },
+                { texto: "[    0.002001] mounting /mnt/sem-julgamentos ... OK", classe: "ok", delay: 90 },
+                { texto: "[    0.002547] mounting /mnt/rede-de-apoio ... OK", classe: "ok", delay: 90 },
+                { texto: "[    0.003012] loading module autocompaixao.ko ... OK", classe: "ok", delay: 100 },
+                { texto: "[    0.003546] loading module escuta_ativa.ko ... OK", classe: "ok", delay: 100 },
+                { texto: "[    0.004001] loading module empatia.ko ... OK", classe: "ok", delay: 100 },
+                { texto: "", delay: 150 },
+                { texto: "[  OK  ] Started Journal Service.", classe: "ok", delay: 130 },
+                { texto: "[  OK  ] Started udev Kernel Device Manager.", classe: "ok", delay: 130 },
+                { texto: "[  OK  ] Reached target Basic System.", classe: "ok", delay: 130 },
+                { texto: "[  OK  ] Started suporte-emocional.service", classe: "ok", delay: 150 },
+                { texto: "[  OK  ] Started cvv-188.service", classe: "ok", delay: 150 },
+                { texto: "[  OK  ] Started caps-sus.service", classe: "ok", delay: 150 },
+                { texto: "[  OK  ] Started ajuda-flutuante.service", classe: "ok", delay: 150 },
+                { texto: "[  OK  ] Reached target Multi-User System.", classe: "ok", delay: 140 },
+                { texto: "[  OK  ] Reached target Ninguém Está Sozinho.", classe: "accent", delay: 220 },
+                { texto: "", delay: 220 },
+                { texto: "voceimporta login: visitante", classe: "accent", delay: 260 },
+                { texto: "password: ********", classe: "dim", delay: 320 },
+                { texto: "Last login: hoje, agora — de um momento difícil.", classe: "dim", delay: 260 },
+                { texto: "", delay: 240 },
+                { texto: "Bem-vindo(a). Você importa.", classe: "accent", delay: 420 },
+                { texto: "Iniciando sessão...", classe: "info", delay: 420 },
+                { texto: "", delay: 320 }
+            ];
+
+            let idx = 0;
+            let finalizado = false;
+            let timeoutAtual = null;
+
+            // Insere cursor piscante no fim
+            const cursor = document.createElement('span');
+            cursor.id = 'bootCursor';
+
+            function appendLinha(texto, classe) {
+                const div = document.createElement('div');
+                if (classe) div.className = classe;
+                if (texto === "") {
+                    div.innerHTML = '&nbsp;';
+                } else {
+                    div.textContent = texto;
+                }
+                bootOutput.appendChild(div);
+                bootOutput.scrollTop = bootOutput.scrollHeight;
+                return div;
+            }
+
+            function renderizarTudo() {
+                bootOutput.innerHTML = '';
+                linhas.forEach(l => appendLinha(l.texto, l.classe));
+                const ultima = bootOutput.lastElementChild;
+                if (ultima) ultima.appendChild(cursor);
+                bootOutput.scrollTop = bootOutput.scrollHeight;
+            }
+
+            function finalizar() {
+                if (finalizado) return;
+                finalizado = true;
+                if (timeoutAtual) clearTimeout(timeoutAtual);
+                encerrarBoot();
+            }
+
+            function proximaLinha() {
+                if (finalizado) return;
+                if (idx >= linhas.length) {
+                    timeoutAtual = setTimeout(finalizar, 900);
+                    return;
+                }
+                const l = linhas[idx];
+                const div = appendLinha(l.texto, l.classe);
+                // Cursor acompanha a última linha
+                div.appendChild(cursor);
+                idx++;
+                timeoutAtual = setTimeout(proximaLinha, l.delay || 70);
+            }
+
+            function pular() {
+                if (finalizado) return;
+                finalizado = true;
+                if (timeoutAtual) clearTimeout(timeoutAtual);
+                renderizarTudo();
+                setTimeout(finalizar, 450);
+            }
+
+            // Handlers de skip
+            const onKey = () => { pular(); document.removeEventListener('keydown', onKey); };
+            document.addEventListener('keydown', onKey);
+            bootScreen.addEventListener('click', pular);
+            bootScreen.addEventListener('touchstart', pular, { passive: true });
+
+            // Inicia
+            setTimeout(proximaLinha, 350);
+        })();
+
+        /* ========================================================= */
+        /* SITE — LÓGICA ORIGINAL                                    */
+        /* ========================================================= */
+
         const elementosComAnimacao = [];
 
         function registrarAnimacoes() {
