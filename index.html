@@ -6,12 +6,8 @@
     <title>voceimporta - Depressão: Você não está sozinho | Expotech 2026</title>
 
     <style>
-        /* ===================================================================== */
-        /* VARIÁVEIS GLOBAIS                                                     */
-        /* ===================================================================== */
         :root {
             --noise-opacity: 0.8;
-
             --cor-primaria: #7a8a7a;
             --cor-secundaria: #6b7a5a;
             --cor-escura: #1a1510;
@@ -24,35 +20,26 @@
             --cor-borda: #3a3028;
             --cor-amarelo: #a89060;
             --cor-amarelo-suave: #c8b898;
-
             --sombra: 0 4px 20px rgba(0, 0, 0, 0.8);
             --sombra-interna: inset 0 0 30px rgba(0, 0, 0, 0.6);
             --raio-borda: 3px;
-
             --fonte-principal: 'Courier New', Courier, monospace;
             --tamanho-h1: clamp(2rem, 5vw, 3rem);
             --tamanho-h2: clamp(1.6rem, 3vw, 2.2rem);
             --tamanho-h3: clamp(1.2rem, 2vw, 1.5rem);
             --tamanho-texto: clamp(1rem, 1.2vw, 1.1rem);
-
             --sidebar-largura: 260px;
             --sticky-bar-h: 42px;
-
             --tree-rail: #5a4a3a;
             --tree-rail-dim: #4a3a2a;
             --tree-row-h: 22px;
-
-            /* Altura da taskbar — atualizada via JS quando há janelas */
             --window-taskbar-h: 0px;
             --window-taskbar-h-real: 44px;
-
-            /* Faixa de z-index das janelas (mantém-se abaixo da sticky bar=9990 e sidebar=10000) */
             --window-z-base: 9451;
             --window-z-max: 9985;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         html { scroll-behavior: smooth; font-size: 16px; }
 
         body {
@@ -70,19 +57,22 @@
             display: flex;
         }
 
-        html.boot-lock,
-        body.boot-lock { overflow: hidden !important; height: 100% !important; touch-action: none; overscroll-behavior: none; }
-
-        html.terminal-lock,
-        body.terminal-lock { overflow: hidden !important; }
+        html.boot-lock, body.boot-lock { overflow: hidden !important; height: 100% !important; touch-action: none; overscroll-behavior: none; }
+        html.terminal-lock, body.terminal-lock { overflow: hidden !important; }
 
         body.crt-off .crt-overlay,
         body.crt-off .crt-flicker,
         body.crt-off .crt-noise,
         body.crt-off #noise-overlay { display: none !important; }
 
+        /* Efeitos individuais (controlados pelo terminal) */
+        body.fx-scanlines-off .crt-overlay { display: none !important; }
+        body.fx-flicker-off .crt-flicker { display: none !important; }
+        body.fx-noise-off .crt-noise { display: none !important; }
+        body.fx-marquee-off .sticky-bar-marquee { animation: none; }
+
         /* ===================================================================== */
-        /* STICKY BAR                                                            */
+        /* STICKY BAR */
         /* ===================================================================== */
         .sticky-bar {
             position: fixed;
@@ -109,7 +99,6 @@
             overflow: hidden;
             text-shadow: none;
         }
-
         .sticky-bar-marquee {
             display: inline-flex;
             align-items: center;
@@ -118,40 +107,13 @@
             animation: sticky-marquee 90s linear infinite;
             will-change: transform;
         }
-
         .sticky-bar-marquee > span { display: inline-block; padding: 0 1.5em; white-space: nowrap; }
-
         @keyframes sticky-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-        .sticky-bar.visivel {
-            background: rgba(15, 10, 8, 0.94);
-            border-bottom-color: #3a3028;
-            color: #d0c8b8;
-            text-shadow: 0 0 10px rgba(200, 176, 144, 0.45);
-        }
-        .sticky-bar.visivel.bar-clara {
-            background: rgba(224, 216, 200, 0.96);
-            border-bottom-color: #9a8a7a;
-            color: #1a1510;
-            text-shadow: none;
-        }
-
-        /* Força visível quando há janela maximizada — evita "buraco" no topo */
-        body.has-maximized-window .sticky-bar {
-            background: rgba(15, 10, 8, 0.94);
-            border-bottom-color: #3a3028;
-            color: #d0c8b8;
-            text-shadow: 0 0 10px rgba(200, 176, 144, 0.45);
-        }
-        body.has-maximized-window .sticky-bar.bar-clara {
-            background: rgba(224, 216, 200, 0.96);
-            border-bottom-color: #9a8a7a;
-            color: #1a1510;
-            text-shadow: none;
-        }
-
+        .sticky-bar.visivel { background: rgba(15, 10, 8, 0.94); border-bottom-color: #3a3028; color: #d0c8b8; text-shadow: 0 0 10px rgba(200, 176, 144, 0.45); }
+        .sticky-bar.visivel.bar-clara { background: rgba(224, 216, 200, 0.96); border-bottom-color: #9a8a7a; color: #1a1510; text-shadow: none; }
+        body.has-maximized-window .sticky-bar { background: rgba(15, 10, 8, 0.94); border-bottom-color: #3a3028; color: #d0c8b8; text-shadow: 0 0 10px rgba(200, 176, 144, 0.45); }
+        body.has-maximized-window .sticky-bar.bar-clara { background: rgba(224, 216, 200, 0.96); border-bottom-color: #9a8a7a; color: #1a1510; text-shadow: none; }
         body.sidebar-oculta-body .sticky-bar { left: 0; }
-
         section[id] { scroll-margin-top: calc(var(--sticky-bar-h) + 13px); }
 
         @media (max-width: 1024px) {
@@ -159,7 +121,6 @@
             .sticky-bar { left: 0; font-size: 0.72rem; letter-spacing: 2.5px; padding-left: 58px; padding-right: 0; }
             section[id] { scroll-margin-top: calc(var(--sticky-bar-h) + 13px); }
         }
-
         @media (prefers-reduced-motion: reduce) {
             .sticky-bar { transition: none; justify-content: center; padding: 0 20px; }
             .sticky-bar-marquee { animation: none; }
@@ -167,7 +128,7 @@
         }
 
         /* ===================================================================== */
-        /* BOOT SCREEN                                                            */
+        /* BOOT SCREEN */
         /* ===================================================================== */
         #bootScreen {
             position: fixed; inset: 0;
@@ -248,10 +209,9 @@
         }
 
         /* ===================================================================== */
-        /* CRT EFFECTS                                                            */
+        /* CRT */
         /* ===================================================================== */
         .crt-overlay, .crt-flicker, .crt-noise { display: none; }
-
         @media (hover: hover) and (pointer: fine) and (min-width: 1025px) {
             .crt-overlay { display: block; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 1; transition: opacity 0.3s ease; mix-blend-mode: overlay; will-change: opacity; }
             .crt-overlay::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.65) 0px, rgba(0,0,0,0.65) 2px, transparent 2px, transparent 3px); animation: scanlineMove 8s linear infinite; }
@@ -259,7 +219,6 @@
             .crt-flicker { display: block; position: fixed; inset: 0; pointer-events: none; z-index: 9998; background: rgba(200,176,144,0.08); animation: flicker 0.09s infinite; opacity: 1; transition: opacity 0.3s ease; mix-blend-mode: screen; will-change: opacity; }
             .crt-noise { display: block; position: fixed; top: -25%; left: -25%; width: 150%; height: 150%; pointer-events: none; z-index: 9997; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E"); animation: noiseMove 0.1s steps(10) infinite; opacity: 1; transition: opacity 0.3s ease; mix-blend-mode: overlay; will-change: opacity; }
         }
-
         @keyframes scanlineMove { 0% { transform: translateY(0); } 100% { transform: translateY(10px); } }
         @keyframes flicker { 0%, 100% { opacity: 0.08; } 50% { opacity: 0.18; } }
         @keyframes noiseMove {
@@ -268,7 +227,6 @@
             60% { transform: translate(15%, 0); } 70% { transform: translate(0, 10%); } 80% { transform: translate(-15%, 0); }
             90% { transform: translate(10%, 5%); } 100% { transform: translate(5%, 0); }
         }
-
         #noise-overlay {
             position: fixed; inset: 0; pointer-events: none; z-index: 9000;
             opacity: var(--noise-opacity);
@@ -289,7 +247,50 @@
         }
 
         /* ===================================================================== */
-        /* SIDEBAR                                                                */
+        /* DEBUG OVERLAY (terminal) */
+        /* ===================================================================== */
+        .debug-overlay {
+            position: fixed;
+            top: calc(var(--sticky-bar-h) + 8px);
+            right: 10px;
+            z-index: 9989;
+            background: rgba(15, 10, 8, 0.94);
+            border: 1px solid #3a3028;
+            color: #c8b090;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.7rem;
+            line-height: 1.55;
+            padding: 8px 12px;
+            pointer-events: none;
+            display: none;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 6px rgba(200, 160, 100, 0.35);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.85);
+            min-width: 220px;
+        }
+        .debug-overlay.ativo { display: block; }
+        .debug-overlay::before {
+            content: 'DEBUG';
+            display: block;
+            font-weight: 700;
+            color: #e0cba0;
+            border-bottom: 1px solid #3a3028;
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+            letter-spacing: 2px;
+            font-size: 0.66rem;
+        }
+        .debug-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            white-space: nowrap;
+        }
+        .debug-key { color: #8a7a6a; }
+        .debug-val { color: #e0cba0; font-weight: 700; }
+
+        /* ===================================================================== */
+        /* SIDEBAR */
         /* ===================================================================== */
         .sidebar {
             position: fixed; top: 0; left: 0; width: var(--sidebar-largura); height: 100vh;
@@ -398,7 +399,7 @@
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10002; }
 
         /* ===================================================================== */
-        /* MAIN CONTENT                                                           */
+        /* MAIN CONTENT */
         /* ===================================================================== */
         .main-content { flex: 1; margin-left: var(--sidebar-largura); min-height: 100vh; width: calc(100% - var(--sidebar-largura)); transition: margin-left 0.3s ease, width 0.3s ease; }
         .main-content.sidebar-oculta { margin-left: 0; width: 100%; }
@@ -408,7 +409,6 @@
         .section-titulo h2 { font-size: var(--tamanho-h2); color: #d0c8b8; margin-bottom: 0.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); letter-spacing: 2px; text-transform: uppercase; }
         .section-titulo p { color: var(--cor-texto-claro); font-size: 1.1rem; max-width: 700px; margin: 0 auto; font-style: italic; }
 
-        /* Hero */
         .hero { background: linear-gradient(135deg, #1a1510 0%, #0f0a08 50%, #0d0a08 100%); color: #d0c8b8; padding: 4rem 0; text-align: center; border-bottom: 2px solid #3a3028; box-shadow: inset 0 0 100px rgba(60,40,20,0.4); position: relative; }
         .hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(80,50,30,0.03) 10px, rgba(80,50,30,0.03) 20px); pointer-events: none; }
         .hero h1 {
@@ -447,7 +447,6 @@
         section { padding: 3.5rem 0; }
         section:not(#inicio) { content-visibility: auto; contain-intrinsic-size: auto 800px; }
 
-        /* Cards */
         .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
         .card { background: #1e1812; border-radius: 2px; padding: 1.8rem; border: 1px solid #3a3028; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.6), inset 0 0 15px rgba(60,40,25,0.2); transition: transform 0.2s, box-shadow 0.2s; }
         .card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(80,50,30,0.3); }
@@ -472,7 +471,6 @@
         .citacoes-lista { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
         .citacao-item { background: #1e1812; padding: 1.5rem; border-radius: 2px; border-left: 4px solid #6a5a4a; font-style: italic; color: #b0a898; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
 
-        /* Quiz */
         .quiz-container { background: #1e1812; border-radius: 2px; padding: 2rem; max-width: 760px; margin: 1.5rem auto 0; border: 1px solid #3a3028; box-shadow: 0 8px 30px rgba(0,0,0,0.7), inset 0 0 20px rgba(50,35,20,0.3); }
         .quiz-contador { font-size: 0.9rem; font-weight: 600; color: #c8b090; letter-spacing: 1px; margin-bottom: 0.5rem; text-transform: uppercase; border-bottom: 1px solid #3a3028; padding-bottom: 0.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
         .quiz-contador .barra-progresso { flex: 1 1 100%; height: 6px; background: #0f0a08; border-radius: 3px; overflow: hidden; margin-top: 0.4rem; border: 1px solid #3a3028; }
@@ -537,7 +535,6 @@
         .membro-card .membro-nome { font-weight: 700; color: #d0c8b8; font-size: 1.05rem; letter-spacing: 1px; }
         .membro-card .membro-email { color: #c8b090; text-decoration: none; font-size: 0.95rem; letter-spacing: 0.5px; padding: 0.4rem 0.9rem; border: 1px solid var(--cor-borda); border-radius: 2px; background: #0f0a08; transition: all 0.2s; }
         .membro-card .membro-email:hover { background: #252018; color: #e8d5a3; border-color: var(--cor-amarelo); text-shadow: 0 0 8px rgba(200,180,150,0.5); }
-
         .secao-clara .membro-card { background: #e0d8c8; border-color: #9a8a7a; border-left-color: #5a6a4a; }
         .secao-clara .membro-card .membro-nome { color: #1a1510; }
         .secao-clara .membro-card .membro-email { background: #d0c8b8; color: #1a1510; border-color: #9a8a7a; }
@@ -579,13 +576,8 @@
             font-family: inherit; letter-spacing: 1px;
         }
         .botao-ajuda-flutuante button:hover { transform: translateY(-3px); box-shadow: 0 10px 35px rgba(0,0,0,0.9), inset 0 0 20px rgba(170,100,70,0.4); }
+        body.window-taskbar-visible .botao-ajuda-flutuante { bottom: calc(var(--window-taskbar-h) + 20px); }
 
-        /* Move o botão flutuante quando a taskbar está visível */
-        body.window-taskbar-visible .botao-ajuda-flutuante {
-            bottom: calc(var(--window-taskbar-h) + 20px);
-        }
-
-        /* Modal emergência */
         .modal-emergencia { display: none; position: fixed; inset: 0; background: rgba(10,5,0,0.9); z-index: 10004; justify-content: center; align-items: center; padding: 20px; }
         .modal-emergencia.ativo { display: flex; }
         .modal-conteudo { background: #1e1812; border-radius: 2px; padding: 2rem; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; text-align: center; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 0 3px #4a3a2a; border: 1px solid #6a5a4a; }
@@ -597,7 +589,6 @@
         .modal-fechar { position: absolute; top: 10px; right: 15px; font-size: 1.8rem; cursor: pointer; color: #8a7a6a; background: none; border: none; font-weight: 700; }
         .modal-fechar:hover { color: #d0c8b8; }
 
-        /* Terminal */
         .terminal-overlay { display: none; position: fixed; inset: 0; background: rgba(5,4,3,0.88); z-index: 9996; justify-content: center; align-items: center; padding: 20px; }
         .terminal-overlay.ativo { display: flex; }
         .terminal-window { width: 100%; max-width: 640px; max-height: 75vh; background: #0a0704; border: 2px solid #3a3028; box-shadow: 0 0 40px rgba(200,160,100,0.22), 0 10px 50px rgba(0,0,0,0.95); display: flex; flex-direction: column; font-family: 'Courier New', Courier, monospace; color: #c8b090; animation: terminalIn 0.25s ease-out; overflow: hidden; }
@@ -626,7 +617,6 @@
         .terminal-input { flex: 1; background: transparent; border: none; color: #c8b090; font-family: inherit; font-size: 0.82rem; outline: none; padding: 0; letter-spacing: 0.5px; caret-color: #c8b090; }
         .terminal-input::placeholder { color: #5a4a3a; font-style: italic; }
 
-        /* Respiro */
         #respiro { background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%); }
         #respiro .section-titulo h2 { color: #d0c8b8; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
         #respiro .section-titulo p { color: #b0a898; }
@@ -637,14 +627,7 @@
         .respiro-grounding { margin-top: 1.5rem; color: #1a1510; font-weight: 600; }
 
         .compartilhar-container { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
-        .btn-compartilhar {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 0.7rem 1.5rem; border-radius: 2px; border: 1px solid #4a3a2a;
-            cursor: pointer; font-size: 0.95rem; font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-family: inherit; text-decoration: none; color: #d0c8b8;
-            letter-spacing: 1px; background: #4a3a2a;
-        }
+        .btn-compartilhar { display: inline-flex; align-items: center; gap: 8px; padding: 0.7rem 1.5rem; border-radius: 2px; border: 1px solid #4a3a2a; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s; font-family: inherit; text-decoration: none; color: #d0c8b8; letter-spacing: 1px; background: #4a3a2a; }
         .btn-compartilhar:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .btn-whatsapp { background: #2a3a2a; border-color: #4a5a4a; }
         .btn-facebook { background: #1a2a3a; border-color: #3a4a5a; }
@@ -652,7 +635,7 @@
         .btn-link     { background: #3a3a3a; border-color: #5a5a5a; }
 
         /* ===================================================================== */
-        /* RESPONSIVO                                                             */
+        /* RESPONSIVO */
         /* ===================================================================== */
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
@@ -677,179 +660,72 @@
             .terminal-window { max-height: 85vh; }
             .terminal-body { font-size: 0.75rem; }
             .terminal-input { font-size: 0.78rem; }
+            .debug-overlay { font-size: 0.62rem; padding: 6px 8px; min-width: 180px; }
         }
 
         /* ===================================================================== */
-        /* JANELAS FLUTUANTES — NOVO SISTEMA                                     */
+        /* JANELAS FLUTUANTES */
         /* ===================================================================== */
-
-        /* Camada de contenção das janelas */
-        .window-layer {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 9450;
-            overflow: visible;
-        }
-
-        /* ---------- Janela base ---------- */
+        .window-layer { position: fixed; inset: 0; pointer-events: none; z-index: 9450; overflow: visible; }
         .os-window {
-            position: fixed;
-            display: flex;
-            flex-direction: column;
+            position: fixed; display: flex; flex-direction: column;
             background: #1e1812;
-            border: 2px solid;
-            border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
+            border: 2px solid; border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
             box-shadow: 0 12px 50px rgba(0,0,0,0.92), inset 1px 1px 0 rgba(255,255,255,0.06);
             font-family: 'Courier New', Courier, monospace;
-            color: #c8c0b8;
-            pointer-events: auto;
-            overflow: hidden;
-            min-width: 320px;
-            min-height: 180px;
+            color: #c8c0b8; pointer-events: auto; overflow: hidden;
+            min-width: 320px; min-height: 180px;
             animation: os-window-in 0.18s ease-out;
             transition: box-shadow 0.2s;
         }
-
-        @keyframes os-window-in {
-            from { opacity: 0; transform: scale(0.97); }
-            to   { opacity: 1; transform: scale(1); }
-        }
-
-        /* Janela em foco — brilho sutil */
-        .os-window.focused {
-            box-shadow: 0 16px 60px rgba(0,0,0,0.95), inset 1px 1px 0 rgba(255,255,255,0.08),
-                        0 0 0 1px rgba(200, 176, 144, 0.25);
-        }
-
-        .os-window.focused .os-window-titlebar {
-            background: linear-gradient(180deg, #4a3520 0%, #3a2515 50%, #1a1008 100%);
-        }
-
-        /* ---------- Estados ---------- */
-
-        /* Maximizada: fica entre sticky bar e taskbar */
-        .os-window.maximized {
-            top: var(--sticky-bar-h) !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: var(--window-taskbar-h) !important;
-            width: auto !important;
-            height: auto !important;
-        }
+        @keyframes os-window-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+        .os-window.focused { box-shadow: 0 16px 60px rgba(0,0,0,0.95), inset 1px 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(200, 176, 144, 0.25); }
+        .os-window.focused .os-window-titlebar { background: linear-gradient(180deg, #4a3520 0%, #3a2515 50%, #1a1008 100%); }
+        .os-window.maximized { top: var(--sticky-bar-h) !important; left: 0 !important; right: 0 !important; bottom: var(--window-taskbar-h) !important; width: auto !important; height: auto !important; }
         .os-window.maximized .os-window-resize { display: none; }
-
-        /* Minimizada: só a barra de título */
-        .os-window.minimized {
-            height: auto !important;
-            min-height: 0 !important;
-        }
+        .os-window.minimized { height: auto !important; min-height: 0 !important; }
         .os-window.minimized .os-window-body { display: none; }
         .os-window.minimized .os-window-resize { display: none; }
-
-        /* ---------- Barra de título ---------- */
         .os-window-titlebar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: flex; align-items: center; gap: 8px;
             padding: 4px 5px 4px 9px;
             background: linear-gradient(180deg, #3a2a1a 0%, #2a1a0a 50%, #1a1008 100%);
             border-bottom: 2px solid #1a1008;
-            cursor: move;
-            user-select: none;
-            font-size: 0.76rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #c8b090;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
-            flex: 0 0 auto;
-            min-height: 26px;
-            position: relative;
+            cursor: move; user-select: none;
+            font-size: 0.76rem; font-weight: 700; letter-spacing: 0.5px;
+            color: #c8b090; text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
+            flex: 0 0 auto; min-height: 26px; position: relative;
         }
         .os-window-titlebar:active { cursor: grabbing; }
-        .os-window-titlebar::before {
-            content: '▣';
-            font-size: 0.9rem;
-            color: #8a7a6a;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
-            flex: 0 0 auto;
-        }
+        .os-window-titlebar::before { content: '▣'; font-size: 0.9rem; color: #8a7a6a; text-shadow: 1px 1px 0 rgba(0,0,0,0.8); flex: 0 0 auto; }
         .os-window.maximized .os-window-titlebar { cursor: default; }
         .os-window.maximized .os-window-titlebar:active { cursor: default; }
-
-        .os-window-title {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            text-transform: uppercase;
-        }
-
+        .os-window-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-transform: uppercase; }
         .os-window-controls { display: flex; gap: 2px; flex: 0 0 auto; }
         .os-window-ctrl {
-            width: 20px;
-            height: 18px;
-            background: #252018;
-            border: 1px solid;
-            border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
-            color: #c8b090;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.8rem;
-            font-weight: 700;
-            line-height: 1;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 20px; height: 18px; background: #252018;
+            border: 1px solid; border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
+            color: #c8b090; cursor: pointer;
+            font-family: inherit; font-size: 0.8rem; font-weight: 700;
+            line-height: 1; padding: 0;
+            display: flex; align-items: center; justify-content: center;
             box-shadow: inset 1px 1px 0 rgba(255,255,255,0.06);
             transition: background 0.1s;
         }
         .os-window-ctrl:hover { background: #3a2a1a; color: #e8d5a3; }
         .os-window-ctrl:active { border-color: #1a1008 #5a4a3a #5a4a3a #1a1008; box-shadow: inset -1px -1px 0 rgba(255,255,255,0.06); }
         .os-window-ctrl[data-action="close"]:hover { background: #5a1a1a; color: #ffb0a0; }
-
-        /* ---------- Corpo da janela ---------- */
-        .os-window-body {
-            flex: 1 1 auto;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: #1e1812;
-            color: #c8c0b8;
-            scrollbar-width: thin;
-            scrollbar-color: #3a3028 #0f0a08;
-            position: relative;
-        }
+        .os-window-body { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; background: #1e1812; color: #c8c0b8; scrollbar-width: thin; scrollbar-color: #3a3028 #0f0a08; position: relative; }
         .os-window-body::-webkit-scrollbar { width: 8px; }
         .os-window-body::-webkit-scrollbar-track { background: #0f0a08; }
         .os-window-body::-webkit-scrollbar-thumb { background: #3a3028; border: 1px solid #1a1008; }
-
-        .os-window-body > section {
-            padding: 1.5rem 1.4rem !important;
-            content-visibility: visible !important;
-            contain-intrinsic-size: auto !important;
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
-        }
-        .os-window-body > section.secao-clara {
-            background: #d0c8b8 !important;
-            color: #1a1510;
-            border-radius: 0;
-        }
-        .os-window-body > section#respiro {
-            background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%) !important;
-        }
+        .os-window-body > section { padding: 1.5rem 1.4rem !important; content-visibility: visible !important; contain-intrinsic-size: auto !important; border: none !important; box-shadow: none !important; background: transparent !important; }
+        .os-window-body > section.secao-clara { background: #d0c8b8 !important; color: #1a1510; border-radius: 0; }
+        .os-window-body > section#respiro { background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%) !important; }
         .os-window-body > section[style*="background: #1a1510"] { background: #1a1510 !important; }
         .os-window-body > section[style*="background: #1e1812"] { background: #1e1812 !important; }
         .os-window-body > section[style*="background: #0f0a08"] { background: #0f0a08 !important; }
-
-        /* ---------- Alças de redimensionamento ---------- */
-        .os-window-resize {
-            position: absolute;
-            z-index: 20;
-            background: transparent;
-        }
+        .os-window-resize { position: absolute; z-index: 20; background: transparent; }
         .os-window-resize[data-dir="n"] { top: -3px; left: 8px; right: 8px; height: 6px; cursor: n-resize; }
         .os-window-resize[data-dir="s"] { bottom: -3px; left: 8px; right: 8px; height: 6px; cursor: s-resize; }
         .os-window-resize[data-dir="e"] { right: -3px; top: 8px; bottom: 8px; width: 6px; cursor: e-resize; }
@@ -858,25 +734,15 @@
         .os-window-resize[data-dir="nw"] { top: -4px; left: -4px; width: 14px; height: 14px; cursor: nw-resize; }
         .os-window-resize[data-dir="se"] { bottom: -4px; right: -4px; width: 14px; height: 14px; cursor: se-resize; }
         .os-window-resize[data-dir="sw"] { bottom: -4px; left: -4px; width: 14px; height: 14px; cursor: sw-resize; }
-
-        /* ---------- Placeholder no local original ---------- */
         .window-placeholder {
-            max-width: 1100px;
-            margin: 2rem auto;
-            padding: 1.2rem 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            text-align: center;
+            max-width: 1100px; margin: 2rem auto; padding: 1.2rem 1.8rem;
+            display: flex; align-items: center; justify-content: center;
+            gap: 14px; flex-wrap: wrap; text-align: center;
             background: rgba(30, 24, 18, 0.4);
             border: 1px dashed #5a4a3a;
             color: #a09890;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9rem;
-            border-radius: 2px;
-            letter-spacing: 0.5px;
+            font-size: 0.9rem; border-radius: 2px; letter-spacing: 0.5px;
         }
         .window-placeholder .placeholder-icon { font-size: 1.1rem; filter: sepia(0.7) saturate(0.6) brightness(0.95); }
         .window-placeholder button {
@@ -887,27 +753,15 @@
         }
         .window-placeholder button:hover { background: #5a4a3a; }
         .window-placeholder button:active { background: #3a2a1a; }
-
-        /* ---------- Botão "abrir em janela" nos títulos ---------- */
         .pop-out-btn {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 32px;
-            height: 30px;
-            background: #252018;
-            border: 1px solid;
+            position: absolute; top: 0; right: 0;
+            width: 32px; height: 30px;
+            background: #252018; border: 1px solid;
             border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
-            color: #c8b090;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.85rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            opacity: 0.55;
+            color: #c8b090; cursor: pointer;
+            font-family: inherit; font-size: 0.85rem; line-height: 1;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0; opacity: 0.55;
             transition: opacity 0.15s, background 0.15s, color 0.15s;
             box-shadow: inset 1px 1px 0 rgba(255,255,255,0.06);
             z-index: 5;
@@ -915,137 +769,66 @@
         .pop-out-btn svg { display: block; }
         .pop-out-btn:hover { opacity: 1; background: #3a2a1a; color: #e8d5a3; }
         .pop-out-btn:active { border-color: #1a1008 #5a4a3a #5a4a3a #1a1008; box-shadow: inset -1px -1px 0 rgba(255,255,255,0.06); }
+        .secao-clara .pop-out-btn, section[style*="background: #d0c8b8"] .pop-out-btn { background: #e0d8c8; border-color: #f0e8d8 #9a8a7a #9a8a7a #f0e8d8; color: #3a3028; }
+        .secao-clara .pop-out-btn:hover, section[style*="background: #d0c8b8"] .pop-out-btn:hover { background: #d0c8b8; color: #000; }
 
-        .secao-clara .pop-out-btn,
-        section[style*="background: #d0c8b8"] .pop-out-btn {
-            background: #e0d8c8;
-            border-color: #f0e8d8 #9a8a7a #9a8a7a #f0e8d8;
-            color: #3a3028;
-        }
-        .secao-clara .pop-out-btn:hover,
-        section[style*="background: #d0c8b8"] .pop-out-btn:hover {
-            background: #d0c8b8; color: #000;
-        }
-
-        /* ===================================================================== */
-        /* TASKBAR (rodapé)                                                       */
-        /* ===================================================================== */
         .window-taskbar {
-            position: fixed;
-            bottom: 0;
-            left: var(--sidebar-largura);
-            right: 0;
+            position: fixed; bottom: 0;
+            left: var(--sidebar-largura); right: 0;
             height: var(--window-taskbar-h-real);
             background: rgba(15, 10, 8, 0.96);
             border-top: 2px solid #3a3028;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.7);
-            z-index: 9988;
-            display: none;
-            align-items: center;
-            padding: 0 8px;
-            pointer-events: auto;
-            overflow: hidden;
+            z-index: 9988; display: none; align-items: center;
+            padding: 0 8px; pointer-events: auto; overflow: hidden;
         }
         .window-taskbar.visivel { display: flex; }
         body.sidebar-oculta-body .window-taskbar { left: 0; }
-
         .window-taskbar-items {
-            display: flex;
-            gap: 4px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: #3a3028 transparent;
-            height: 100%;
-            align-items: center;
-            flex: 1;
-            padding: 2px 0;
+            display: flex; gap: 4px;
+            overflow-x: auto; overflow-y: hidden;
+            scrollbar-width: thin; scrollbar-color: #3a3028 transparent;
+            height: 100%; align-items: center; flex: 1; padding: 2px 0;
         }
         .window-taskbar-items::-webkit-scrollbar { height: 4px; }
         .window-taskbar-items::-webkit-scrollbar-track { background: transparent; }
         .window-taskbar-items::-webkit-scrollbar-thumb { background: #3a3028; }
-
         .taskbar-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            background: #252018;
-            border: 1px solid;
-            border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 8px; background: #252018;
+            border: 1px solid; border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a;
             color: #c8b090;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            white-space: nowrap;
-            max-width: 200px;
-            text-overflow: ellipsis;
-            overflow: hidden;
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px;
+            cursor: pointer; white-space: nowrap;
+            max-width: 200px; text-overflow: ellipsis; overflow: hidden;
             box-shadow: inset 1px 1px 0 rgba(255,255,255,0.06);
             transition: background 0.1s, color 0.1s;
-            flex: 0 0 auto;
-            height: 30px;
+            flex: 0 0 auto; height: 30px;
         }
         .taskbar-item:hover { background: #3a2a1a; color: #e8d5a3; }
-        .taskbar-item.ativo {
-            background: #3a2a1a;
-            color: #e8d5a3;
-            border-color: #8a6a4a #1a1008 #1a1008 #8a6a4a;
-            box-shadow: inset -1px -1px 0 rgba(255,255,255,0.06);
-        }
-        .taskbar-item-label {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 150px;
-        }
-        .taskbar-item-close {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 16px;
-            height: 16px;
-            margin-left: 2px;
-            color: #8a7a6a;
-            font-size: 0.85rem;
-            font-weight: 700;
-            line-height: 1;
-            border-radius: 1px;
-        }
+        .taskbar-item.ativo { background: #3a2a1a; color: #e8d5a3; border-color: #8a6a4a #1a1008 #1a1008 #8a6a4a; box-shadow: inset -1px -1px 0 rgba(255,255,255,0.06); }
+        .taskbar-item-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px; }
+        .taskbar-item-close { display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-left: 2px; color: #8a7a6a; font-size: 0.85rem; font-weight: 700; line-height: 1; border-radius: 1px; }
         .taskbar-item-close:hover { background: #5a1a1a; color: #ffb0a0; }
 
-        /* ===================================================================== */
-        /* SNAP PREVIEW                                                           */
-        /* ===================================================================== */
         .snap-preview {
             position: fixed;
             background: rgba(200, 176, 144, 0.12);
             border: 2px dashed #c8b090;
-            z-index: 9449;
-            pointer-events: none;
-            display: none;
+            z-index: 9449; pointer-events: none; display: none;
             border-radius: 2px;
             box-shadow: inset 0 0 30px rgba(200, 176, 144, 0.08);
             transition: opacity 0.15s ease, top 0.12s ease, left 0.12s ease, width 0.12s ease, height 0.12s ease;
         }
         .snap-preview.visivel { display: block; }
 
-        /* ===================================================================== */
-        /* RESPONSIVO — janelas em mobile                                         */
-        /* ===================================================================== */
         @media (max-width: 1024px) {
             .os-window {
-                top: var(--sticky-bar-h) !important;
-                left: 0 !important;
-                right: 0 !important;
+                top: var(--sticky-bar-h) !important; left: 0 !important; right: 0 !important;
                 bottom: var(--window-taskbar-h) !important;
-                width: auto !important;
-                height: auto !important;
-                min-width: 0;
-                border-left: none;
-                border-right: none;
+                width: auto !important; height: auto !important;
+                min-width: 0; border-left: none; border-right: none;
             }
             .os-window .os-window-resize { display: none; }
             .os-window-titlebar { cursor: default; }
@@ -1056,18 +839,12 @@
             .taskbar-item { max-width: 140px; }
             .taskbar-item-label { max-width: 100px; }
         }
-
-        /* Barra de rolagem estilizada na taskbar em Firefox */
-        @media (min-width: 1025px) {
-            .window-taskbar-items { scrollbar-width: thin; }
-        }
+        @media (min-width: 1025px) { .window-taskbar-items { scrollbar-width: thin; } }
     </style>
 </head>
 <body>
 
-    <!-- ===================================================================== -->
-    <!-- STICKY BAR — FAIXA SUPERIOR COM MARQUEE                                -->
-    <!-- ===================================================================== -->
+    <!-- STICKY BAR -->
     <div class="sticky-bar" id="stickyBar" aria-hidden="true">
         <div class="sticky-bar-marquee">
             <span>sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;</span>
@@ -1087,13 +864,23 @@
     <div class="crt-noise" id="crtNoise"></div>
     <div id="noise-overlay"></div>
 
+    <!-- DEBUG OVERLAY (controlado pelo terminal) -->
+    <div class="debug-overlay" id="debugOverlay">
+        <div class="debug-row"><span class="debug-key">scroll</span><span class="debug-val" id="dbgScroll">0</span></div>
+        <div class="debug-row"><span class="debug-key">section</span><span class="debug-val" id="dbgSection">—</span></div>
+        <div class="debug-row"><span class="debug-key">windows</span><span class="debug-val" id="dbgWindows">0</span></div>
+        <div class="debug-row"><span class="debug-key">focus</span><span class="debug-val" id="dbgFocus">—</span></div>
+        <div class="debug-row"><span class="debug-key">z-max</span><span class="debug-val" id="dbgZmax">—</span></div>
+        <div class="debug-row"><span class="debug-key">crt</span><span class="debug-val" id="dbgCRT">—</span></div>
+        <div class="debug-row"><span class="debug-key">noise</span><span class="debug-val" id="dbgNoise">—</span></div>
+        <div class="debug-row"><span class="debug-key">fps</span><span class="debug-val" id="dbgFPS">—</span></div>
+    </div>
+
     <!-- Controles mobile -->
     <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
         <span></span><span></span><span></span>
     </button>
-
     <button class="sidebar-show-btn" id="sidebarShowBtn" aria-label="Mostrar menu lateral" title="Mostrar menu">☰</button>
-
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- SIDEBAR -->
@@ -1103,7 +890,6 @@
             <span class="explorer-title">/mnt/voceimporta</span>
             <button class="sidebar-hide-btn" id="sidebarHideBtn" aria-label="Esconder menu lateral" title="Esconder menu">×</button>
         </div>
-
         <div class="tree-container">
             <ul class="sidebar-nav tree-root">
                 <li class="tree-node tree-group">
@@ -1125,40 +911,28 @@
                             </ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder">
-                                <span class="tree-icon" aria-hidden="true">📁</span>
-                                <span class="tree-label">contextos</span>
-                            </div>
+                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">contextos</span></div>
                             <ul class="tree-children">
                                 <li class="tree-node"><a href="#adolescentes" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">adolescentes</span></a></li>
                                 <li class="tree-node"><a href="#redes-sociais" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">redes sociais</span></a></li>
                             </ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder">
-                                <span class="tree-icon" aria-hidden="true">📁</span>
-                                <span class="tree-label">caminhos</span>
-                            </div>
+                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">caminhos</span></div>
                             <ul class="tree-children">
                                 <li class="tree-node"><a href="#tratamentos" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">tratamentos</span></a></li>
                                 <li class="tree-node"><a href="#ajudar" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">como ajudar</span></a></li>
                             </ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder">
-                                <span class="tree-icon" aria-hidden="true">📁</span>
-                                <span class="tree-label">ferramentas</span>
-                            </div>
+                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">ferramentas</span></div>
                             <ul class="tree-children">
                                 <li class="tree-node"><a href="#autoavaliacao" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">autoavaliação</span></a></li>
                                 <li class="tree-node"><a href="#respiro" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">como se acalmar</span></a></li>
                             </ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder">
-                                <span class="tree-icon" aria-hidden="true">📁</span>
-                                <span class="tree-label">recursos</span>
-                            </div>
+                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">recursos</span></div>
                             <ul class="tree-children">
                                 <li class="tree-node"><a href="#ajuda" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">ajuda</span></a></li>
                                 <li class="tree-node"><a href="#mapa" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">mapa</span></a></li>
@@ -1166,10 +940,7 @@
                             </ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder">
-                                <span class="tree-icon" aria-hidden="true">📁</span>
-                                <span class="tree-label">projeto</span>
-                            </div>
+                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">projeto</span></div>
                             <ul class="tree-children">
                                 <li class="tree-node"><a href="#equipe" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">equipe</span></a></li>
                                 <li class="tree-node"><a href="#contato" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">contato</span></a></li>
@@ -1179,7 +950,6 @@
                 </li>
             </ul>
         </div>
-
         <div class="sidebar-footer">
             <button class="crt-toggle-btn" id="crtToggleBtn" type="button" aria-pressed="true" title="Ativar/desativar efeito CRT">
                 <span class="crt-toggle-indicator" aria-hidden="true"></span>
@@ -1212,13 +982,13 @@
         <div class="terminal-overlay" id="terminalOverlay" role="dialog" aria-modal="true" aria-label="Terminal de ajuda">
             <div class="terminal-window">
                 <div class="terminal-titlebar">
-                    <span class="terminal-title-text">ajuda.exe — voceimporta terminal</span>
+                    <span class="terminal-title-text">voceimporta.sh — terminal</span>
                     <button class="terminal-close" id="terminalClose" aria-label="Fechar terminal">×</button>
                 </div>
                 <div class="terminal-body" id="terminalBody"></div>
                 <div class="terminal-input-row">
                     <span class="terminal-prompt" aria-hidden="true">&gt;</span>
-                    <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" placeholder="digite um comando (ex: ajuda)">
+                    <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" placeholder="digite 'help' para ver os comandos">
                 </div>
             </div>
         </div>
@@ -1264,10 +1034,7 @@
 
         <section id="estatisticas" class="estatisticas">
             <div class="container">
-                <div class="section-titulo">
-                    <h2>Depressão em números no Brasil</h2>
-                    <p>Dados que reforçam a importância de falar sobre o assunto.</p>
-                </div>
+                <div class="section-titulo"><h2>Depressão em números no Brasil</h2><p>Dados que reforçam a importância de falar sobre o assunto.</p></div>
                 <div class="stats-grid">
                     <div class="stat-item"><span class="stat-numero">11</span><span class="stat-rotulo">milhões de brasileiros sofrem de depressão</span></div>
                     <div class="stat-item"><span class="stat-numero">5%</span><span class="stat-rotulo">da população adulta é afetada</span></div>
@@ -1280,10 +1047,7 @@
 
         <section id="sintomas">
             <div class="container">
-                <div class="section-titulo">
-                    <h2>Sinais e sintomas</h2>
-                    <p>Reconhecer os sintomas é o primeiro passo para buscar ajuda.</p>
-                </div>
+                <div class="section-titulo"><h2>Sinais e sintomas</h2><p>Reconhecer os sintomas é o primeiro passo para buscar ajuda.</p></div>
                 <div class="texto-corrido">
                     <p>Os sintomas da depressão variam de pessoa para pessoa, mas os mais comuns incluem tristeza profunda e persistente, perda de interesse ou prazer em atividades que antes eram agradáveis, alterações no apetite (comer demais ou de menos), insônia ou sono excessivo, fadiga constante, sentimentos de culpa, inutilidade ou desesperança, dificuldade de concentração, irritabilidade e, em casos mais graves, pensamentos de morte ou ideação suicida.</p>
                     <p>É comum que a pessoa se isole, evite contato social e sinta que nada faz sentido. Esses sintomas não são frescura nem fraqueza: são manifestações de uma doença que precisa de tratamento adequado. Se você se identificou com vários desses sinais por mais de duas semanas, procure um médico ou psicólogo. Não espere a situação piorar.</p>
@@ -1298,10 +1062,7 @@
 
         <section id="citacoes" style="background: #0f0a08;">
             <div class="container">
-                <div class="section-titulo">
-                    <h2>uma doença silenciosa</h2>
-                    <p>Muitas vezes, quem mais sorri por fora é quem mais sofre por dentro.</p>
-                </div>
+                <div class="section-titulo"><h2>uma doença silenciosa</h2><p>Muitas vezes, quem mais sorri por fora é quem mais sofre por dentro.</p></div>
                 <div class="citacoes-lista">
                     <div class="citacao-item">"A depressão é uma doença silenciosa. Ela não aparece em exames de sangue, não deixa marcas visíveis, mas corrói a alma por dentro. Quem sofre aprende a esconder a dor atrás de um sorriso."<br><cite style="display:block; margin-top:0.5rem;">— Anônimo</cite></div>
                     <div class="citacao-item">"Pode afetar qualquer pessoa: o colega de trabalho que parece sempre animado, a amiga que está sempre disposta a ajudar, o filho que tira boas notas. A depressão não escolhe perfil, não avisa, não pede licença."<br><cite style="display:block; margin-top:0.5rem;">— Adaptado de relatos</cite></div>
@@ -1312,10 +1073,7 @@
 
         <section id="gravidade" style="background: #1a1510;">
             <div class="container">
-                <div class="section-titulo">
-                    <h2>Gravidade dos sintomas</h2>
-                    <p>A depressão não segue uma escada fixa — cada pessoa vive uma combinação única de intensidade.</p>
-                </div>
+                <div class="section-titulo"><h2>Gravidade dos sintomas</h2><p>A depressão não segue uma escada fixa — cada pessoa vive uma combinação única de intensidade.</p></div>
                 <div class="texto-corrido">
                     <p>É comum ouvirmos falar em depressão "leve", "moderada" ou "grave", mas essa classificação não significa que existe uma progressão obrigatória. Ninguém precisa passar primeiro por um estágio para depois chegar a outro. A gravidade é avaliada clinicamente, considerando a intensidade, a frequência e o impacto dos sintomas na vida da pessoa — e isso varia muito de um indivíduo para outro.</p>
                     <p>Uma pessoa pode ter poucos sintomas, mas que causam grande sofrimento; outra pode apresentar vários sintomas que não a impedem de trabalhar. Não existe uma "régua" exata ou pontuação que defina sozinha a gravidade. Apenas um profissional de saúde mental pode fazer essa avaliação, levando em conta o histórico, o contexto social e os fatores biológicos de cada um.</p>
@@ -1326,10 +1084,7 @@
 
         <section id="adolescentes" style="background: #1e1812;">
             <div class="container">
-                <div class="section-titulo">
-                    <h2>Depressão em adolescentes</h2>
-                    <p>Uma fase de mudanças intensas pode esconder sinais de sofrimento que merecem atenção.</p>
-                </div>
+                <div class="section-titulo"><h2>Depressão em adolescentes</h2><p>Uma fase de mudanças intensas pode esconder sinais de sofrimento que merecem atenção.</p></div>
                 <div class="texto-corrido">
                     <p>A adolescência é um período de transformações físicas, emocionais e sociais. É comum que os jovens experimentem altos e baixos, mas quando a tristeza, a irritabilidade e o desânimo persistem por semanas e começam a interferir na escola, nas amizades e na convivência familiar, pode ser um sinal de depressão. Infelizmente, muitos casos passam despercebidos, pois os sintomas são confundidos com rebeldia ou "fase difícil".</p>
                     <p>Diferente dos adultos, adolescentes com depressão podem demonstrar mais irritabilidade, explosões de raiva, isolamento no quarto, queda no rendimento escolar e maior sensibilidade à rejeição. Também é comum o uso excessivo de redes sociais como forma de fuga, além de alterações no sono e no apetite. A automutilação e os pensamentos suicidas são sinais de alerta que exigem intervenção imediata.</p>
@@ -1343,10 +1098,7 @@
 
         <section id="redes-sociais" style="background: #0f0a08;">
             <div class="container">
-                <div class="section-titulo">
-                    <h2>Redes sociais e depressão</h2>
-                    <p>Entre a conexão e o isolamento — o impacto das telas na saúde mental.</p>
-                </div>
+                <div class="section-titulo"><h2>Redes sociais e depressão</h2><p>Entre a conexão e o isolamento — o impacto das telas na saúde mental.</p></div>
                 <div class="texto-corrido">
                     <p>As redes sociais se tornaram parte da vida cotidiana. Para muitos, são espaços de informação, entretenimento e contato com amigos. Mas o uso excessivo e sem crítica pode ter um impacto profundo na saúde mental, especialmente entre adolescentes e jovens adultos. A exposição constante a uma vitrine de vidas "perfeitas" cria comparações irreais e um sentimento persistente de que nunca se é suficiente — fatores que alimentam quadros de ansiedade e depressão.</p>
                     <p>Um dos efeitos mais nocivos é a <strong>comparação social</strong>. Ao ver apenas os melhores momentos alheios — viagens, conquistas, relacionamentos — a pessoa tende a subestimar a própria vida. Esse contraste contínuo pode levar a sentimentos de inferioridade, baixa autoestima e desesperança. Para quem já tem predisposição à depressão, esse ciclo pode ser devastador.</p>
@@ -1359,7 +1111,7 @@
                 <div class="texto-corrido">
                     <p><strong>Como usar as redes de forma mais saudável:</strong></p>
                     <p>Estabeleça horários para usar o celular, especialmente longe da hora de dormir. Faça pausas regulares — o famoso <em>detox digital</em> — e observe como seu humor reage. Deixe de seguir perfis que te fazem mal ou que promovem comparações constantes. Prefira conteúdos que informem, ensinem ou tragam leveza de verdade. E lembre-se: <strong>a vida real acontece fora da tela.</strong></p>
-                    <p>Se você perceber que o uso das redes tem intensificado sintomas de tristeza, vazio ou ansiedade, procure conversar com um profissional. Às vezes, mudar a relação com o celular é uma parte importante do tratamento — e pode fazer toda a diferença.</p>
+                    <p>Se você perce<p>Se você perceber que o uso das redes tem intensificado sintomas de tristeza, vazio ou ansiedade, procure conversar com um profissional. Às vezes, mudar a relação com o celular é uma parte importante do tratamento — e pode fazer toda a diferença.</p>
                 </div>
             </div>
         </section>
@@ -1663,7 +1415,7 @@
                 { texto: `[  OK  ] Sessão iniciada. ${saudacao}, visitante.`, classe: "ok", delay: 340 },
                 { texto: "[ INFO ] Analisando estado emocional... não é binário.", classe: "info", delay: 360 },
                 { texto: "[ WARN ] Lembrete: você não precisa ter tudo resolvido hoje.", classe: "warn", delay: 420 },
-                { texto: "[ INFO ] Dica: digite 'ajuda' em qualquer lugar da página.", classe: "info", delay: 380 },
+                { texto: "[ INFO ] Dica: digite 'help' em qualquer lugar da página.", classe: "info", delay: 380 },
                 { texto: "[  OK  ] Pronto. Role a página no seu tempo.", classe: "accent", delay: 340 },
                 { texto: "", delay: 220 }
             ];
@@ -1694,7 +1446,7 @@
                 { texto: "", delay: 160 },
                 { texto: `[  OK  ] ${saudacao}, visitante.`, classe: "ok", delay: 280 },
                 { texto: "[ WARN ] Você não precisa ter tudo resolvido hoje.", classe: "warn", delay: 340 },
-                { texto: "[ INFO ] Digite 'ajuda' em qualquer lugar.", classe: "info", delay: 300 },
+                { texto: "[ INFO ] Digite 'help' em qualquer lugar.", classe: "info", delay: 300 },
                 { texto: "[  OK  ] Pronto. Role no seu tempo.", classe: "accent", delay: 300 },
                 { texto: "", delay: 200 }
             ];
@@ -1785,7 +1537,7 @@
         updateStickyBarNow();
 
         /* ===================================================================== */
-        /* CRT TOGGLE                                                            */
+        /* CRT TOGGLE (sidebar)                                                  */
         /* ===================================================================== */
         const crtToggleBtn = document.getElementById('crtToggleBtn');
         function aplicarEstadoCRT() {
@@ -1908,157 +1660,14 @@
         }
 
         /* ===================================================================== */
-        /* TERMINAL (EASTER EGG)                                                 */
+        /* JANELAS FLUTUANTES                                                    */
         /* ===================================================================== */
-        const terminalOverlay = document.getElementById('terminalOverlay');
-        const terminalBody = document.getElementById('terminalBody');
-        const terminalInput = document.getElementById('terminalInput');
-        const terminalClose = document.getElementById('terminalClose');
-
-        let keystrokeBuffer = '';
-        let terminalAberto = false;
-
-        function appendTerminalLinha(texto, classe) {
-            if (!terminalBody) return;
-            const div = document.createElement('div');
-            div.className = 't-line' + (classe ? ' ' + classe : '');
-            if (texto === '') div.innerHTML = '&nbsp;'; else div.textContent = texto;
-            terminalBody.appendChild(div);
-            try { terminalBody.scrollTop = terminalBody.scrollHeight; } catch (e) {}
-        }
-
-        function renderizarBoasVindasTerminal() {
-            if (!terminalBody) return;
-            terminalBody.innerHTML = '';
-            appendTerminalLinha("voceimporta terminal v1.0", "t-accent");
-            appendTerminalLinha("Um pequeno espaço seguro, no meio da página.", "t-dim");
-            appendTerminalLinha("");
-            appendTerminalLinha("Digite 'ajuda' para ver os comandos disponíveis.", "t-info");
-            appendTerminalLinha("");
-        }
-
-        function abrirTerminal() {
-            if (!terminalOverlay || terminalAberto) return;
-            terminalAberto = true;
-            renderizarBoasVindasTerminal();
-            terminalOverlay.classList.add('ativo');
-            document.documentElement.classList.add('terminal-lock');
-            document.body.classList.add('terminal-lock');
-            setTimeout(() => { try { terminalInput.focus(); } catch (e) {} }, 60);
-        }
-        function fecharTerminal() {
-            if (!terminalOverlay || !terminalAberto) return;
-            terminalAberto = false;
-            terminalOverlay.classList.remove('ativo');
-            document.documentElement.classList.remove('terminal-lock');
-            document.body.classList.remove('terminal-lock');
-        }
-        function rolarPara(id) {
-            const el = document.getElementById(id);
-            if (el) { fecharTerminal(); setTimeout(() => { try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} }, 120); }
-        }
-
-        function executarComando(raw) {
-            const entrada = (raw || '').trim();
-            const cmd = entrada.toLowerCase();
-            if (!entrada) return;
-            appendTerminalLinha('> ' + entrada, 't-prompt-line');
-            switch (cmd) {
-                case 'ajuda': case 'help': case '?':
-                    appendTerminalLinha("Comandos disponíveis:", "t-accent");
-                    appendTerminalLinha("  ajuda      — mostra esta lista");
-                    appendTerminalLinha("  sobre      — o que é o voceimporta");
-                    appendTerminalLinha("  cvv        — apoio 24h gratuito");
-                    appendTerminalLinha("  caps       — atendimento pelo SUS");
-                    appendTerminalLinha("  samu       — emergência médica");
-                    appendTerminalLinha("  respirar   — ir para a seção de respiração");
-                    appendTerminalLinha("  cuidar     — uma mensagem pra você");
-                    appendTerminalLinha("  limpar     — limpa a tela");
-                    appendTerminalLinha("  fechar     — fecha o terminal");
-                    appendTerminalLinha(""); break;
-                case 'sobre': case 'about':
-                    appendTerminalLinha("voceimporta — projeto de conscientização", "t-accent");
-                    appendTerminalLinha("sobre depressão, feito pra Expotech 2026.", "t-info");
-                    appendTerminalLinha("Sem julgamentos. Sem pressa. No seu tempo.", "t-dim");
-                    appendTerminalLinha(""); break;
-                case 'cvv': case '188':
-                    appendTerminalLinha("CVV — Centro de Valorização da Vida", "t-accent");
-                    appendTerminalLinha("Telefone: 188", "t-ok");
-                    appendTerminalLinha("Gratuito. Sigiloso. 24h por dia, todos os dias.", "t-info");
-                    appendTerminalLinha("Você não precisa estar em crise pra ligar.", "t-dim");
-                    appendTerminalLinha(""); break;
-                case 'caps':
-                    appendTerminalLinha("CAPS — Centro de Atenção Psicossocial", "t-accent");
-                    appendTerminalLinha("Acompanhamento psicológico e psiquiátrico", "t-info");
-                    appendTerminalLinha("gratuito pelo SUS. Procure a UBS mais próxima", "t-info");
-                    appendTerminalLinha("e peça encaminhamento.", "t-dim");
-                    appendTerminalLinha(""); break;
-                case 'samu': case '192':
-                    appendTerminalLinha("SAMU — 192", "t-accent");
-                    appendTerminalLinha("Emergência médica. Ligue se houver risco", "t-warn");
-                    appendTerminalLinha("imediato à vida. Não hesite.", "t-warn");
-                    appendTerminalLinha(""); break;
-                case 'respirar': case 'respira': case 'respiro':
-                    appendTerminalLinha("Indo para a seção de respiração...", "t-info");
-                    appendTerminalLinha("Respire fundo uma vez antes.", "t-dim");
-                    appendTerminalLinha("");
-                    setTimeout(() => rolarPara('respiro'), 500); break;
-                case 'cuidar': case 'cuidado':
-                    appendTerminalLinha("Você está aqui, digitando comandos", "t-info");
-                    appendTerminalLinha("num terminal simbólico às " + String(new Date().getHours()).padStart(2,'0') + "h.", "t-dim");
-                    appendTerminalLinha("Isso já é um pequeno ato de cuidado com você.", "t-accent");
-                    appendTerminalLinha("");
-                    appendTerminalLinha("Tome um copo de água. Solte os ombros.", "t-ok");
-                    appendTerminalLinha("Você está fazendo o melhor que dá hoje.", "t-ok");
-                    appendTerminalLinha(""); break;
-                case 'limpar': case 'clear': case 'cls':
-                    terminalBody.innerHTML = '';
-                    appendTerminalLinha("terminal limpo.", "t-dim");
-                    appendTerminalLinha(""); break;
-                case 'fechar': case 'sair': case 'exit': case 'quit':
-                    appendTerminalLinha("até logo. cuide-se.", "t-accent");
-                    appendTerminalLinha("");
-                    setTimeout(fecharTerminal, 450); break;
-                default:
-                    appendTerminalLinha("comando não reconhecido: " + cmd, "t-err");
-                    appendTerminalLinha("digite 'ajuda' para ver os comandos.", "t-dim");
-                    appendTerminalLinha(""); break;
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (document.getElementById('bootScreen')) return;
-            if (terminalAberto) return;
-            const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
-            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-            if (e.ctrlKey || e.metaKey || e.altKey) return;
-            if (typeof e.key !== 'string' || e.key.length !== 1) {
-                if (e.key === 'Escape') keystrokeBuffer = '';
-                return;
-            }
-            keystrokeBuffer = (keystrokeBuffer + e.key.toLowerCase()).slice(-10);
-            if (keystrokeBuffer.indexOf('ajuda') !== -1) { keystrokeBuffer = ''; abrirTerminal(); }
-        });
-
-        if (terminalInput) {
-            terminalInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') { e.preventDefault(); executarComando(terminalInput.value); terminalInput.value = ''; }
-                else if (e.key === 'Escape') { e.preventDefault(); fecharTerminal(); }
-            });
-        }
-        if (terminalClose) terminalClose.addEventListener('click', fecharTerminal);
-        if (terminalOverlay) terminalOverlay.addEventListener('click', (e) => { if (e.target === terminalOverlay) fecharTerminal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && terminalAberto) { e.stopPropagation(); fecharTerminal(); } }, true);
-
-        /* ===================================================================== */
-        /* JANELAS FLUTUANTES — SISTEMA REFORMULADO                              */
-        /* ===================================================================== */
-        (function windowManager() {
+        const voceWM = (function windowManager() {
             const layer = document.getElementById('windowLayer');
             const taskbar = document.getElementById('windowTaskbar');
             const taskbarItemsEl = document.getElementById('windowTaskbarItems');
             const snapPreview = document.getElementById('snapPreview');
-            if (!layer) return;
+            if (!layer) return null;
 
             const BASE_Z = 9451;
             const MAX_Z = 9985;
@@ -2067,7 +1676,7 @@
             const SNAP_THRESHOLD = 24;
             const TASKBAR_H = 44;
 
-            const windows = {}; // id -> w
+            const windows = {};
             let zCounter = BASE_Z;
             let focusedId = null;
             let cascade = 0;
@@ -2103,7 +1712,6 @@
                 if (taskbar) taskbar.classList.toggle('visivel', hasAny);
                 document.body.classList.toggle('window-taskbar-visible', hasAny);
                 document.documentElement.style.setProperty('--window-taskbar-h', hasAny ? (TASKBAR_H + 'px') : '0px');
-
                 const anyMax = Object.keys(windows).some(id => windows[id].state === 'maximized');
                 document.body.classList.toggle('has-maximized-window', anyMax);
             }
@@ -2118,18 +1726,15 @@
                     if (w.id === focusedId) item.classList.add('ativo');
                     item.dataset.winId = w.id;
                     item.title = w.title;
-
                     const label = document.createElement('span');
                     label.className = 'taskbar-item-label';
                     label.textContent = w.title;
                     item.appendChild(label);
-
                     const close = document.createElement('span');
                     close.className = 'taskbar-item-close';
                     close.textContent = '×';
                     close.dataset.closeWinId = w.id;
                     item.appendChild(close);
-
                     taskbarItemsEl.appendChild(item);
                 });
             }
@@ -2142,10 +1747,7 @@
 
             function focusWindow(id) {
                 const w = windows[id];
-                if (!w || focusedId === id) {
-                    if (w) renderTaskbar();
-                    return;
-                }
+                if (!w || focusedId === id) { if (w) renderTaskbar(); return; }
                 focusedId = id;
                 if (zCounter > MAX_Z - 20) renormalizeZ();
                 w.el.style.zIndex = zCounter++;
@@ -2159,9 +1761,7 @@
 
             function computeInitialGeometry() {
                 const wa = getWorkArea();
-                if (isMobile()) {
-                    return { top: wa.top, left: 0, width: wa.width, height: wa.height };
-                }
+                if (isMobile()) return { top: wa.top, left: 0, width: wa.width, height: wa.height };
                 const w = Math.min(760, wa.width - 80);
                 const h = Math.min(600, wa.height - 40);
                 const sidebarOffset = document.body.classList.contains('sidebar-oculta-body') ? 20 : 300;
@@ -2184,7 +1784,6 @@
                 win.style.width = geo.width + 'px';
                 win.style.height = geo.height + 'px';
                 win.style.zIndex = zCounter++;
-
                 win.innerHTML = `
                     <div class="os-window-titlebar">
                         <span class="os-window-title"></span>
@@ -2210,20 +1809,16 @@
 
             function openWindow(sectionId) {
                 const section = document.getElementById(sectionId);
-                if (!section) return;
-
-                // Se já aberta, foca/restaura
+                if (!section) return null;
                 for (const id in windows) {
                     if (windows[id].sectionId === sectionId) {
                         focusWindow(id);
                         if (windows[id].state === 'minimized') unminimizeWindow(id);
-                        return;
+                        return id;
                     }
                 }
-
                 const title = getSectionTitle(section);
                 const id = 'w' + (winIdCounter++);
-
                 const placeholder = document.createElement('div');
                 placeholder.className = 'window-placeholder';
                 placeholder.dataset.placeholderFor = sectionId;
@@ -2233,24 +1828,11 @@
                     <button type="button" data-reopen-section="${sectionId}">trazer para frente</button>
                 `;
                 section.parentNode.insertBefore(placeholder, section);
-
                 const win = createWindowElement(id, title);
                 const body = win.querySelector('.os-window-body');
                 body.appendChild(section);
-
                 layer.appendChild(win);
-
-                windows[id] = {
-                    id, sectionId, title,
-                    el: win,
-                    section,
-                    placeholder,
-                    state: 'normal',
-                    prevRect: null,
-                    prevState: null
-                };
-
-                // Botões
+                windows[id] = { id, sectionId, title, el: win, section, placeholder, state: 'normal', prevRect: null, prevState: null };
                 win.querySelectorAll('.os-window-ctrl').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -2260,32 +1842,25 @@
                         else if (action === 'maximize') toggleMaximizeWindow(id);
                     });
                 });
-
-                // Foco ao clicar
                 win.addEventListener('mousedown', () => focusWindow(id), true);
                 win.addEventListener('touchstart', () => focusWindow(id), { passive: true });
-
-                // Duplo clique maximiza
                 const titlebar = win.querySelector('.os-window-titlebar');
                 titlebar.addEventListener('dblclick', (e) => {
                     if (e.target.closest('.os-window-ctrl')) return;
                     toggleMaximizeWindow(id);
                 });
-
                 makeDraggable(win, titlebar, id);
                 win.querySelectorAll('.os-window-resize').forEach(h => makeResizable(win, h, id));
-
                 updateTaskbarVisibility();
                 renderTaskbar();
                 focusWindow(id);
-
                 try { placeholder.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+                return id;
             }
 
             function closeWindow(id) {
                 const w = windows[id];
                 if (!w) return;
-
                 if (w.placeholder && w.placeholder.parentNode) {
                     w.placeholder.parentNode.insertBefore(w.section, w.placeholder);
                     w.placeholder.parentNode.removeChild(w.placeholder);
@@ -2295,21 +1870,23 @@
                 }
                 if (w.el && w.el.parentNode) w.el.parentNode.removeChild(w.el);
                 delete windows[id];
-
                 if (focusedId === id) {
                     const remaining = Object.keys(windows);
                     focusedId = remaining.length ? remaining[remaining.length - 1] : null;
                     if (focusedId) focusWindow(focusedId);
                 }
-
                 updateTaskbarVisibility();
                 renderTaskbar();
+            }
+
+            function closeAllWindows() {
+                const ids = Object.keys(windows);
+                ids.forEach(closeWindow);
             }
 
             function minimizeWindow(id) {
                 const w = windows[id];
                 if (!w || w.state === 'minimized') return;
-
                 if (w.state === 'normal') {
                     w.prevRect = { top: w.el.style.top, left: w.el.style.left, width: w.el.style.width, height: w.el.style.height };
                 }
@@ -2317,14 +1894,12 @@
                 w.state = 'minimized';
                 w.el.classList.add('minimized');
                 w.el.classList.remove('maximized');
-
                 const remaining = Object.keys(windows).filter(i => i !== id && windows[i].state !== 'minimized');
                 if (remaining.length) focusWindow(remaining[remaining.length - 1]);
                 else {
                     focusedId = null;
                     Object.keys(windows).forEach(wid => windows[wid].el.classList.remove('focused'));
                 }
-
                 updateTaskbarVisibility();
                 renderTaskbar();
             }
@@ -2332,9 +1907,7 @@
             function unminimizeWindow(id) {
                 const w = windows[id];
                 if (!w || w.state !== 'minimized') return;
-
                 w.el.classList.remove('minimized');
-
                 if (w.prevState === 'maximized') {
                     w.el.classList.add('maximized');
                     w.state = 'maximized';
@@ -2355,7 +1928,6 @@
             function toggleMaximizeWindow(id) {
                 const w = windows[id];
                 if (!w) return;
-
                 if (w.state === 'maximized') {
                     w.el.classList.remove('maximized');
                     if (w.prevRect) {
@@ -2382,7 +1954,6 @@
                 let dragging = false;
                 let startX = 0, startY = 0, startLeft = 0, startTop = 0;
                 let snapSide = null;
-
                 function begin(cx, cy) {
                     const w = windows[id];
                     if (!w || w.state === 'maximized' || isMobile()) return;
@@ -2393,29 +1964,23 @@
                     startTop = r.top;
                     document.body.style.userSelect = 'none';
                 }
-
                 function move(cx, cy) {
                     if (!dragging) return;
                     const dx = cx - startX, dy = cy - startY;
                     let nl = startLeft + dx, nt = startTop + dy;
-
                     const wa = getWorkArea();
                     const winW = win.offsetWidth;
                     const minVisible = 60;
-
                     nl = clamp(nl, -winW + minVisible, wa.right - minVisible);
                     nt = clamp(nt, wa.top, wa.bottom - 30);
-
                     win.style.left = nl + 'px';
                     win.style.top = nt + 'px';
-
                     snapSide = null;
                     if (cx <= wa.left + SNAP_THRESHOLD) snapSide = 'left';
                     else if (cx >= wa.right - SNAP_THRESHOLD) snapSide = 'right';
                     else if (cy <= wa.top + SNAP_THRESHOLD) snapSide = 'top';
                     showSnapPreview(snapSide);
                 }
-
                 function end() {
                     if (!dragging) return;
                     dragging = false;
@@ -2423,7 +1988,6 @@
                     hideSnapPreview();
                     if (snapSide) { applySnap(id, snapSide); snapSide = null; }
                 }
-
                 handle.addEventListener('mousedown', (e) => {
                     if (e.target.closest('.os-window-ctrl')) return;
                     e.preventDefault();
@@ -2431,7 +1995,6 @@
                 });
                 document.addEventListener('mousemove', (e) => move(e.clientX, e.clientY));
                 document.addEventListener('mouseup', end);
-
                 handle.addEventListener('touchstart', (e) => {
                     if (e.target.closest('.os-window-ctrl')) return;
                     const t = e.touches[0];
@@ -2469,7 +2032,6 @@
                     w.prevRect = { top: w.el.style.top, left: w.el.style.left, width: w.el.style.width, height: w.el.style.height };
                 }
                 w.el.classList.remove('minimized', 'maximized');
-
                 if (side === 'top') {
                     w.el.classList.add('maximized');
                     w.state = 'maximized';
@@ -2495,7 +2057,6 @@
                 const dir = handle.dataset.dir;
                 let resizing = false;
                 let startX = 0, startY = 0, startW = 0, startH = 0, startL = 0, startT = 0;
-
                 function begin(cx, cy) {
                     const w = windows[id];
                     if (!w || w.state === 'maximized' || w.state === 'minimized' || isMobile()) return;
@@ -2503,41 +2064,33 @@
                     startX = cx; startY = cy;
                     const r = win.getBoundingClientRect();
                     startW = r.width; startH = r.height;
-                    startL = r.left;  startT = r.top;
+                    startL = r.left; startT = r.top;
                     document.body.style.userSelect = 'none';
                 }
-
                 function move(cx, cy) {
                     if (!resizing) return;
                     const dx = cx - startX, dy = cy - startY;
                     let nw = startW, nh = startH, nl = startL, nt = startT;
-
                     if (dir.includes('e')) nw = startW + dx;
                     if (dir.includes('s')) nh = startH + dy;
                     if (dir.includes('w')) { nw = startW - dx; nl = startL + dx; }
                     if (dir.includes('n')) { nh = startH - dy; nt = startT + dy; }
-
                     if (nw < MIN_W) { if (dir.includes('w')) nl = startL + startW - MIN_W; nw = MIN_W; }
                     if (nh < MIN_H) { if (dir.includes('n')) nt = startT + startH - MIN_H; nh = MIN_H; }
-
                     const wa = getWorkArea();
                     if (nl < wa.left) { nw += nl - wa.left; nl = wa.left; }
-                    if (nt < wa.top)  { nh += nt - wa.top;  nt = wa.top; }
+                    if (nt < wa.top) { nh += nt - wa.top; nt = wa.top; }
                     if (nl + nw > wa.right) nw = wa.right - nl;
                     if (nt + nh > wa.bottom) nh = wa.bottom - nt;
-
                     win.style.left = nl + 'px';
                     win.style.top = nt + 'px';
                     win.style.width = nw + 'px';
                     win.style.height = nh + 'px';
                 }
-
                 function end() { if (!resizing) return; resizing = false; document.body.style.userSelect = ''; }
-
                 handle.addEventListener('mousedown', (e) => { e.preventDefault(); e.stopPropagation(); begin(e.clientX, e.clientY); });
                 document.addEventListener('mousemove', move);
                 document.addEventListener('mouseup', end);
-
                 handle.addEventListener('touchstart', (e) => {
                     e.stopPropagation();
                     const t = e.touches[0];
@@ -2552,7 +2105,6 @@
                 document.addEventListener('touchcancel', end);
             }
 
-            // Taskbar
             if (taskbar) {
                 taskbar.addEventListener('click', (e) => {
                     const closeBtn = e.target.closest('.taskbar-item-close');
@@ -2573,9 +2125,7 @@
                 });
             }
 
-            // Pop-out buttons
             const POP_OUT_SVG = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter"><rect x="1" y="1" width="7" height="7"/><rect x="5" y="5" width="7" height="7"/></svg>';
-
             function injectPopOutButtons() {
                 document.querySelectorAll('section[id]').forEach(section => {
                     if (section.id === 'inicio') return;
@@ -2611,36 +2161,17 @@
                 }
             });
 
-            // Atalhos de teclado
             document.addEventListener('keydown', (e) => {
                 if (!focusedId) return;
                 const term = document.getElementById('terminalOverlay');
                 if (term && term.classList.contains('ativo')) return;
                 if (document.getElementById('sidebar').classList.contains('ativo')) return;
-
-                if (e.key === 'Escape') {
-                    e.preventDefault();
-                    closeWindow(focusedId);
-                    return;
-                }
-                if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'w') {
-                    e.preventDefault();
-                    closeWindow(focusedId);
-                    return;
-                }
-                if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'm') {
-                    e.preventDefault();
-                    minimizeWindow(focusedId);
-                    return;
-                }
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'm') {
-                    e.preventDefault();
-                    toggleMaximizeWindow(focusedId);
-                    return;
-                }
+                if (e.key === 'Escape') { e.preventDefault(); closeWindow(focusedId); return; }
+                if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'w') { e.preventDefault(); closeWindow(focusedId); return; }
+                if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'm') { e.preventDefault(); minimizeWindow(focusedId); return; }
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'm') { e.preventDefault(); toggleMaximizeWindow(focusedId); return; }
             });
 
-            // Resize da janela do navegador
             let resizeDebounce = null;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeDebounce);
@@ -2663,16 +2194,568 @@
                 }, 120);
             });
 
-            // Init
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', injectPopOutButtons);
             } else {
                 injectPopOutButtons();
             }
-
             updateTaskbarVisibility();
             renderTaskbar();
+
+            // API exposta para o terminal
+            return {
+                open: openWindow,
+                close: closeWindow,
+                closeAll: closeAllWindows,
+                minimize: minimizeWindow,
+                unminimize: unminimizeWindow,
+                toggleMaximize: toggleMaximizeWindow,
+                focus: focusWindow,
+                list: () => Object.values(windows).map(w => ({
+                    id: w.id,
+                    title: w.title,
+                    sectionId: w.sectionId,
+                    state: w.state,
+                    z: parseInt(w.el.style.zIndex, 10) || 0,
+                    focused: w.id === focusedId
+                })),
+                count: () => Object.keys(windows).length,
+                getFocused: () => focusedId,
+                getMaxZ: () => {
+                    let maxZ = 0;
+                    Object.values(windows).forEach(w => {
+                        const z = parseInt(w.el.style.zIndex, 10) || 0;
+                        if (z > maxZ) maxZ = z;
+                    });
+                    return maxZ;
+                }
+            };
         })();
+
+        /* ===================================================================== */
+        /* DEBUG OVERLAY                                                          */
+        /* ===================================================================== */
+        const debugOverlay = document.getElementById('debugOverlay');
+        const dbgScroll  = document.getElementById('dbgScroll');
+        const dbgSection = document.getElementById('dbgSection');
+        const dbgWindows = document.getElementById('dbgWindows');
+        const dbgFocus   = document.getElementById('dbgFocus');
+        const dbgZmax    = document.getElementById('dbgZmax');
+        const dbgCRT     = document.getElementById('dbgCRT');
+        const dbgNoise   = document.getElementById('dbgNoise');
+        const dbgFPS     = document.getElementById('dbgFPS');
+
+        let debugAtivo = false;
+        let debugInterval = null;
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
+        let currentFPS = 0;
+
+        function tickFPS() {
+            frameCount++;
+            const now = performance.now();
+            if (now - lastFrameTime >= 1000) {
+                currentFPS = frameCount;
+                frameCount = 0;
+                lastFrameTime = now;
+            }
+            if (debugAtivo) requestAnimationFrame(tickFPS);
+        }
+
+        function getSecaoAtual() {
+            const secoes = document.querySelectorAll('section[id]');
+            const topRef = getComputedStyle(document.documentElement).getPropertyValue('--sticky-bar-h').trim();
+            const topPx = parseInt(topRef, 10) || 42;
+            let atual = '—';
+            secoes.forEach(sec => {
+                const rect = sec.getBoundingClientRect();
+                if (rect.top <= topPx + 40 && rect.bottom > topPx + 40) atual = '#' + sec.id;
+            });
+            return atual;
+        }
+
+        function atualizarDebug() {
+            if (!debugOverlay || !debugAtivo) return;
+            const scrollY = Math.round(window.pageYOffset || document.documentElement.scrollTop);
+            const docH = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = docH > 0 ? Math.round((scrollY / docH) * 100) : 0;
+            dbgScroll.textContent  = scrollY + 'px (' + pct + '%)';
+            dbgSection.textContent = getSecaoAtual();
+            if (voceWM) {
+                dbgWindows.textContent = voceWM.count();
+                const foc = voceWM.getFocused();
+                if (foc) {
+                    const list = voceWM.list();
+                    const w = list.find(x => x.id === foc);
+                    dbgFocus.textContent = w ? (foc + ' · ' + w.title) : foc;
+                } else {
+                    dbgFocus.textContent = '—';
+                }
+                dbgZmax.textContent = voceWM.getMaxZ() || '—';
+            } else {
+                dbgWindows.textContent = '0';
+                dbgFocus.textContent = '—';
+                dbgZmax.textContent = '—';
+            }
+            const crtOn = !document.body.classList.contains('crt-off');
+            dbgCRT.textContent = crtOn ? 'on' : 'off';
+            const noiseVal = getComputedStyle(document.documentElement).getPropertyValue('--noise-opacity').trim() || '0';
+            dbgNoise.textContent = parseFloat(noiseVal).toFixed(2);
+            dbgFPS.textContent = currentFPS;
+        }
+
+        function ativarDebug() {
+            if (!debugOverlay || debugAtivo) return;
+            debugAtivo = true;
+            debugOverlay.classList.add('ativo');
+            lastFrameTime = performance.now();
+            frameCount = 0;
+            requestAnimationFrame(tickFPS);
+            debugInterval = setInterval(atualizarDebug, 250);
+            atualizarDebug();
+        }
+
+        function desativarDebug() {
+            if (!debugAtivo) return;
+            debugAtivo = false;
+            debugOverlay.classList.remove('ativo');
+            if (debugInterval) { clearInterval(debugInterval); debugInterval = null; }
+        }
+
+        /* ===================================================================== */
+        /* TERMINAL — EASTER EGG                                                 */
+        /* ===================================================================== */
+        const terminalOverlay = document.getElementById('terminalOverlay');
+        const terminalBody = document.getElementById('terminalBody');
+        const terminalInput = document.getElementById('terminalInput');
+        const terminalClose = document.getElementById('terminalClose');
+
+        let keystrokeBuffer = '';
+        let terminalAberto = false;
+
+        function appendTerminalLinha(texto, classe) {
+            if (!terminalBody) return;
+            const div = document.createElement('div');
+            div.className = 't-line' + (classe ? ' ' + classe : '');
+            if (texto === '') div.innerHTML = '&nbsp;'; else div.textContent = texto;
+            terminalBody.appendChild(div);
+            try { terminalBody.scrollTop = terminalBody.scrollHeight; } catch (e) {}
+        }
+
+        function renderizarBoasVindasTerminal() {
+            if (!terminalBody) return;
+            terminalBody.innerHTML = '';
+            appendTerminalLinha("voceimporta.sh — terminal v1.0", "t-accent");
+            appendTerminalLinha("Digite 'help' para ver os comandos disponíveis.", "t-dim");
+            appendTerminalLinha("");
+        }
+
+        function abrirTerminal() {
+            if (!terminalOverlay || terminalAberto) return;
+            terminalAberto = true;
+            renderizarBoasVindasTerminal();
+            terminalOverlay.classList.add('ativo');
+            document.documentElement.classList.add('terminal-lock');
+            document.body.classList.add('terminal-lock');
+            setTimeout(() => { try { terminalInput.focus(); } catch (e) {} }, 60);
+        }
+
+        function fecharTerminal() {
+            if (!terminalOverlay || !terminalAberto) return;
+            terminalAberto = false;
+            terminalOverlay.classList.remove('ativo');
+            document.documentElement.classList.remove('terminal-lock');
+            document.body.classList.remove('terminal-lock');
+        }
+
+        /* -------- helpers dos comandos -------- */
+
+        // Pega todas as seções "navegáveis" (exclui hero)
+        function listarSecoes() {
+            return Array.from(document.querySelectorAll('section[id]')).filter(s => s.id !== 'inicio');
+        }
+
+        // Retorna o texto completo de uma seção
+        function textoDaSecao(sec) {
+            if (!sec) return '';
+            const clone = sec.cloneNode(true);
+            // Remove botões de pop-out e demais elementos de UI
+            clone.querySelectorAll('.pop-out-btn, .section-titulo button').forEach(b => b.remove());
+            return (clone.textContent || '').replace(/\s+/g, ' ').trim();
+        }
+
+        // Duração "uptime" desde o carregamento
+        const bootTime = Date.now();
+        function uptimeString() {
+            const segs = Math.floor((Date.now() - bootTime) / 1000);
+            const h = Math.floor(segs / 3600);
+            const m = Math.floor((segs % 3600) / 60);
+            const s = segs % 60;
+            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        }
+
+        /* -------- handlers dos comandos -------- */
+
+        // uptime
+        function cmdUptime() {
+            const secs = Math.floor((Date.now() - bootTime) / 1000);
+            const h = Math.floor(secs / 3600);
+            const m = Math.floor((secs % 3600) / 60);
+            const s = secs % 60;
+            const parts = [];
+            if (h > 0) parts.push(h + 'h');
+            if (m > 0) parts.push(m + 'min');
+            parts.push(s + 's');
+            appendTerminalLinha('up ' + parts.join(' ') + ' — 1 user — load: 0.42, 0.13, 0.05', 't-ok');
+        }
+
+        // env
+        function cmdEnv() {
+            const vars = [
+                ['USER', 'visitante'],
+                ['HOSTNAME', 'voceimporta'],
+                ['PWD', '/mnt/voceimporta'],
+                ['SHELL', '/bin/acolhimento'],
+                ['LANG', 'pt_BR.UTF-8'],
+                ['THEME', 'dark-amber'],
+                ['CRT', document.body.classList.contains('crt-off') ? 'off' : 'on'],
+                ['NOISE', (getComputedStyle(document.documentElement).getPropertyValue('--noise-opacity').trim() || '0')],
+                ['STICKY_BAR_H', getComputedStyle(document.documentElement).getPropertyValue('--sticky-bar-h').trim()],
+                ['WINDOWS', String(voceWM ? voceWM.count() : 0)]
+            ];
+            vars.forEach(([k, v]) => appendTerminalLinha(k + '=' + v, 't-info'));
+        }
+
+        // cat <seção>
+        function cmdCat(args) {
+            if (!args.length) {
+                appendTerminalLinha("uso: cat <seção>", "t-dim");
+                appendTerminalLinha("seções disponíveis: " + listarSecoes().map(s => s.id).join(', '), "t-dim");
+                return;
+            }
+            const id = args[0].toLowerCase().replace('#', '').replace('.txt', '').replace('.log', '');
+            const sec = document.getElementById(id);
+            if (!sec) {
+                appendTerminalLinha("cat: " + id + ": arquivo não encontrado", "t-err");
+                return;
+            }
+            const txt = textoDaSecao(sec);
+            // Quebra em pedaços de ~120 chars por linha para leitura no terminal
+            const linhas = txt.match(/.{1,120}(\s|$)/g) || [txt];
+            linhas.forEach(l => appendTerminalLinha(l.trim(), ''));
+        }
+
+        // cd <destino>
+        function cmdCd(args) {
+            const alvo = (args[0] || '~').toLowerCase();
+            if (alvo === '~' || alvo === '/' || alvo === 'inicio' || alvo === 'top') {
+                fecharTerminal();
+                setTimeout(() => {
+                    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
+                }, 100);
+                return;
+            }
+            const id = alvo.replace('#', '');
+            const sec = document.getElementById(id);
+            if (!sec) {
+                appendTerminalLinha("cd: " + id + ": diretório inexistente", "t-err");
+                return;
+            }
+            fecharTerminal();
+            setTimeout(() => {
+                try { sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+            }, 100);
+        }
+
+        // find <termo>
+        function cmdFind(args) {
+            if (!args.length) {
+                appendTerminalLinha("uso: find <termo>", "t-dim");
+                return;
+            }
+            const termo = args.join(' ').toLowerCase();
+            const secoes = listarSecoes();
+            let total = 0;
+            appendTerminalLinha("buscando por: \"" + termo + "\"", "t-info");
+            secoes.forEach(sec => {
+                const txt = textoDaSecao(sec).toLowerCase();
+                let idx = txt.indexOf(termo);
+                let ocorrencias = 0;
+                while (idx !== -1) { ocorrencias++; idx = txt.indexOf(termo, idx + termo.length); }
+                if (ocorrencias > 0) {
+                    appendTerminalLinha('  #' + sec.id.padEnd(18, ' ') + ' → ' + ocorrencias + ' ocorrência' + (ocorrencias > 1 ? 's' : ''), 't-ok');
+                    total += ocorrencias;
+                }
+            });
+            if (total === 0) appendTerminalLinha("nenhum resultado.", "t-warn");
+            else appendTerminalLinha("total: " + total + " ocorrência" + (total > 1 ? 's' : ''), 't-accent');
+        }
+
+        // kill <pid>
+        function cmdKill(args) {
+            if (!args.length) {
+                appendTerminalLinha("uso: kill <pid>  (use 'ps' para listar)", "t-dim");
+                return;
+            }
+            const id = args[0];
+            if (!voceWM) { appendTerminalLinha("kill: gerenciador de janelas indisponível", "t-err"); return; }
+            const list = voceWM.list();
+            const alvo = list.find(w => w.id === id);
+            if (!alvo) {
+                appendTerminalLinha("kill: (" + id + ") — processo não encontrado", "t-err");
+                return;
+            }
+            voceWM.close(id);
+            appendTerminalLinha("kill: processo " + id + " (" + alvo.title + ") encerrado", "t-ok");
+        }
+
+        // killall
+        function cmdKillall() {
+            if (!voceWM) { appendTerminalLinha("killall: nada para encerrar", "t-warn"); return; }
+            const n = voceWM.count();
+            if (n === 0) { appendTerminalLinha("killall: nenhuma janela aberta", "t-warn"); return; }
+            voceWM.closeAll();
+            appendTerminalLinha("killall: " + n + " processo" + (n > 1 ? 's' : '') + " encerrado" + (n > 1 ? 's' : ''), 't-ok');
+        }
+
+        // reset-windows
+        function cmdResetWindows() {
+            if (!voceWM) { appendTerminalLinha("reset-windows: indisponível", "t-warn"); return; }
+            const n = voceWM.count();
+            voceWM.closeAll();
+            appendTerminalLinha("reset-windows: " + n + " janela" + (n === 1 ? '' : 's') + " fechada" + (n === 1 ? '' : 's') + ", estado restaurado.", 't-ok');
+        }
+
+        // ps (implícito como suporte a kill)
+        function cmdPs() {
+            if (!voceWM) { appendTerminalLinha("ps: gerenciador de janelas indisponível", "t-err"); return; }
+            const list = voceWM.list();
+            if (!list.length) { appendTerminalLinha("ps: nenhuma janela aberta", "t-dim"); return; }
+            appendTerminalLinha("  PID   STATE       Z-INDEX  TITLE", "t-accent");
+            list.forEach(w => {
+                const foco = w.focused ? ' *' : '  ';
+                appendTerminalLinha(
+                    '  ' + w.id.padEnd(5) + ' ' + w.state.padEnd(11) + ' ' + String(w.z).padEnd(8) + ' ' + w.title + foco,
+                    w.focused ? 't-ok' : ''
+                );
+            });
+            appendTerminalLinha("  (* = em foco)", "t-dim");
+        }
+
+        // debug / debug off
+        function cmdDebug(args) {
+            if (args[0] === 'off') {
+                desativarDebug();
+                appendTerminalLinha("debug: desativado", 't-info');
+            } else {
+                ativarDebug();
+                appendTerminalLinha("debug: ativado — overlay no canto superior direito", 't-ok');
+            }
+        }
+
+        // crt / crt on / crt off
+        function cmdCrt(args) {
+            const sub = (args[0] || '').toLowerCase();
+            if (sub === 'on') {
+                document.body.classList.remove('crt-off');
+                try { localStorage.setItem('voceimporta_crt_ativo', '1'); } catch (e) {}
+                if (typeof aplicarEstadoCRT === 'function') aplicarEstadoCRT();
+                appendTerminalLinha("crt: ativado", 't-ok');
+            } else if (sub === 'off') {
+                document.body.classList.add('crt-off');
+                try { localStorage.setItem('voceimporta_crt_ativo', '0'); } catch (e) {}
+                if (typeof aplicarEstadoCRT === 'function') aplicarEstadoCRT();
+                appendTerminalLinha("crt: desativado", 't-ok');
+            } else {
+                const ativo = !document.body.classList.contains('crt-off');
+                appendTerminalLinha("crt: " + (ativo ? 'on' : 'off'), 't-info');
+                appendTerminalLinha("use 'crt on' ou 'crt off' para alterar", 't-dim');
+            }
+        }
+
+        // noise [valor]
+        function cmdNoise(args) {
+            if (!args.length) {
+                const v = getComputedStyle(document.documentElement).getPropertyValue('--noise-opacity').trim();
+                appendTerminalLinha("noise: " + (parseFloat(v).toFixed(2)), 't-info');
+                appendTerminalLinha("use 'noise <0..1>' para ajustar", 't-dim');
+                return;
+            }
+            const v = parseFloat(args[0]);
+            if (isNaN(v) || v < 0 || v > 1) {
+                appendTerminalLinha("noise: valor inválido (use entre 0 e 1)", 't-err');
+                return;
+            }
+            document.documentElement.style.setProperty('--noise-opacity', v.toFixed(2));
+            appendTerminalLinha("noise: " + v.toFixed(2), 't-ok');
+        }
+
+        // enable / disable <efeito>
+        const efeitos = {
+            scanlines: 'fx-scanlines-off',
+            flicker:   'fx-flicker-off',
+            noise:     'fx-noise-off',
+            marquee:   'fx-marquee-off'
+        };
+        function cmdEfeito(acao, args) {
+            if (!args.length) {
+                appendTerminalLinha("uso: " + acao + " <efeito>", "t-dim");
+                appendTerminalLinha("efeitos: " + Object.keys(efeitos).join(', '), "t-dim");
+                return;
+            }
+            const nome = args[0].toLowerCase();
+            const classe = efeitos[nome];
+            if (!classe) {
+                appendTerminalLinha(acao + ": efeito desconhecido: " + nome, "t-err");
+                return;
+            }
+            if (acao === 'disable') {
+                document.body.classList.add(classe);
+                appendTerminalLinha("disable: " + nome + " desativado", 't-ok');
+            } else {
+                document.body.classList.remove(classe);
+                appendTerminalLinha("enable: " + nome + " ativado", 't-ok');
+            }
+        }
+
+        // rm -rf /
+        let rmExecutado = false;
+        function cmdRm(args) {
+            const raw = args.join(' ').toLowerCase();
+            if (raw === '-rf /' || raw === '-rf/*' || raw === '-rf .') {
+                if (rmExecutado) {
+                    appendTerminalLinha("rm: já tentou isso. ainda está tudo aqui.", 't-dim');
+                    return;
+                }
+                rmExecutado = true;
+                appendTerminalLinha("rm: removendo / ...", 't-warn');
+                appendTerminalLinha("rm: você está tentando apagar um espaço seguro.", 't-warn');
+                appendTerminalLinha("");
+                // glitch rápido na tela
+                const glitch = document.createElement('div');
+                glitch.style.cssText = 'position:fixed;inset:0;background:#000;z-index:99998;pointer-events:none;opacity:0;transition:opacity 0.08s;';
+                document.body.appendChild(glitch);
+                let flashes = 0;
+                const flash = setInterval(() => {
+                    glitch.style.opacity = flashes % 2 ? '0' : '0.85';
+                    flashes++;
+                    if (flashes > 6) {
+                        clearInterval(flash);
+                        glitch.style.opacity = '0';
+                        setTimeout(() => glitch.remove(), 200);
+                    }
+                }, 80);
+                setTimeout(() => {
+                    appendTerminalLinha("rm: operação cancelada pelo kernel.", 't-err');
+                    appendTerminalLinha("rm: motivo: /dev/cuidado é read-only.", 't-dim');
+                    appendTerminalLinha("");
+                    appendTerminalLinha("Fique. Você importa.", 't-accent');
+                }, 700);
+                return;
+            }
+            appendTerminalLinha("rm: operação bloqueada — este terminal é apenas simbólico.", 't-dim');
+        }
+
+        /* -------- help -------- */
+        function cmdHelp() {
+            appendTerminalLinha("comandos disponíveis:", "t-accent");
+            appendTerminalLinha("  uptime                     — há quanto tempo a sessão está aberta", "t-info");
+            appendTerminalLinha("  env                        — variáveis de ambiente do site", "t-info");
+            appendTerminalLinha("  cat <seção>                — imprime o texto de uma seção", "t-info");
+            appendTerminalLinha("  cd ~                       — volta para o topo da página", "t-info");
+            appendTerminalLinha("  find <termo>               — busca um termo em todas as seções", "t-info");
+            appendTerminalLinha("");
+            appendTerminalLinha("  ps                         — lista janelas abertas (com PID)", "t-info");
+            appendTerminalLinha("  kill <pid>                 — fecha uma janela pelo ID", "t-info");
+            appendTerminalLinha("  killall                    — fecha todas as janelas", "t-info");
+            appendTerminalLinha("  reset-windows              — restaura o layout das janelas", "t-info");
+            appendTerminalLinha("");
+            appendTerminalLinha("  debug | debug off          — overlay de debug em tempo real", "t-info");
+            appendTerminalLinha("  crt | crt on | crt off     — controla o efeito CRT", "t-info");
+            appendTerminalLinha("  noise [0..1]               — vê ou ajusta a intensidade do ruído", "t-info");
+            appendTerminalLinha("  enable <efeito>            — liga um efeito visual", "t-info");
+            appendTerminalLinha("  disable <efeito>           — desliga um efeito visual", "t-info");
+            appendTerminalLinha("       efeitos: scanlines, flicker, noise, marquee", "t-dim");
+            appendTerminalLinha("");
+            appendTerminalLinha("  rm -rf /                   — não faça isso. só dizendo.", "t-dim");
+            appendTerminalLinha("  clear                      — limpa a tela", "t-dim");
+            appendTerminalLinha("  exit                       — fecha o terminal", "t-dim");
+            appendTerminalLinha("");
+        }
+
+        /* -------- despacho -------- */
+        function executarComando(raw) {
+            const entrada = (raw || '').trim();
+            const cmd = entrada.toLowerCase();
+            if (!entrada) return;
+
+            appendTerminalLinha('> ' + entrada, 't-prompt-line');
+
+            const partes = cmd.split(/\s+/);
+            const nome = partes[0];
+            const args = partes.slice(1);
+
+            switch (nome) {
+                case 'help': case '?':           cmdHelp(); break;
+                case 'uptime':                   cmdUptime(); break;
+                case 'env':                      cmdEnv(); break;
+                case 'cat':                      cmdCat(args); break;
+                case 'cd':                       cmdCd(args); break;
+                case 'find': case 'grep':        cmdFind(args); break;
+                case 'ps':                       cmdPs(); break;
+                case 'kill':                     cmdKill(args); break;
+                case 'killall':                  cmdKillall(); break;
+                case 'reset-windows':            cmdResetWindows(); break;
+                case 'debug':                    cmdDebug(args); break;
+                case 'crt':                      cmdCrt(args); break;
+                case 'noise':                    cmdNoise(args); break;
+                case 'enable':                   cmdEfeito('enable', args); break;
+                case 'disable':                  cmdEfeito('disable', args); break;
+                case 'rm':                       cmdRm(args); break;
+                case 'clear': case 'cls':
+                    terminalBody.innerHTML = '';
+                    appendTerminalLinha("terminal limpo.", 't-dim');
+                    appendTerminalLinha("");
+                    break;
+                case 'exit': case 'quit':
+                    appendTerminalLinha("até logo. cuide-se.", 't-accent');
+                    appendTerminalLinha("");
+                    setTimeout(fecharTerminal, 450);
+                    break;
+                default:
+                    appendTerminalLinha("comando não reconhecido: " + nome, 't-err');
+                    appendTerminalLinha("digite 'help' para ver os comandos.", 't-dim');
+                    appendTerminalLinha("");
+                    break;
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('bootScreen')) return;
+            if (terminalAberto) return;
+            const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (typeof e.key !== 'string' || e.key.length !== 1) {
+                if (e.key === 'Escape') keystrokeBuffer = '';
+                return;
+            }
+            keystrokeBuffer = (keystrokeBuffer + e.key.toLowerCase()).slice(-10);
+            if (keystrokeBuffer.indexOf('ajuda') !== -1 || keystrokeBuffer.indexOf('help') !== -1) {
+                keystrokeBuffer = '';
+                abrirTerminal();
+            }
+        });
+
+        if (terminalInput) {
+            terminalInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); executarComando(terminalInput.value); terminalInput.value = ''; }
+                else if (e.key === 'Escape') { e.preventDefault(); fecharTerminal(); }
+            });
+        }
+        if (terminalClose) terminalClose.addEventListener('click', fecharTerminal);
+        if (terminalOverlay) terminalOverlay.addEventListener('click', (e) => { if (e.target === terminalOverlay) fecharTerminal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && terminalAberto) { e.stopPropagation(); fecharTerminal(); } }, true);
 
         /* ===================================================================== */
         /* QUIZ                                                                  */
