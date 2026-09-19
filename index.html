@@ -65,7 +65,6 @@
         body.crt-off .crt-noise,
         body.crt-off #noise-overlay { display: none !important; }
 
-        /* Efeitos individuais (controlados pelo terminal) */
         body.fx-scanlines-off .crt-overlay { display: none !important; }
         body.fx-flicker-off .crt-flicker { display: none !important; }
         body.fx-noise-off .crt-noise { display: none !important; }
@@ -247,7 +246,7 @@
         }
 
         /* ===================================================================== */
-        /* DEBUG OVERLAY (terminal) */
+        /* DEBUG OVERLAY */
         /* ===================================================================== */
         .debug-overlay {
             position: fixed;
@@ -634,9 +633,6 @@
         .btn-twitter  { background: #1a1a2a; border-color: #3a3a4a; }
         .btn-link     { background: #3a3a3a; border-color: #5a5a5a; }
 
-        /* ===================================================================== */
-        /* RESPONSIVO */
-        /* ===================================================================== */
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.ativo { transform: translateX(0); }
@@ -864,7 +860,7 @@
     <div class="crt-noise" id="crtNoise"></div>
     <div id="noise-overlay"></div>
 
-    <!-- DEBUG OVERLAY (controlado pelo terminal) -->
+    <!-- DEBUG OVERLAY -->
     <div class="debug-overlay" id="debugOverlay">
         <div class="debug-row"><span class="debug-key">scroll</span><span class="debug-val" id="dbgScroll">0</span></div>
         <div class="debug-row"><span class="debug-key">section</span><span class="debug-val" id="dbgSection">—</span></div>
@@ -1041,8 +1037,7 @@
                     <div class="stat-item"><span class="stat-numero">1º</span><span class="stat-rotulo">país mais ansioso da América Latina</span></div>
                     <div class="stat-item"><span class="stat-numero">38%</span><span class="stat-rotulo">de aumento de casos entre jovens</span></div>
                 </div>
-                <p style="text-align:center; margin-top:1.5rem; font-size:0.85rem; color:#a09080;">    Fontes: Organização Mundial da Saúde (OMS), Ministério da Saúde e IBGE.
-    Dados consultados em setembro de 2026.</p>
+                <p style="text-align:center; margin-top:1.5rem; font-size:0.85rem; color:#a09080;">Fontes: Organização Mundial da Saúde (OMS), Ministério da Saúde e IBGE. Dados consultados em setembro de 2026.</p>
             </div>
         </section>
 
@@ -1112,7 +1107,7 @@
                 <div class="texto-corrido">
                     <p><strong>Como usar as redes de forma mais saudável:</strong></p>
                     <p>Estabeleça horários para usar o celular, especialmente longe da hora de dormir. Faça pausas regulares — o famoso <em>detox digital</em> — e observe como seu humor reage. Deixe de seguir perfis que te fazem mal ou que promovem comparações constantes. Prefira conteúdos que informem, ensinem ou tragam leveza de verdade. E lembre-se: <strong>a vida real acontece fora da tela.</strong></p>
-                    <p>Se você perce<p>Se você perceber que o uso das redes tem intensificado sintomas de tristeza, vazio ou ansiedade, procure conversar com um profissional. Às vezes, mudar a relação com o celular é uma parte importante do tratamento — e pode fazer toda a diferença.</p>
+                    <p>Se você perceber que o uso das redes tem intensificado sintomas de tristeza, vazio ou ansiedade, procure conversar com um profissional. Às vezes, mudar a relação com o celular é uma parte importante do tratamento — e pode fazer toda a diferença.</p>
                 </div>
             </div>
         </section>
@@ -2203,7 +2198,6 @@
             updateTaskbarVisibility();
             renderTaskbar();
 
-            // API exposta para o terminal
             return {
                 open: openWindow,
                 close: closeWindow,
@@ -2369,23 +2363,17 @@
             document.body.classList.remove('terminal-lock');
         }
 
-        /* -------- helpers dos comandos -------- */
-
-        // Pega todas as seções "navegáveis" (exclui hero)
         function listarSecoes() {
             return Array.from(document.querySelectorAll('section[id]')).filter(s => s.id !== 'inicio');
         }
 
-        // Retorna o texto completo de uma seção
         function textoDaSecao(sec) {
             if (!sec) return '';
             const clone = sec.cloneNode(true);
-            // Remove botões de pop-out e demais elementos de UI
             clone.querySelectorAll('.pop-out-btn, .section-titulo button').forEach(b => b.remove());
             return (clone.textContent || '').replace(/\s+/g, ' ').trim();
         }
 
-        // Duração "uptime" desde o carregamento
         const bootTime = Date.now();
         function uptimeString() {
             const segs = Math.floor((Date.now() - bootTime) / 1000);
@@ -2395,9 +2383,6 @@
             return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         }
 
-        /* -------- handlers dos comandos -------- */
-
-        // uptime
         function cmdUptime() {
             const secs = Math.floor((Date.now() - bootTime) / 1000);
             const h = Math.floor(secs / 3600);
@@ -2410,7 +2395,6 @@
             appendTerminalLinha('up ' + parts.join(' ') + ' — 1 user — load: 0.42, 0.13, 0.05', 't-ok');
         }
 
-        // env
         function cmdEnv() {
             const vars = [
                 ['USER', 'visitante'],
@@ -2427,7 +2411,6 @@
             vars.forEach(([k, v]) => appendTerminalLinha(k + '=' + v, 't-info'));
         }
 
-        // cat <seção>
         function cmdCat(args) {
             if (!args.length) {
                 appendTerminalLinha("uso: cat <seção>", "t-dim");
@@ -2441,12 +2424,10 @@
                 return;
             }
             const txt = textoDaSecao(sec);
-            // Quebra em pedaços de ~120 chars por linha para leitura no terminal
             const linhas = txt.match(/.{1,120}(\s|$)/g) || [txt];
             linhas.forEach(l => appendTerminalLinha(l.trim(), ''));
         }
 
-        // cd <destino>
         function cmdCd(args) {
             const alvo = (args[0] || '~').toLowerCase();
             if (alvo === '~' || alvo === '/' || alvo === 'inicio' || alvo === 'top') {
@@ -2468,7 +2449,6 @@
             }, 100);
         }
 
-        // find <termo>
         function cmdFind(args) {
             if (!args.length) {
                 appendTerminalLinha("uso: find <termo>", "t-dim");
@@ -2492,7 +2472,6 @@
             else appendTerminalLinha("total: " + total + " ocorrência" + (total > 1 ? 's' : ''), 't-accent');
         }
 
-        // kill <pid>
         function cmdKill(args) {
             if (!args.length) {
                 appendTerminalLinha("uso: kill <pid>  (use 'ps' para listar)", "t-dim");
@@ -2510,7 +2489,6 @@
             appendTerminalLinha("kill: processo " + id + " (" + alvo.title + ") encerrado", "t-ok");
         }
 
-        // killall
         function cmdKillall() {
             if (!voceWM) { appendTerminalLinha("killall: nada para encerrar", "t-warn"); return; }
             const n = voceWM.count();
@@ -2519,7 +2497,6 @@
             appendTerminalLinha("killall: " + n + " processo" + (n > 1 ? 's' : '') + " encerrado" + (n > 1 ? 's' : ''), 't-ok');
         }
 
-        // reset-windows
         function cmdResetWindows() {
             if (!voceWM) { appendTerminalLinha("reset-windows: indisponível", "t-warn"); return; }
             const n = voceWM.count();
@@ -2527,7 +2504,6 @@
             appendTerminalLinha("reset-windows: " + n + " janela" + (n === 1 ? '' : 's') + " fechada" + (n === 1 ? '' : 's') + ", estado restaurado.", 't-ok');
         }
 
-        // ps (implícito como suporte a kill)
         function cmdPs() {
             if (!voceWM) { appendTerminalLinha("ps: gerenciador de janelas indisponível", "t-err"); return; }
             const list = voceWM.list();
@@ -2543,7 +2519,6 @@
             appendTerminalLinha("  (* = em foco)", "t-dim");
         }
 
-        // debug / debug off
         function cmdDebug(args) {
             if (args[0] === 'off') {
                 desativarDebug();
@@ -2554,7 +2529,6 @@
             }
         }
 
-        // crt / crt on / crt off
         function cmdCrt(args) {
             const sub = (args[0] || '').toLowerCase();
             if (sub === 'on') {
@@ -2574,7 +2548,6 @@
             }
         }
 
-        // noise [valor]
         function cmdNoise(args) {
             if (!args.length) {
                 const v = getComputedStyle(document.documentElement).getPropertyValue('--noise-opacity').trim();
@@ -2591,7 +2564,6 @@
             appendTerminalLinha("noise: " + v.toFixed(2), 't-ok');
         }
 
-        // enable / disable <efeito>
         const efeitos = {
             scanlines: 'fx-scanlines-off',
             flicker:   'fx-flicker-off',
@@ -2619,7 +2591,6 @@
             }
         }
 
-        // rm -rf /
         let rmExecutado = false;
         function cmdRm(args) {
             const raw = args.join(' ').toLowerCase();
@@ -2632,7 +2603,6 @@
                 appendTerminalLinha("rm: removendo / ...", 't-warn');
                 appendTerminalLinha("rm: você está tentando apagar um espaço seguro.", 't-warn');
                 appendTerminalLinha("");
-                // glitch rápido na tela
                 const glitch = document.createElement('div');
                 glitch.style.cssText = 'position:fixed;inset:0;background:#000;z-index:99998;pointer-events:none;opacity:0;transition:opacity 0.08s;';
                 document.body.appendChild(glitch);
@@ -2657,7 +2627,6 @@
             appendTerminalLinha("rm: operação bloqueada — este terminal é apenas simbólico.", 't-dim');
         }
 
-        /* -------- help -------- */
         function cmdHelp() {
             appendTerminalLinha("comandos disponíveis:", "t-accent");
             appendTerminalLinha("  uptime                     — há quanto tempo a sessão está aberta", "t-info");
@@ -2684,7 +2653,6 @@
             appendTerminalLinha("");
         }
 
-        /* -------- despacho -------- */
         function executarComando(raw) {
             const entrada = (raw || '').trim();
             const cmd = entrada.toLowerCase();
@@ -2761,6 +2729,9 @@
         /* ===================================================================== */
         /* QUIZ                                                                  */
         /* ===================================================================== */
+        // 29 perguntas × 3 pontos máximos por pergunta = 87 pontos totais.
+        // A pontuação máxima NUNCA é "hardcoded" — é sempre calculada a partir
+        // do tamanho da lista de perguntas (abaixo) para evitar inconsistências.
         const perguntasAutoavaliacao = [
             { texto: "Nas últimas duas semanas, você tem se sentido triste, para baixo ou sem esperança na maior parte do dia?", area: "humor", critica: false },
             { texto: "Você tem perdido o interesse ou o prazer em atividades que antes eram agradáveis?", area: "humor", critica: false },
@@ -2813,10 +2784,16 @@
         const btnReiniciar = document.getElementById('btnReiniciarQuiz');
         const btnVoltar = document.getElementById('btnVoltarQuiz');
 
+        // Máximo dinâmico: depende do número real de perguntas (29 × 3 = 87).
+        // Nunca usar valor fixo aqui — assim, se a lista de perguntas mudar,
+        // a pontuação máxima se ajusta automaticamente.
         const PONTUACAO_MAXIMA = perguntasAutoavaliacao.length * 3;
+
         const AVISO_MEDICO = "LEMBRE-SE: ESTA FERRAMENTA NÃO SUBSTITUI AVALIAÇÃO MÉDICA.";
 
-        function calcularPontuacaoTotal() { return respostasHistorico.reduce((s, v) => s + (typeof v === 'number' ? v : 0), 0); }
+        function calcularPontuacaoTotal() {
+            return respostasHistorico.reduce((s, v) => s + (typeof v === 'number' ? v : 0), 0);
+        }
         function existeRespostaCritica() {
             return respostasHistorico.some((v, i) => {
                 const p = perguntasAutoavaliacao[i];
@@ -2824,6 +2801,8 @@
             });
         }
         function atualizarProgresso() {
+            // A barra reflete a posição atual no fluxo, então ela recua
+            // corretamente quando o usuário volta uma pergunta.
             const pct = (indicePergunta / perguntasAutoavaliacao.length) * 100;
             const preenchida = document.getElementById('barraProgresso');
             if (preenchida) preenchida.style.width = pct.toFixed(1) + '%';
@@ -2870,6 +2849,24 @@
             if (indicePergunta === 0) return;
             indicePergunta--; carregarPergunta();
         }
+
+        // =====================================================================
+        // mostrarResultado — pontuação e faixas de gravidade
+        // ---------------------------------------------------------------------
+        // A pontuação máxima é PONTUACAO_MAXIMA = 29 perguntas × 3 = 87 pontos.
+        // As faixas percentuais abaixo reproduzem a MESMA proporção do PHQ-9
+        // (instrumento validado para rastreio), adaptada para 87 pontos:
+        //
+        //   PHQ-9 (27 pts)        proporção     equivalente em 87 pts
+        //   0–4   (mínimo)        0–15%         0–13   pontos
+        //   5–9   (leve)          15–33%        14–28  pontos
+        //   10–14 (moderado)      33–52%        29–45  pontos
+        //   15–19 (mod. grave)    52–70%        46–60  pontos
+        //   20–27 (grave)         70–100%       61–87  pontos
+        //
+        // Assim, NENHUM limite fixo do PHQ-9 (4, 9, 14, 19) é usado aqui —
+        // tudo é proporcional à pontuação máxima real.
+        // =====================================================================
         function mostrarResultado() {
             const total = calcularPontuacaoTotal();
             const pct = (total / PONTUACAO_MAXIMA) * 100;
@@ -2881,15 +2878,36 @@
             btnVoltar.disabled = true;
 
             let nivel, mensagem, classe;
-            if (pct <= 10) { nivel = "Sintomas mínimos ou ausentes"; mensagem = "Seu escore está dentro da faixa considerada mínima. Isso não significa que você não possa estar passando por momentos difíceis, mas os sinais atuais de depressão são leves. Continue cuidando de si, mantendo vínculos e observando como se sente nas próximas semanas."; classe = 'minima'; }
-            else if (pct <= 25) { nivel = "Sintomas leves"; mensagem = "Seu escore sugere sintomas depressivos leves. Fases assim podem acontecer, mas vale a pena conversar com alguém de confiança e, se os sintomas persistirem por mais de duas semanas ou piorarem, considerar uma avaliação com um profissional de saúde mental."; classe = 'leve'; }
-            else if (pct <= 45) { nivel = "Sintomas moderados"; mensagem = "Seu escore indica sintomas depressivos moderados. É recomendado buscar apoio profissional para uma avaliação mais completa, especialmente se esses sintomas têm afetado sua rotina, seus estudos, seu trabalho ou suas relações."; classe = 'moderada'; }
-            else if (pct <= 65) { nivel = "Sintomas moderadamente graves"; mensagem = "Seu escore sugere sintomas depressivos moderadamente graves. É importante procurar um psicólogo ou psiquiatra para uma avaliação e acompanhamento adequado o quanto antes. Você não precisa enfrentar isso sozinho(a)."; classe = 'moderadamente-grave'; }
-            else { nivel = "Sintomas graves"; mensagem = "Seu escore sugere sintomas depressivos graves. Busque ajuda profissional imediatamente. Se houver pensamentos de morte ou autolesão, ligue agora para o CVV (188) ou vá a um pronto-socorro. Não enfrente isso sozinho(a) — o apoio existe e faz diferença."; classe = 'grave'; }
+            if (pct <= 15) {
+                nivel = "Sintomas mínimos ou ausentes";
+                mensagem = "Seu escore está dentro da faixa considerada mínima. Isso não significa que você não possa estar passando por momentos difíceis, mas os sinais atuais de depressão são leves. Continue cuidando de si, mantendo vínculos e observando como se sente nas próximas semanas.";
+                classe = 'minima';
+            } else if (pct <= 33) {
+                nivel = "Sintomas leves";
+                mensagem = "Seu escore sugere sintomas depressivos leves. Fases assim podem acontecer, mas vale a pena conversar com alguém de confiança e, se os sintomas persistirem por mais de duas semanas ou piorarem, considerar uma avaliação com um profissional de saúde mental.";
+                classe = 'leve';
+            } else if (pct <= 52) {
+                nivel = "Sintomas moderados";
+                mensagem = "Seu escore indica sintomas depressivos moderados. É recomendado buscar apoio profissional para uma avaliação mais completa, especialmente se esses sintomas têm afetado sua rotina, seus estudos, seu trabalho ou suas relações.";
+                classe = 'moderada';
+            } else if (pct <= 70) {
+                nivel = "Sintomas moderadamente graves";
+                mensagem = "Seu escore sugere sintomas depressivos moderadamente graves. É importante procurar um psicólogo ou psiquiatra para uma avaliação e acompanhamento adequado o quanto antes. Você não precisa enfrentar isso sozinho(a).";
+                classe = 'moderadamente-grave';
+            } else {
+                nivel = "Sintomas graves";
+                mensagem = "Seu escore sugere sintomas depressivos graves. Busque ajuda profissional imediatamente. Se houver pensamentos de morte ou autolesão, ligue agora para o CVV (188) ou vá a um pronto-socorro. Não enfrente isso sozinho(a) — o apoio existe e faz diferença.";
+                classe = 'grave';
+            }
 
             quizResultadoEl.style.display = 'block';
             quizResultadoEl.className = 'quiz-resultado ' + classe;
-            quizResultadoEl.innerHTML = `<div style="font-size:1.15rem; letter-spacing:1px; margin-bottom:0.4rem;">${nivel.toUpperCase()}</div><strong>Pontuação: ${total} de ${PONTUACAO_MAXIMA} (${pct.toFixed(0)}%)</strong><br><span style="display:block; margin-top:0.6rem; font-weight:400;">${mensagem}</span><span class="aviso-medico">${AVISO_MEDICO}</span>`;
+            quizResultadoEl.innerHTML = `
+                <div style="font-size:1.15rem; letter-spacing:1px; margin-bottom:0.4rem;">${nivel.toUpperCase()}</div>
+                <strong>Pontuação: ${total} de ${PONTUACAO_MAXIMA} (${pct.toFixed(0)}%)</strong><br>
+                <span style="display:block; margin-top:0.6rem; font-weight:400;">${mensagem}</span>
+                <span class="aviso-medico">${AVISO_MEDICO}</span>
+            `;
 
             if (existeRespostaCritica()) {
                 alertaCriticoEl.classList.add('ativo');
