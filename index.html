@@ -92,7 +92,7 @@
             font-size: 0.9rem;
             padding: 0;
             border-bottom: 1px solid transparent;
-            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease, text-shadow 0.5s ease;
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease, text-shadow 0.5s ease, left 0.3s ease;
             pointer-events: none;
             text-align: left;
             overflow: hidden;
@@ -380,6 +380,77 @@
         .crt-toggle-btn.crt-off .crt-toggle-indicator { background: #8a3a3a; box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 4px rgba(180,60,60,0.4); }
         .crt-toggle-label { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; }
 
+        /* ===================================================================== */
+        /* ATALHO ESTILO WINDOWS — aparece quando a sidebar está escondida        */
+        /* ===================================================================== */
+        .sidebar-desktop-icon {
+            position: fixed;
+            top: calc(var(--sticky-bar-h) + 18px);
+            left: 18px;
+            z-index: 10005;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 8px 8px;
+            min-width: 88px;
+            max-width: 100px;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 3px;
+            border: 1px solid transparent;
+            background: transparent;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.85);
+            pointer-events: none;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease, background 0.15s ease, border-color 0.15s ease;
+        }
+        .sidebar-desktop-icon.visivel {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .sidebar-desktop-icon:hover,
+        .sidebar-desktop-icon:focus-visible {
+            background: rgba(200, 176, 144, 0.14);
+            border-color: rgba(200, 176, 144, 0.3);
+            outline: none;
+        }
+        /* Seleção azulada, imitando o Windows ao clicar uma vez */
+        .sidebar-desktop-icon.clicado {
+            background: rgba(140, 170, 200, 0.28);
+            border-color: rgba(140, 170, 200, 0.6);
+        }
+        .sidebar-desktop-icon .desktop-icon-img {
+            font-size: 2.15rem;
+            line-height: 1;
+            filter: sepia(0.75) saturate(0.75) brightness(1.05);
+            text-shadow: 0 0 10px rgba(200, 160, 100, 0.45), 1px 1px 2px rgba(0,0,0,0.9);
+            pointer-events: none;
+        }
+        .sidebar-desktop-icon .desktop-icon-label {
+            font-size: 0.68rem;
+            color: #e0d5c0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.75);
+            letter-spacing: 0.4px;
+            line-height: 1.15;
+            word-break: break-word;
+            max-width: 92px;
+            pointer-events: none;
+        }
+        .sidebar-desktop-icon .desktop-icon-label small {
+            display: block;
+            font-size: 0.58rem;
+            color: #a09080;
+            margin-top: 2px;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
         .sidebar-show-btn {
             position: fixed; top: 15px; left: 15px; z-index: 10005;
             width: 44px; height: 44px;
@@ -408,7 +479,24 @@
         .section-titulo h2 { font-size: var(--tamanho-h2); color: #d0c8b8; margin-bottom: 0.8rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); letter-spacing: 2px; text-transform: uppercase; }
         .section-titulo p { color: var(--cor-texto-claro); font-size: 1.1rem; max-width: 700px; margin: 0 auto; font-style: italic; }
 
-        .hero { background: linear-gradient(135deg, #1a1510 0%, #0f0a08 50%, #0d0a08 100%); color: #d0c8b8; padding: 4rem 0; text-align: center; border-bottom: 2px solid #3a3028; box-shadow: inset 0 0 100px rgba(60,40,20,0.4); position: relative; }
+        .hero {
+            background-image:
+                linear-gradient(135deg,
+                    rgba(26, 21, 16, 0.85) 0%,
+                    rgba(15, 10, 8, 0.90) 50%,
+                    rgba(13, 10, 8, 0.92) 100%),
+                url('https://i.pinimg.com/1200x/f1/58/26/f15826b186924e595d81f193d0e6cb04.jpg');
+            background-size: cover, cover;
+            background-position: center, center;
+            background-repeat: no-repeat, no-repeat;
+            background-attachment: scroll, fixed;
+            color: #d0c8b8;
+            padding: 4rem 0;
+            text-align: center;
+            border-bottom: 2px solid #3a3028;
+            box-shadow: inset 0 0 100px rgba(60, 40, 20, 0.4);
+            position: relative;
+        }
         .hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(80,50,30,0.03) 10px, rgba(80,50,30,0.03) 20px); pointer-events: none; }
         .hero h1 {
             font-size: var(--tamanho-h1); margin-bottom: 1.2rem; font-weight: 800;
@@ -637,6 +725,7 @@
             .sidebar { transform: translateX(-100%); }
             .sidebar.ativo { transform: translateX(0); }
             .sidebar-hide-btn { display: none; }
+            .sidebar-desktop-icon { display: none !important; }
             .sidebar-show-btn { display: none !important; }
             .menu-toggle { display: block; }
             .main-content { margin-left: 0; width: 100%; }
@@ -777,6 +866,7 @@
             box-shadow: 0 -4px 20px rgba(0,0,0,0.7);
             z-index: 9988; display: none; align-items: center;
             padding: 0 8px; pointer-events: auto; overflow: hidden;
+            transition: left 0.3s ease;
         }
         .window-taskbar.visivel { display: flex; }
         body.sidebar-oculta-body .window-taskbar { left: 0; }
@@ -843,7 +933,7 @@
     <!-- STICKY BAR -->
     <div class="sticky-bar" id="stickyBar" aria-hidden="true">
         <div class="sticky-bar-marquee">
-            <span>sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;</span>
+            <span>sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;digite "ajuda"&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;</span>
             <span aria-hidden="true">sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;sua saúde mental importa&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;digite "ajuda".&nbsp; · &nbsp;respire. você importa.&nbsp; · &nbsp;</span>
         </div>
     </div>
@@ -876,8 +966,19 @@
     <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
         <span></span><span></span><span></span>
     </button>
-    <button class="sidebar-show-btn" id="sidebarShowBtn" aria-label="Mostrar menu lateral" title="Mostrar menu">☰</button>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===================================================================== -->
+    <!-- ATALHO ESTILO WINDOWS — aparece quando a sidebar está escondida        -->
+    <!-- Duplo-clique (ou toque em mobile) reabre a sidebar.                    -->
+    <!-- ===================================================================== -->
+    <div class="sidebar-desktop-icon" id="sidebarDesktopIcon" role="button" tabindex="0" aria-label="Abrir menu lateral" title="Duplo clique para abrir o menu">
+        <div class="desktop-icon-img" aria-hidden="true">📁</div>
+        <div class="desktop-icon-label">
+            voceimporta
+            <small>menu</small>
+        </div>
+    </div>
 
     <!-- SIDEBAR -->
     <nav class="sidebar" id="sidebar">
@@ -1562,17 +1663,21 @@
         aplicarEstadoCRT();
 
         /* ===================================================================== */
-        /* SIDEBAR                                                               */
+        /* SIDEBAR + ATALHO ESTILO WINDOWS                                        */
         /* ===================================================================== */
         const sidebar = document.getElementById('sidebar');
         const sidebarHideBtn = document.getElementById('sidebarHideBtn');
-        const sidebarShowBtn = document.getElementById('sidebarShowBtn');
+        const sidebarDesktopIcon = document.getElementById('sidebarDesktopIcon');
         const mainContent = document.getElementById('mainContent');
+
+        // Detecta se é um dispositivo touch (celular/tablet) para tratar o
+        // clique no atalho de forma diferente do desktop.
+        const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
         function esconderSidebar() {
             sidebar.classList.add('escondida');
             mainContent.classList.add('sidebar-oculta');
-            sidebarShowBtn.classList.add('visivel');
+            if (sidebarDesktopIcon) sidebarDesktopIcon.classList.add('visivel');
             document.body.classList.add('sidebar-oculta-body');
             try { localStorage.setItem('voceimporta_sidebar_oculta', '1'); } catch (e) {}
             scheduleStickyUpdate();
@@ -1580,14 +1685,52 @@
         function mostrarSidebar() {
             sidebar.classList.remove('escondida');
             mainContent.classList.remove('sidebar-oculta');
-            sidebarShowBtn.classList.remove('visivel');
+            if (sidebarDesktopIcon) sidebarDesktopIcon.classList.remove('visivel');
             document.body.classList.remove('sidebar-oculta-body');
             try { localStorage.setItem('voceimporta_sidebar_oculta', '0'); } catch (e) {}
             scheduleStickyUpdate();
         }
-        sidebarHideBtn.addEventListener('click', esconderSidebar);
-        sidebarShowBtn.addEventListener('click', mostrarSidebar);
-        try { if (localStorage.getItem('voceimporta_sidebar_oculta') === '1' && window.matchMedia('(min-width: 1025px)').matches) esconderSidebar(); } catch (e) {}
+
+        // Abre a sidebar a partir do atalho (chamado pelo duplo-clique ou toque)
+        function abrirSidebarDoAtalho() {
+            if (!sidebarDesktopIcon) return;
+            // Pequena animação de "clique" antes de abrir
+            sidebarDesktopIcon.classList.add('clicado');
+            setTimeout(() => {
+                sidebarDesktopIcon.classList.remove('clicado');
+                mostrarSidebar();
+            }, 140);
+        }
+
+        // Botão X da sidebar
+        if (sidebarHideBtn) sidebarHideBtn.addEventListener('click', esconderSidebar);
+
+        // Atalho: no desktop, duplo-clique para abrir; no touch, um toque.
+        if (sidebarDesktopIcon) {
+            if (isTouchDevice) {
+                sidebarDesktopIcon.addEventListener('click', abrirSidebarDoAtalho);
+            } else {
+                sidebarDesktopIcon.addEventListener('dblclick', abrirSidebarDoAtalho);
+                // No desktop, clique único gera apenas o destaque azul (seleção)
+                sidebarDesktopIcon.addEventListener('click', () => {
+                    sidebarDesktopIcon.classList.add('clicado');
+                    setTimeout(() => sidebarDesktopIcon.classList.remove('clicado'), 300);
+                });
+            }
+            // Acessibilidade: Enter ou Espaço abre
+            sidebarDesktopIcon.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    abrirSidebarDoAtalho();
+                }
+            });
+        }
+
+        try {
+            if (localStorage.getItem('voceimporta_sidebar_oculta') === '1' && window.matchMedia('(min-width: 1025px)').matches) {
+                esconderSidebar();
+            }
+        } catch (e) {}
 
         const crtOverlay = document.getElementById('crtOverlay');
         const crtFlicker = document.getElementById('crtFlicker');
