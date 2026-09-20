@@ -58,7 +58,6 @@
         }
 
         html.boot-lock, body.boot-lock { overflow: hidden !important; height: 100% !important; touch-action: none; overscroll-behavior: none; }
-        html.terminal-lock, body.terminal-lock { overflow: hidden !important; }
 
         body.crt-off .crt-overlay,
         body.crt-off .crt-flicker,
@@ -381,7 +380,7 @@
         .crt-toggle-label { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; }
 
         /* ===================================================================== */
-        /* ATALHO ESTILO WINDOWS — aparece quando a sidebar está escondida        */
+        /* ATALHO ESTILO WINDOWS */
         /* ===================================================================== */
         .sidebar-desktop-icon {
             position: fixed;
@@ -420,7 +419,6 @@
             border-color: rgba(200, 176, 144, 0.3);
             outline: none;
         }
-        /* Seleção azulada, imitando o Windows ao clicar uma vez */
         .sidebar-desktop-icon.clicado {
             background: rgba(140, 170, 200, 0.28);
             border-color: rgba(140, 170, 200, 0.6);
@@ -676,34 +674,6 @@
         .modal-fechar { position: absolute; top: 10px; right: 15px; font-size: 1.8rem; cursor: pointer; color: #8a7a6a; background: none; border: none; font-weight: 700; }
         .modal-fechar:hover { color: #d0c8b8; }
 
-        .terminal-overlay { display: none; position: fixed; inset: 0; background: rgba(5,4,3,0.88); z-index: 9996; justify-content: center; align-items: center; padding: 20px; }
-        .terminal-overlay.ativo { display: flex; }
-        .terminal-window { width: 100%; max-width: 640px; max-height: 75vh; background: #0a0704; border: 2px solid #3a3028; box-shadow: 0 0 40px rgba(200,160,100,0.22), 0 10px 50px rgba(0,0,0,0.95); display: flex; flex-direction: column; font-family: 'Courier New', Courier, monospace; color: #c8b090; animation: terminalIn 0.25s ease-out; overflow: hidden; }
-        @keyframes terminalIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .terminal-titlebar { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: #0f0a08; border-bottom: 2px solid #3a3028; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px; color: #c8b090; text-shadow: 0 0 6px rgba(200,160,100,0.35); flex: 0 0 auto; }
-        .terminal-titlebar::before { content: '▣'; font-size: 0.9rem; color: #8a7a6a; text-shadow: 1px 1px 0 rgba(0,0,0,0.8); }
-        .terminal-title-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .terminal-close { width: 20px; height: 18px; background: #252018; border: 1px solid; border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a; color: #c8b090; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 700; line-height: 1; padding: 0; display: flex; align-items: center; justify-content: center; }
-        .terminal-close:hover { background: #3a2a1a; color: #e8d5a3; }
-        .terminal-close:active { border-color: #1a1008 #5a4a3a #5a4a3a #1a1008; }
-        .terminal-body { flex: 1 1 auto; min-height: 160px; overflow-y: auto; padding: 14px 16px; font-size: 0.82rem; line-height: 1.55; white-space: pre-wrap; word-break: break-word; scrollbar-width: thin; scrollbar-color: #3a3028 #0f0a08; }
-        .terminal-body::-webkit-scrollbar { width: 8px; }
-        .terminal-body::-webkit-scrollbar-track { background: #0f0a08; }
-        .terminal-body::-webkit-scrollbar-thumb { background: #3a3028; border: 1px solid #1a1008; }
-        .terminal-body .t-line { min-height: 1.5em; animation: t-line-in 0.15s ease-out; }
-        @keyframes t-line-in { from { opacity: 0; transform: translateX(-3px); } to { opacity: 1; transform: translateX(0); } }
-        .t-prompt-line { color: #8a7a6a; }
-        .t-ok { color: #8ac88a; }
-        .t-info { color: #8ab0d0; }
-        .t-warn { color: #d0a860; }
-        .t-accent { color: #e0cba0; font-weight: 700; }
-        .t-err { color: #d07a6a; }
-        .t-dim { color: #6a5a4a; }
-        .terminal-input-row { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-top: 1px solid #2a2018; background: #050403; }
-        .terminal-prompt { color: #8ac88a; font-weight: 700; font-size: 0.9rem; }
-        .terminal-input { flex: 1; background: transparent; border: none; color: #c8b090; font-family: inherit; font-size: 0.82rem; outline: none; padding: 0; letter-spacing: 0.5px; caret-color: #c8b090; }
-        .terminal-input::placeholder { color: #5a4a3a; font-style: italic; }
-
         #respiro { background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%); }
         #respiro .section-titulo h2 { color: #d0c8b8; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
         #respiro .section-titulo p { color: #b0a898; }
@@ -742,9 +712,6 @@
             .quiz-container { padding: 1.3rem; }
             .tree-row, .tree-item { min-height: 28px; font-size: 0.82rem; }
             .tree-node:last-child::before { height: 14px; }
-            .terminal-window { max-height: 85vh; }
-            .terminal-body { font-size: 0.75rem; }
-            .terminal-input { font-size: 0.78rem; }
             .debug-overlay { font-size: 0.62rem; padding: 6px 8px; min-width: 180px; }
         }
 
@@ -909,6 +876,69 @@
         }
         .snap-preview.visivel { display: block; }
 
+        /* ===================================================================== */
+        /* TERMINAL DENTRO DE JANELA FLUTUANTE                                   */
+        /* ===================================================================== */
+        .os-window-body.terminal-window-body-wrapper {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 0 !important;
+            background: #0f0a08 !important;
+        }
+        .terminal-body-windowed {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 14px 16px;
+            font-size: 0.82rem;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: #0f0a08;
+            color: #c8b090;
+            font-family: 'Courier New', Courier, monospace;
+            scrollbar-width: thin;
+            scrollbar-color: #3a3028 #0f0a08;
+            text-shadow: 0 0 6px rgba(200, 176, 144, 0.15);
+        }
+        .terminal-body-windowed::-webkit-scrollbar { width: 8px; }
+        .terminal-body-windowed::-webkit-scrollbar-track { background: #0f0a08; }
+        .terminal-body-windowed::-webkit-scrollbar-thumb { background: #3a3028; border: 1px solid #1a1008; }
+        .terminal-body-windowed .t-line { min-height: 1.5em; animation: t-line-in 0.15s ease-out; }
+        @keyframes t-line-in { from { opacity: 0; transform: translateX(-3px); } to { opacity: 1; transform: translateX(0); } }
+        .t-prompt-line { color: #8a7a6a; }
+        .t-ok { color: #8ac88a; }
+        .t-info { color: #c8b898; }
+        .t-warn { color: #d0a860; }
+        .t-accent { color: #e0cba0; font-weight: 700; }
+        .t-err { color: #d07a6a; }
+        .t-dim { color: #6a5a4a; }
+        .terminal-input-row {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-top: 1px solid #2a2018;
+            background: #050403;
+        }
+        .terminal-prompt { color: #8ac88a; font-weight: 700; font-size: 0.9rem; }
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #c8b090;
+            font-family: inherit;
+            font-size: 0.82rem;
+            outline: none;
+            padding: 0;
+            letter-spacing: 0.5px;
+            caret-color: #c8b090;
+        }
+        .terminal-input::placeholder { color: #5a4a3a; font-style: italic; }
+
         @media (max-width: 1024px) {
             .os-window {
                 top: var(--sticky-bar-h) !important; left: 0 !important; right: 0 !important;
@@ -924,6 +954,8 @@
             .window-taskbar-items { -webkit-overflow-scrolling: touch; }
             .taskbar-item { max-width: 140px; }
             .taskbar-item-label { max-width: 100px; }
+            .terminal-body-windowed { font-size: 0.78rem; }
+            .terminal-input { font-size: 0.78rem; }
         }
         @media (min-width: 1025px) { .window-taskbar-items { scrollbar-width: thin; } }
     </style>
@@ -968,10 +1000,7 @@
     </button>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- ===================================================================== -->
-    <!-- ATALHO ESTILO WINDOWS — aparece quando a sidebar está escondida        -->
-    <!-- Duplo-clique (ou toque em mobile) reabre a sidebar.                    -->
-    <!-- ===================================================================== -->
+    <!-- ATALHO ESTILO WINDOWS -->
     <div class="sidebar-desktop-icon" id="sidebarDesktopIcon" role="button" tabindex="0" aria-label="Abrir menu lateral" title="Duplo clique para abrir o menu">
         <div class="desktop-icon-img" aria-hidden="true">📁</div>
         <div class="desktop-icon-label">
@@ -1073,20 +1102,6 @@
                 <div class="telefone-grande" style="font-size:1.6rem; color:#c8a090;"><a href="tel:192" style="color:#c8a090;">192 (SAMU)</a></div>
                 <p style="font-size:0.9rem; color:#a09080;">Em caso de risco imediato, ligue para o SAMU ou vá ao pronto-socorro mais próximo. Não fique sozinho.</p>
                 <p style="font-size:0.9rem; color:#8a7a6a; margin-top:1rem;"><em>Respire fundo. Você é importante. Há pessoas que se importam com você.</em></p>
-            </div>
-        </div>
-
-        <div class="terminal-overlay" id="terminalOverlay" role="dialog" aria-modal="true" aria-label="Terminal de ajuda">
-            <div class="terminal-window">
-                <div class="terminal-titlebar">
-                    <span class="terminal-title-text">voceimporta.sh — terminal</span>
-                    <button class="terminal-close" id="terminalClose" aria-label="Fechar terminal">×</button>
-                </div>
-                <div class="terminal-body" id="terminalBody"></div>
-                <div class="terminal-input-row">
-                    <span class="terminal-prompt" aria-hidden="true">&gt;</span>
-                    <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false" placeholder="digite 'help' para ver os comandos">
-                </div>
             </div>
         </div>
 
@@ -1670,8 +1685,6 @@
         const sidebarDesktopIcon = document.getElementById('sidebarDesktopIcon');
         const mainContent = document.getElementById('mainContent');
 
-        // Detecta se é um dispositivo touch (celular/tablet) para tratar o
-        // clique no atalho de forma diferente do desktop.
         const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
         function esconderSidebar() {
@@ -1691,10 +1704,8 @@
             scheduleStickyUpdate();
         }
 
-        // Abre a sidebar a partir do atalho (chamado pelo duplo-clique ou toque)
         function abrirSidebarDoAtalho() {
             if (!sidebarDesktopIcon) return;
-            // Pequena animação de "clique" antes de abrir
             sidebarDesktopIcon.classList.add('clicado');
             setTimeout(() => {
                 sidebarDesktopIcon.classList.remove('clicado');
@@ -1702,22 +1713,18 @@
             }, 140);
         }
 
-        // Botão X da sidebar
         if (sidebarHideBtn) sidebarHideBtn.addEventListener('click', esconderSidebar);
 
-        // Atalho: no desktop, duplo-clique para abrir; no touch, um toque.
         if (sidebarDesktopIcon) {
             if (isTouchDevice) {
                 sidebarDesktopIcon.addEventListener('click', abrirSidebarDoAtalho);
             } else {
                 sidebarDesktopIcon.addEventListener('dblclick', abrirSidebarDoAtalho);
-                // No desktop, clique único gera apenas o destaque azul (seleção)
                 sidebarDesktopIcon.addEventListener('click', () => {
                     sidebarDesktopIcon.classList.add('clicado');
                     setTimeout(() => sidebarDesktopIcon.classList.remove('clicado'), 300);
                 });
             }
-            // Acessibilidade: Enter ou Espaço abre
             sidebarDesktopIcon.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
                     e.preventDefault();
@@ -1796,6 +1803,22 @@
         function copiarLink() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => { alert('Link copiado para a área de transferência!'); }).catch(() => { prompt('Copie o link:', url); });
+        }
+
+        /* ===================================================================== */
+        /* ESTADO GLOBAL DO TERMINAL                                             */
+        /* ===================================================================== */
+        let activeTerminalBody = null;
+        let activeTerminalInput = null;
+        let terminalWindowId = null;
+
+        function appendTerminalLinha(texto, classe) {
+            if (!activeTerminalBody) return;
+            const div = document.createElement('div');
+            div.className = 't-line' + (classe ? ' ' + classe : '');
+            if (texto === '') div.innerHTML = '&nbsp;'; else div.textContent = texto;
+            activeTerminalBody.appendChild(div);
+            try { activeTerminalBody.scrollTop = activeTerminalBody.scrollHeight; } catch (e) {}
         }
 
         /* ===================================================================== */
@@ -1946,6 +1969,27 @@
                 return win;
             }
 
+            function wireWindowChrome(win, id) {
+                win.querySelectorAll('.os-window-ctrl').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = btn.dataset.action;
+                        if (action === 'close') closeWindow(id);
+                        else if (action === 'minimize') minimizeWindow(id);
+                        else if (action === 'maximize') toggleMaximizeWindow(id);
+                    });
+                });
+                win.addEventListener('mousedown', () => focusWindow(id), true);
+                win.addEventListener('touchstart', () => focusWindow(id), { passive: true });
+                const titlebar = win.querySelector('.os-window-titlebar');
+                titlebar.addEventListener('dblclick', (e) => {
+                    if (e.target.closest('.os-window-ctrl')) return;
+                    toggleMaximizeWindow(id);
+                });
+                makeDraggable(win, titlebar, id);
+                win.querySelectorAll('.os-window-resize').forEach(h => makeResizable(win, h, id));
+            }
+
             function openWindow(sectionId) {
                 const section = document.getElementById(sectionId);
                 if (!section) return null;
@@ -1971,25 +2015,8 @@
                 const body = win.querySelector('.os-window-body');
                 body.appendChild(section);
                 layer.appendChild(win);
-                windows[id] = { id, sectionId, title, el: win, section, placeholder, state: 'normal', prevRect: null, prevState: null };
-                win.querySelectorAll('.os-window-ctrl').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const action = btn.dataset.action;
-                        if (action === 'close') closeWindow(id);
-                        else if (action === 'minimize') minimizeWindow(id);
-                        else if (action === 'maximize') toggleMaximizeWindow(id);
-                    });
-                });
-                win.addEventListener('mousedown', () => focusWindow(id), true);
-                win.addEventListener('touchstart', () => focusWindow(id), { passive: true });
-                const titlebar = win.querySelector('.os-window-titlebar');
-                titlebar.addEventListener('dblclick', (e) => {
-                    if (e.target.closest('.os-window-ctrl')) return;
-                    toggleMaximizeWindow(id);
-                });
-                makeDraggable(win, titlebar, id);
-                win.querySelectorAll('.os-window-resize').forEach(h => makeResizable(win, h, id));
+                windows[id] = { id, sectionId, title, el: win, section, placeholder, state: 'normal', prevRect: null, prevState: null, isTerminal: false };
+                wireWindowChrome(win, id);
                 updateTaskbarVisibility();
                 renderTaskbar();
                 focusWindow(id);
@@ -1997,13 +2024,98 @@
                 return id;
             }
 
+            function openTerminal() {
+                for (const id in windows) {
+                    if (windows[id].isTerminal) {
+                        focusWindow(id);
+                        if (windows[id].state === 'minimized') unminimizeWindow(id);
+                        return id;
+                    }
+                }
+                const id = 'term' + (winIdCounter++);
+                const title = 'terminal — voceimporta.sh';
+                const win = createWindowElement(id, title);
+                const body = win.querySelector('.os-window-body');
+                body.classList.add('terminal-window-body-wrapper');
+
+                const terminalBody = document.createElement('div');
+                terminalBody.className = 'terminal-body-windowed';
+
+                const inputRow = document.createElement('div');
+                inputRow.className = 'terminal-input-row';
+                const promptEl = document.createElement('span');
+                promptEl.className = 'terminal-prompt';
+                promptEl.setAttribute('aria-hidden', 'true');
+                promptEl.textContent = '>';
+                const inputEl = document.createElement('input');
+                inputEl.type = 'text';
+                inputEl.className = 'terminal-input';
+                inputEl.autocomplete = 'off';
+                inputEl.spellcheck = false;
+                inputEl.placeholder = "digite 'help' para ver os comandos";
+                inputRow.appendChild(promptEl);
+                inputRow.appendChild(inputEl);
+
+                body.appendChild(terminalBody);
+                body.appendChild(inputRow);
+
+                layer.appendChild(win);
+
+                windows[id] = {
+                    id,
+                    sectionId: null,
+                    title,
+                    el: win,
+                    section: null,
+                    placeholder: null,
+                    state: 'normal',
+                    prevRect: null,
+                    prevState: null,
+                    isTerminal: true,
+                    onClose: () => {
+                        if (activeTerminalBody === terminalBody) {
+                            activeTerminalBody = null;
+                            activeTerminalInput = null;
+                        }
+                        if (terminalWindowId === id) {
+                            terminalWindowId = null;
+                        }
+                    }
+                };
+
+                wireWindowChrome(win, id);
+
+                // Inicializa terminal
+                activeTerminalBody = terminalBody;
+                activeTerminalInput = inputEl;
+
+                appendTerminalLinha("Digite 'help' para ver os comandos disponíveis.", 't-info');
+
+                inputEl.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        executarComando(inputEl.value);
+                        inputEl.value = '';
+                    }
+                });
+
+                setTimeout(() => { try { inputEl.focus(); } catch (e) {} }, 80);
+
+                updateTaskbarVisibility();
+                renderTaskbar();
+                focusWindow(id);
+                return id;
+            }
+
             function closeWindow(id) {
                 const w = windows[id];
                 if (!w) return;
+                if (typeof w.onClose === 'function') { try { w.onClose(); } catch (e) {} }
                 if (w.placeholder && w.placeholder.parentNode) {
                     w.placeholder.parentNode.insertBefore(w.section, w.placeholder);
                     w.placeholder.parentNode.removeChild(w.placeholder);
-                } else if (w.section.parentNode) {
+                } else if (w.section && w.section.parentNode) {
                     const mc = document.getElementById('mainContent');
                     if (mc) mc.appendChild(w.section);
                 }
@@ -2302,8 +2414,6 @@
 
             document.addEventListener('keydown', (e) => {
                 if (!focusedId) return;
-                const term = document.getElementById('terminalOverlay');
-                if (term && term.classList.contains('ativo')) return;
                 if (document.getElementById('sidebar').classList.contains('ativo')) return;
                 if (e.key === 'Escape') { e.preventDefault(); closeWindow(focusedId); return; }
                 if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'w') { e.preventDefault(); closeWindow(focusedId); return; }
@@ -2343,6 +2453,7 @@
 
             return {
                 open: openWindow,
+                openTerminal: openTerminal,
                 close: closeWindow,
                 closeAll: closeAllWindows,
                 minimize: minimizeWindow,
@@ -2355,7 +2466,8 @@
                     sectionId: w.sectionId,
                     state: w.state,
                     z: parseInt(w.el.style.zIndex, 10) || 0,
-                    focused: w.id === focusedId
+                    focused: w.id === focusedId,
+                    isTerminal: !!w.isTerminal
                 })),
                 count: () => Object.keys(windows).length,
                 getFocused: () => focusedId,
@@ -2369,6 +2481,18 @@
                 }
             };
         })();
+
+        /* ===================================================================== */
+        /* ABRIR / FECHAR TERMINAL                                               */
+        /* ===================================================================== */
+        function abrirTerminal() {
+            if (!voceWM) return;
+            terminalWindowId = voceWM.openTerminal();
+        }
+        function fecharTerminal() {
+            if (terminalWindowId && voceWM) voceWM.close(terminalWindowId);
+            terminalWindowId = null;
+        }
 
         /* ===================================================================== */
         /* DEBUG OVERLAY                                                          */
@@ -2461,50 +2585,9 @@
         }
 
         /* ===================================================================== */
-        /* TERMINAL — EASTER EGG                                                 */
+        /* TERMINAL — COMANDOS                                                   */
         /* ===================================================================== */
-        const terminalOverlay = document.getElementById('terminalOverlay');
-        const terminalBody = document.getElementById('terminalBody');
-        const terminalInput = document.getElementById('terminalInput');
-        const terminalClose = document.getElementById('terminalClose');
-
         let keystrokeBuffer = '';
-        let terminalAberto = false;
-
-        function appendTerminalLinha(texto, classe) {
-            if (!terminalBody) return;
-            const div = document.createElement('div');
-            div.className = 't-line' + (classe ? ' ' + classe : '');
-            if (texto === '') div.innerHTML = '&nbsp;'; else div.textContent = texto;
-            terminalBody.appendChild(div);
-            try { terminalBody.scrollTop = terminalBody.scrollHeight; } catch (e) {}
-        }
-
-        function renderizarBoasVindasTerminal() {
-            if (!terminalBody) return;
-            terminalBody.innerHTML = '';
-            appendTerminalLinha("voceimporta.sh — terminal v1.0", "t-accent");
-            appendTerminalLinha("Digite 'help' para ver os comandos disponíveis.", "t-dim");
-            appendTerminalLinha("");
-        }
-
-        function abrirTerminal() {
-            if (!terminalOverlay || terminalAberto) return;
-            terminalAberto = true;
-            renderizarBoasVindasTerminal();
-            terminalOverlay.classList.add('ativo');
-            document.documentElement.classList.add('terminal-lock');
-            document.body.classList.add('terminal-lock');
-            setTimeout(() => { try { terminalInput.focus(); } catch (e) {} }, 60);
-        }
-
-        function fecharTerminal() {
-            if (!terminalOverlay || !terminalAberto) return;
-            terminalAberto = false;
-            terminalOverlay.classList.remove('ativo');
-            document.documentElement.classList.remove('terminal-lock');
-            document.body.classList.remove('terminal-lock');
-        }
 
         function listarSecoes() {
             return Array.from(document.querySelectorAll('section[id]')).filter(s => s.id !== 'inicio');
@@ -2518,13 +2601,6 @@
         }
 
         const bootTime = Date.now();
-        function uptimeString() {
-            const segs = Math.floor((Date.now() - bootTime) / 1000);
-            const h = Math.floor(segs / 3600);
-            const m = Math.floor((segs % 3600) / 60);
-            const s = segs % 60;
-            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        }
 
         function cmdUptime() {
             const secs = Math.floor((Date.now() - bootTime) / 1000);
@@ -2825,7 +2901,7 @@
                 case 'disable':                  cmdEfeito('disable', args); break;
                 case 'rm':                       cmdRm(args); break;
                 case 'clear': case 'cls':
-                    terminalBody.innerHTML = '';
+                    if (activeTerminalBody) activeTerminalBody.innerHTML = '';
                     appendTerminalLinha("terminal limpo.", 't-dim');
                     appendTerminalLinha("");
                     break;
@@ -2844,7 +2920,12 @@
 
         document.addEventListener('keydown', (e) => {
             if (document.getElementById('bootScreen')) return;
-            if (terminalAberto) return;
+            // Se o terminal estiver aberto e focado, o input recebe o texto — ignora o atalho.
+            if (terminalWindowId && voceWM) {
+                const list = voceWM.list();
+                const term = list.find(w => w.id === terminalWindowId);
+                if (term && term.focused) return;
+            }
             const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
             if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
             if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -2859,22 +2940,9 @@
             }
         });
 
-        if (terminalInput) {
-            terminalInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') { e.preventDefault(); executarComando(terminalInput.value); terminalInput.value = ''; }
-                else if (e.key === 'Escape') { e.preventDefault(); fecharTerminal(); }
-            });
-        }
-        if (terminalClose) terminalClose.addEventListener('click', fecharTerminal);
-        if (terminalOverlay) terminalOverlay.addEventListener('click', (e) => { if (e.target === terminalOverlay) fecharTerminal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && terminalAberto) { e.stopPropagation(); fecharTerminal(); } }, true);
-
         /* ===================================================================== */
         /* QUIZ                                                                  */
         /* ===================================================================== */
-        // 29 perguntas × 3 pontos máximos por pergunta = 87 pontos totais.
-        // A pontuação máxima NUNCA é "hardcoded" — é sempre calculada a partir
-        // do tamanho da lista de perguntas (abaixo) para evitar inconsistências.
         const perguntasAutoavaliacao = [
             { texto: "Nas últimas duas semanas, você tem se sentido triste, para baixo ou sem esperança na maior parte do dia?", area: "humor", critica: false },
             { texto: "Você tem perdido o interesse ou o prazer em atividades que antes eram agradáveis?", area: "humor", critica: false },
@@ -2927,9 +2995,6 @@
         const btnReiniciar = document.getElementById('btnReiniciarQuiz');
         const btnVoltar = document.getElementById('btnVoltarQuiz');
 
-        // Máximo dinâmico: depende do número real de perguntas (29 × 3 = 87).
-        // Nunca usar valor fixo aqui — assim, se a lista de perguntas mudar,
-        // a pontuação máxima se ajusta automaticamente.
         const PONTUACAO_MAXIMA = perguntasAutoavaliacao.length * 3;
 
         const AVISO_MEDICO = "LEMBRE-SE: ESTA FERRAMENTA NÃO SUBSTITUI AVALIAÇÃO MÉDICA.";
@@ -2944,8 +3009,6 @@
             });
         }
         function atualizarProgresso() {
-            // A barra reflete a posição atual no fluxo, então ela recua
-            // corretamente quando o usuário volta uma pergunta.
             const pct = (indicePergunta / perguntasAutoavaliacao.length) * 100;
             const preenchida = document.getElementById('barraProgresso');
             if (preenchida) preenchida.style.width = pct.toFixed(1) + '%';
@@ -2993,23 +3056,6 @@
             indicePergunta--; carregarPergunta();
         }
 
-        // =====================================================================
-        // mostrarResultado — pontuação e faixas de gravidade
-        // ---------------------------------------------------------------------
-        // A pontuação máxima é PONTUACAO_MAXIMA = 29 perguntas × 3 = 87 pontos.
-        // As faixas percentuais abaixo reproduzem a MESMA proporção do PHQ-9
-        // (instrumento validado para rastreio), adaptada para 87 pontos:
-        //
-        //   PHQ-9 (27 pts)        proporção     equivalente em 87 pts
-        //   0–4   (mínimo)        0–15%         0–13   pontos
-        //   5–9   (leve)          15–33%        14–28  pontos
-        //   10–14 (moderado)      33–52%        29–45  pontos
-        //   15–19 (mod. grave)    52–70%        46–60  pontos
-        //   20–27 (grave)         70–100%       61–87  pontos
-        //
-        // Assim, NENHUM limite fixo do PHQ-9 (4, 9, 14, 19) é usado aqui —
-        // tudo é proporcional à pontuação máxima real.
-        // =====================================================================
         function mostrarResultado() {
             const total = calcularPontuacaoTotal();
             const pct = (total / PONTUACAO_MAXIMA) * 100;
