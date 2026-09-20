@@ -650,6 +650,18 @@
         .mapa-container iframe { width: 100%; height: 400px; border: 0; filter: grayscale(0.8) sepia(0.3); }
 
         /* ===================================================================== */
+        /* SEÇÃO COMO SE ACALMAR (RESPIRO) — com fade escuro→claro              */
+        /* ===================================================================== */
+        #respiro { background: linear-gradient(to bottom, #1a1510 0%, #e0d8c8 100%); }
+        #respiro .section-titulo h2 { color: #d0c8b8; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+        #respiro .section-titulo p { color: #b0a898; }
+        .respiro-container { max-width: 600px; margin: 2rem auto; text-align: center; padding: 0 20px; }
+        .respiro-instrucoes { font-size: 1.1rem; color: #d0c8b8; margin-bottom: 0.5rem; text-align: center; }
+        .respiro-passo { color: #d0c8b8; text-decoration: underline; margin-bottom: 0.5rem; }
+        .respiro-passo strong { color: #d0c8b8; }
+        .respiro-grounding { margin-top: 1.5rem; color: #1a1510; font-weight: 600; }
+
+        /* ===================================================================== */
         /* BOTÃO DE AJUDA FLUTUANTE — ESTILO JANELA RETRÔ                        */
         /* ===================================================================== */
         .botao-ajuda-flutuante {
@@ -1090,6 +1102,14 @@
         }
 
         @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.ativo { transform: translateX(0); }
+            .sidebar-hide-btn { display: none; }
+            .sidebar-desktop-icon { display: none !important; }
+            .sidebar-show-btn { display: none !important; }
+            .menu-toggle { display: block; }
+            .main-content { margin-left: 0; width: 100%; }
+            .sidebar-overlay.ativo { display: block; }
             .os-window {
                 top: var(--sticky-bar-h) !important; left: 0 !important; right: 0 !important;
                 bottom: var(--window-taskbar-h) !important;
@@ -1106,6 +1126,19 @@
             .taskbar-item-label { max-width: 100px; }
             .terminal-body-windowed { font-size: 0.78rem; }
             .terminal-input { font-size: 0.78rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8rem; }
+            .botao-ajuda-flutuante { right: 20px; bottom: 20px; }
+            .botao-ajuda-flutuante button { padding: 8px 14px 8px 10px; font-size: 0.72rem; letter-spacing: 1.5px; }
+            body.window-taskbar-visible .botao-ajuda-flutuante { bottom: calc(var(--window-taskbar-h) + 12px); }
+            .mapa-container iframe { height: 300px; }
+            .membro-card { flex-direction: column; align-items: flex-start; }
+            .quiz-container { padding: 1.3rem; }
+            .tree-row, .tree-item { min-height: 28px; font-size: 0.82rem; }
+            .tree-node:last-child::before { height: 14px; }
+            .debug-overlay { font-size: 0.62rem; padding: 6px 8px; min-width: 180px; }
         }
         @media (min-width: 1025px) { .window-taskbar-items { scrollbar-width: thin; } }
     </style>
@@ -2172,6 +2205,88 @@
                 return id;
             }
 
+            function openCustomWindow(title, uniqueKey, contentBuilder, opts) {
+                opts = opts || {};
+                if (uniqueKey) {
+                    for (const id in windows) {
+                        if (windows[id].customKey === uniqueKey) {
+                            focusWindow(id);
+                            if (windows[id].state === 'minimized') unminimizeWindow(id);
+                            return id;
+                        }
+                    }
+                }
+                const id = 'c' + (winIdCounter++);
+                const win = createWindowElement(id, title, opts);
+                const body = win.querySelector('.os-window-body');
+                if (opts.bodyExtraClass) body.classList.add(opts.bodyExtraClass);
+                if (typeof contentBuilder === 'function') {
+                    try { contentBuilder(body); } catch (e) { console.error('[openCustomWindow]', e); }
+                }
+                layer.appendChild(win);
+                windows[id] = {
+                    id,
+                    sectionId: null,
+                    title,
+                    el: win,
+                    section: null,
+                    placeholder: null,
+                    state: 'normal',
+                    prevRect: null,
+                    prevState: null,
+                    isTerminal: false,
+                    isCustom: true,
+                    isHelp: !!opts.isHelp,
+                    customKey: uniqueKey || null
+                };
+                wireWindowChrome(win, id);
+                updateTaskbarVisibility();
+                renderTaskbar();
+                focusWindow(id);
+                return id;
+            }
+
+            function openAjuda() {
+                return openCustomWindow('ajuda urgente — voceimporta', 'ajuda-agora', (body) => {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'help-window-content';
+                    wrap.innerHTML = `
+                        <div class="help-window-header">
+                            <span class="help-alert-icon" aria-hidden="true">⚠</span>
+                            <h2>Você não está sozinho</h2>
+                        </div>
+                        <p>Se você está em crise ou conhece alguém que precisa de ajuda imediata, ligue agora:</p>
+
+                        <div class="help-phone-card">
+                            <div class="help-phone-label">CVV — Centro de Valorização da Vida</div>
+                            <a href="tel:188" class="help-phone-number">188</a>
+                            <div class="help-phone-sub">Atendimento gratuito, 24 horas por dia, todos os dias.</div>
+                        </div>
+
+                        <div class="help-phone-card destaque-192">
+                            <div class="help-phone-label">SAMU — Emergência médica</div>
+                            <a href="tel:192" class="help-phone-number">192</a>
+                            <div class="help-phone-sub">Em caso de risco imediato à vida.</div>
+                        </div>
+
+                        <div class="help-note">
+                            <strong style="color:#ff8a7a; letter-spacing:1px;">EM CASO DE RISCO IMEDIATO:</strong>
+                            ligue para o SAMU (192) ou vá ao pronto-socorro mais próximo. Não fique sozinho(a).
+                        </div>
+
+                        <div class="help-final">
+                            Respire fundo.<br>Você é importante. Há pessoas que se importam com você.
+                        </div>
+                    `;
+                    body.appendChild(wrap);
+                }, {
+                    extraClass: 'help-window',
+                    bodyExtraClass: 'help-window-body-wrapper',
+                    geometry: computeHelpGeometry,
+                    isHelp: true
+                });
+            }
+
             function openTerminal() {
                 for (const id in windows) {
                     if (windows[id].isTerminal) {
@@ -2233,7 +2348,6 @@
 
                 wireWindowChrome(win, id);
 
-                // Inicializa terminal
                 activeTerminalBody = terminalBody;
                 activeTerminalInput = inputEl;
 
@@ -2249,77 +2363,6 @@
                 });
 
                 setTimeout(() => { try { inputEl.focus(); } catch (e) {} }, 80);
-
-                updateTaskbarVisibility();
-                renderTaskbar();
-                focusWindow(id);
-                return id;
-            }
-
-            function openHelpWindow() {
-                for (const id in windows) {
-                    if (windows[id].isHelp) {
-                        focusWindow(id);
-                        if (windows[id].state === 'minimized') unminimizeWindow(id);
-                        return id;
-                    }
-                }
-                const id = 'help' + (winIdCounter++);
-                const title = 'ajuda urgente — voceimporta';
-                const win = createWindowElement(id, title, {
-                    extraClass: 'help-window',
-                    geometry: computeHelpGeometry
-                });
-                const body = win.querySelector('.os-window-body');
-                body.classList.add('help-window-body-wrapper');
-
-                body.innerHTML = `
-                    <div class="help-window-content">
-                        <div class="help-window-header">
-                            <span class="help-alert-icon" aria-hidden="true">⚠</span>
-                            <h2>Você não está sozinho</h2>
-                        </div>
-                        <p>Se você está em crise ou conhece alguém que precisa de ajuda imediata, ligue agora:</p>
-
-                        <div class="help-phone-card">
-                            <div class="help-phone-label">CVV — Centro de Valorização da Vida</div>
-                            <a href="tel:188" class="help-phone-number">188</a>
-                            <div class="help-phone-sub">Atendimento gratuito, 24 horas por dia, todos os dias.</div>
-                        </div>
-
-                        <div class="help-phone-card destaque-192">
-                            <div class="help-phone-label">SAMU — Emergência médica</div>
-                            <a href="tel:192" class="help-phone-number">192</a>
-                            <div class="help-phone-sub">Em caso de risco imediato à vida.</div>
-                        </div>
-
-                        <div class="help-note">
-                            <strong style="color:#ff8a7a; letter-spacing:1px;">EM CASO DE RISCO IMEDIATO:</strong>
-                            ligue para o SAMU (192) ou vá ao pronto-socorro mais próximo. Não fique sozinho(a).
-                        </div>
-
-                        <div class="help-final">
-                            Respire fundo.<br>Você é importante. Há pessoas que se importam com você.
-                        </div>
-                    </div>
-                `;
-
-                layer.appendChild(win);
-
-                windows[id] = {
-                    id,
-                    sectionId: null,
-                    title,
-                    el: win,
-                    section: null,
-                    placeholder: null,
-                    state: 'normal',
-                    prevRect: null,
-                    prevState: null,
-                    isHelp: true
-                };
-
-                wireWindowChrome(win, id);
 
                 updateTaskbarVisibility();
                 renderTaskbar();
@@ -2673,7 +2716,8 @@
             return {
                 open: openWindow,
                 openTerminal: openTerminal,
-                openHelpWindow: openHelpWindow,
+                openAjuda: openAjuda,
+                openCustom: openCustomWindow,
                 close: closeWindow,
                 closeAll: closeAllWindows,
                 minimize: minimizeWindow,
@@ -2688,7 +2732,9 @@
                     z: parseInt(w.el.style.zIndex, 10) || 0,
                     focused: w.id === focusedId,
                     isTerminal: !!w.isTerminal,
-                    isHelp: !!w.isHelp
+                    isCustom: !!w.isCustom,
+                    isHelp: !!w.isHelp,
+                    customKey: w.customKey || null
                 })),
                 count: () => Object.keys(windows).length,
                 getFocused: () => focusedId,
@@ -2704,6 +2750,16 @@
         })();
 
         /* ===================================================================== */
+        /* BOTÃO "PRECISO DE AJUDA AGORA" — abre em janela flutuante             */
+        /* ===================================================================== */
+        const btnAjudaAgora = document.getElementById('btnAjudaAgora');
+        if (btnAjudaAgora) {
+            btnAjudaAgora.addEventListener('click', () => {
+                if (voceWM && typeof voceWM.openAjuda === 'function') voceWM.openAjuda();
+            });
+        }
+
+        /* ===================================================================== */
         /* ABRIR / FECHAR TERMINAL                                               */
         /* ===================================================================== */
         function abrirTerminal() {
@@ -2713,16 +2769,6 @@
         function fecharTerminal() {
             if (terminalWindowId && voceWM) voceWM.close(terminalWindowId);
             terminalWindowId = null;
-        }
-
-        /* ===================================================================== */
-        /* BOTÃO DE AJUDA URGENTE — abre em janela                               */
-        /* ===================================================================== */
-        const btnAjudaAgora = document.getElementById('btnAjudaAgora');
-        if (btnAjudaAgora) {
-            btnAjudaAgora.addEventListener('click', () => {
-                if (voceWM) voceWM.openHelpWindow();
-            });
         }
 
         /* ===================================================================== */
@@ -3127,7 +3173,7 @@
                 case 'killall':                  cmdKillall(); break;
                 case 'reset-windows':            cmdResetWindows(); break;
                 case 'help-window': case 'ajuda':
-                    if (voceWM) voceWM.openHelpWindow();
+                    if (voceWM) voceWM.openAjuda();
                     appendTerminalLinha("abrir janela de ajuda urgente...", 't-ok');
                     break;
                 case 'debug':                    cmdDebug(args); break;
@@ -3155,7 +3201,6 @@
 
         document.addEventListener('keydown', (e) => {
             if (document.getElementById('bootScreen')) return;
-            // Se o terminal estiver aberto e focado, o input recebe o texto — ignora o atalho.
             if (terminalWindowId && voceWM) {
                 const list = voceWM.list();
                 const term = list.find(w => w.id === terminalWindowId);
