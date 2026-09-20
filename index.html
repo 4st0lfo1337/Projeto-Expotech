@@ -2902,7 +2902,6 @@
                 case 'rm':                       cmdRm(args); break;
                 case 'clear': case 'cls':
                     if (activeTerminalBody) activeTerminalBody.innerHTML = '';
-                    appendTerminalLinha("terminal limpo.", 't-dim');
                     appendTerminalLinha("");
                     break;
                 case 'exit': case 'quit':
