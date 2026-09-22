@@ -1034,7 +1034,7 @@
         .terminal-body-windowed::-webkit-scrollbar-thumb { background: #3a3028; border: 1px solid #1a1008; }
         .terminal-body-windowed .t-line { min-height: 1.5em; animation: t-line-in 0.15s ease-out; }
         @keyframes t-line-in { from { opacity: 0; transform: translateX(-3px); } to { opacity: 1; transform: translateX(0); } }
-        .t-prompt-line { color: #8a7a6a; }
+        .t-prompt-line { color: #c8b898; }
         .t-ok { color: #8ac88a; }
         .t-info { color: #c8b898; }
         .t-warn { color: #d0a860; }
@@ -1044,13 +1044,31 @@
         .terminal-input-row {
             flex: 0 0 auto;
             display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
+            flex-direction: column;
+            gap: 2px;
+            padding: 8px 16px 10px;
             border-top: 1px solid #2a2018;
             background: #050403;
+            font-size: 0.82rem;
         }
-        .terminal-prompt { color: #8ac88a; font-weight: 700; font-size: 0.9rem; }
+        .terminal-prompt-top {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .terminal-prompt-line1 { display: flex; align-items: baseline; gap: 3px; overflow: hidden; min-width: 0; }
+        .t-prompt-rail { color: #c8b898; }
+        .t-prompt-user { color: #a89060; font-weight: 700; }
+        .t-prompt-sep  { color: #8a7a6a; }
+        .t-prompt-host { color: #c8b898; }
+        .t-prompt-in   { color: #8a7a6a; }
+        .t-prompt-path { color: #8ac88a; font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+        .t-prompt-clock { color: #8a7a6a; flex: 0 0 auto; font-size: 0.76rem; }
+        .terminal-prompt-bottom { display: flex; align-items: center; gap: 6px; }
+        .terminal-prompt { color: #c8b898; font-weight: 700; font-size: 0.9rem; white-space: nowrap; }
         .terminal-input {
             flex: 1;
             background: transparent;
@@ -1462,6 +1480,12 @@
             .taskbar-item-label { max-width: 100px; }
             .terminal-body-windowed { font-size: 0.78rem; }
             .terminal-input { font-size: 0.78rem; }
+            .terminal-input-row { font-size: 0.74rem; padding: 7px 12px 9px; }
+            .t-prompt-clock { font-size: 0.68rem; }
+        }
+
+        @media (max-width: 420px) {
+            .t-prompt-clock { display: none; }
         }
 
         @media (max-width: 768px) {
@@ -1607,22 +1631,27 @@
         }
 
         /* ===================================================================== */
-        /* SCROLLBAR PERSONALIZADA — TEMA voceimporta                             */
-        /* Trilho escuro, thumb âmbar/marrom com hover mais claro                 */
+        /* SCROLLBAR RETRO — TEMA voceimporta                                     */
+        /* Bisel 3D estilo janela clássica + trilho "dither" + setas — igual em   */
+        /* toda a página e dentro de todas as janelas flutuantes                  */
         /* ===================================================================== */
         :root {
-            --scrollbar-track: #1e1812;
-            --scrollbar-thumb: #4a3a2a;
-            --scrollbar-thumb-hover: #6a5a4a;
-            --scrollbar-border: #3a3028;
-            --scrollbar-width: 10px;
-            --scrollbar-width-thin: 6px;
+            --scrollbar-width: 16px;
+            --scrollbar-width-thin: 14px;
+            --scrollbar-track: #100c09;
+            --scrollbar-face: var(--cor-destaque);
+            --scrollbar-face-hover: #3a2a1a;
+            --scrollbar-face-active: #4a3520;
+            --scrollbar-luz: #6a5a48;
+            --scrollbar-sombra: #0a0605;
+            --scrollbar-seta: var(--cor-amarelo-suave);
+            --scrollbar-seta-hover: var(--cor-amarelo);
         }
 
         /* Firefox — scrollbar-color e scrollbar-width */
         html {
-            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-face) var(--scrollbar-track);
+            scrollbar-width: auto;
         }
 
         /* WebKit — Chrome, Safari, Edge */
@@ -1631,68 +1660,102 @@
             height: var(--scrollbar-width);
         }
         ::-webkit-scrollbar-track {
-            background: var(--scrollbar-track);
-            border-left: 1px solid var(--scrollbar-border);
+            background-color: var(--scrollbar-track);
+            background-image:
+                repeating-linear-gradient(45deg, rgba(200,176,144,0.05) 0 1px, transparent 1px 2px),
+                repeating-linear-gradient(-45deg, rgba(0,0,0,0.35) 0 1px, transparent 1px 2px);
+            border-left: 1px solid var(--scrollbar-sombra);
+            border-right: 1px solid var(--scrollbar-luz);
             border-radius: 0;
         }
         ::-webkit-scrollbar-thumb {
-            background: var(--scrollbar-thumb);
-            border: 1px solid var(--scrollbar-border);
+            background: var(--scrollbar-face);
+            border: 1px solid;
+            border-color: var(--scrollbar-luz) var(--scrollbar-sombra) var(--scrollbar-sombra) var(--scrollbar-luz);
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.10), inset -1px -1px 0 rgba(0,0,0,0.55);
             border-radius: 0;
-            min-height: 40px;
+            min-height: 32px;
+            background-clip: padding-box;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--scrollbar-thumb-hover);
-            border-color: #5a4a3a;
+            background: var(--scrollbar-face-hover);
+            border-color: #8a7a5a var(--scrollbar-sombra) var(--scrollbar-sombra) #8a7a5a;
         }
         ::-webkit-scrollbar-thumb:active {
-            background: #7a6a5a;
+            background: var(--scrollbar-face-active);
+            border-color: var(--scrollbar-sombra) #8a7a5a #8a7a5a var(--scrollbar-sombra);
+            box-shadow: inset -1px -1px 0 rgba(255,255,255,0.10), inset 1px 1px 0 rgba(0,0,0,0.55);
         }
         ::-webkit-scrollbar-corner {
             background: var(--scrollbar-track);
         }
         ::-webkit-scrollbar-button {
-            display: none;
+            display: block;
+            width: var(--scrollbar-width);
+            height: var(--scrollbar-width);
+            background-color: var(--scrollbar-face);
+            border: 1px solid;
+            border-color: var(--scrollbar-luz) var(--scrollbar-sombra) var(--scrollbar-sombra) var(--scrollbar-luz);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 8px 8px;
+        }
+        ::-webkit-scrollbar-button:hover { background-color: var(--scrollbar-face-hover); }
+        ::-webkit-scrollbar-button:active { border-color: var(--scrollbar-sombra) var(--scrollbar-luz) var(--scrollbar-luz) var(--scrollbar-sombra); }
+        ::-webkit-scrollbar-button:vertical:start:decrement {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 3 L8 7 L2 7 Z' fill='%23c8b898'/%3E%3C/svg%3E");
+        }
+        ::-webkit-scrollbar-button:vertical:end:increment {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 7 L2 3 L8 3 Z' fill='%23c8b898'/%3E%3C/svg%3E");
+        }
+        ::-webkit-scrollbar-button:horizontal:start:decrement {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M7 2 L7 8 L3 5 Z' fill='%23c8b898'/%3E%3C/svg%3E");
+        }
+        ::-webkit-scrollbar-button:horizontal:end:increment {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M3 2 L3 8 L7 5 Z' fill='%23c8b898'/%3E%3C/svg%3E");
         }
 
-        /* Scrollbar fina para elementos internos */
+        /* Mesmo estilo retro dentro das janelas flutuantes / listas internas, só que mais fina */
         .os-window-body::-webkit-scrollbar,
         .tree-container::-webkit-scrollbar,
         .terminal-body-windowed::-webkit-scrollbar,
-        .window-taskbar-items::-webkit-scrollbar,
         .glossario-tooltip::-webkit-scrollbar {
             width: var(--scrollbar-width-thin);
             height: var(--scrollbar-width-thin);
         }
+        .os-window-body::-webkit-scrollbar-button,
+        .tree-container::-webkit-scrollbar-button,
+        .terminal-body-windowed::-webkit-scrollbar-button,
+        .glossario-tooltip::-webkit-scrollbar-button {
+            width: var(--scrollbar-width-thin);
+            height: var(--scrollbar-width-thin);
+            background-size: 7px 7px;
+        }
         .os-window-body::-webkit-scrollbar-track,
         .tree-container::-webkit-scrollbar-track,
         .terminal-body-windowed::-webkit-scrollbar-track,
-        .window-taskbar-items::-webkit-scrollbar-track {
-            background: var(--scrollbar-track);
-            border-left: 1px solid var(--scrollbar-border);
+        .glossario-tooltip::-webkit-scrollbar-track {
+            background-color: var(--scrollbar-track);
+            background-image:
+                repeating-linear-gradient(45deg, rgba(200,176,144,0.05) 0 1px, transparent 1px 2px),
+                repeating-linear-gradient(-45deg, rgba(0,0,0,0.35) 0 1px, transparent 1px 2px);
         }
-        .os-window-body::-webkit-scrollbar-thumb,
-        .tree-container::-webkit-scrollbar-thumb,
-        .terminal-body-windowed::-webkit-scrollbar-thumb,
+        .window-taskbar-items::-webkit-scrollbar { height: 10px; }
+        .window-taskbar-items::-webkit-scrollbar-button { display: none; }
+        .window-taskbar-items::-webkit-scrollbar-track { background: var(--scrollbar-track); border: none; }
         .window-taskbar-items::-webkit-scrollbar-thumb {
-            background: var(--scrollbar-thumb);
-            border: 1px solid var(--scrollbar-border);
+            background: var(--scrollbar-face);
+            border: 1px solid;
+            border-color: var(--scrollbar-luz) var(--scrollbar-sombra) var(--scrollbar-sombra) var(--scrollbar-luz);
             border-radius: 0;
-        }
-        .os-window-body::-webkit-scrollbar-thumb:hover,
-        .tree-container::-webkit-scrollbar-thumb:hover,
-        .terminal-body-windowed::-webkit-scrollbar-thumb:hover,
-        .window-taskbar-items::-webkit-scrollbar-thumb:hover {
-            background: var(--scrollbar-thumb-hover);
-            border-color: #5a4a3a;
         }
 
         /* Sobrescreve estilos antigos de scrollbar que existiam no código */
-        .tree-container { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
-        .os-window-body { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
-        .terminal-body-windowed { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
-        .window-taskbar-items { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparent; }
-        .glossario-tooltip { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
+        .tree-container,
+        .os-window-body,
+        .terminal-body-windowed,
+        .glossario-tooltip { scrollbar-width: thin; scrollbar-color: var(--scrollbar-face) var(--scrollbar-track); }
+        .window-taskbar-items { scrollbar-width: thin; scrollbar-color: var(--scrollbar-face) transparent; }
     </style>
 </head>
 <body>
@@ -3107,21 +3170,41 @@
 
                 const inputRow = document.createElement('div');
                 inputRow.className = 'terminal-input-row';
-                const promptEl = document.createElement('span');
-                promptEl.className = 'terminal-prompt';
-                promptEl.setAttribute('aria-hidden', 'true');
-                promptEl.textContent = '>';
-                const inputEl = document.createElement('input');
-                inputEl.type = 'text';
-                inputEl.className = 'terminal-input';
-                inputEl.autocomplete = 'off';
-                inputEl.spellcheck = false;
-                inputEl.placeholder = "digite 'help' para ver os comandos";
-                inputRow.appendChild(promptEl);
-                inputRow.appendChild(inputEl);
+                const cwdAtual = (function() {
+                    const atual = (typeof getSecaoAtual === 'function') ? getSecaoAtual() : '—';
+                    if (!atual || atual === '—' || atual === '#inicio') return '~';
+                    return '~/' + atual.replace('#', '');
+                })();
+                inputRow.innerHTML =
+                    '<div class="terminal-prompt-top">' +
+                        '<span class="terminal-prompt-line1">' +
+                            '<span class="t-prompt-rail">\u256d\u2500</span>' +
+                            '<span class="t-prompt-user">visitante</span>' +
+                            '<span class="t-prompt-sep">@</span>' +
+                            '<span class="t-prompt-host">voceimporta</span>' +
+                            '<span class="t-prompt-sep">in</span>' +
+                            '<span class="t-prompt-path">' + cwdAtual + '</span>' +
+                        '</span>' +
+                        '<span class="t-prompt-clock" data-term-clock aria-hidden="true">[00:00:00]</span>' +
+                    '</div>' +
+                    '<div class="terminal-prompt-bottom">' +
+                        '<span class="terminal-prompt" aria-hidden="true">\u2570\u2500\u276f</span>' +
+                        '<input type="text" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="digite \'help\' para ver os comandos">' +
+                    '</div>';
+                const inputEl = inputRow.querySelector('.terminal-input');
+                const clockEl = inputRow.querySelector('[data-term-clock]');
 
                 body.appendChild(terminalBody);
                 body.appendChild(inputRow);
+
+                function tickTerminalClock() {
+                    if (!clockEl) return;
+                    const d = new Date();
+                    const p = (n) => String(n).padStart(2, '0');
+                    clockEl.textContent = '[' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()) + ']';
+                }
+                tickTerminalClock();
+                const clockIntervalId = setInterval(tickTerminalClock, 1000);
 
                 layer.appendChild(win);
 
@@ -3137,6 +3220,7 @@
                     prevState: null,
                     isTerminal: true,
                     onClose: () => {
+                        clearInterval(clockIntervalId);
                         if (activeTerminalBody === terminalBody) {
                             activeTerminalBody = null;
                             activeTerminalInput = null;
@@ -4021,7 +4105,7 @@
             const cmd = entrada.toLowerCase();
             if (!entrada) return;
 
-            appendTerminalLinha('> ' + entrada, 't-prompt-line');
+            appendTerminalLinha('\u2570\u2500\u276f ' + entrada, 't-prompt-line');
 
             const partes = cmd.split(/\s+/);
             const nome = partes[0];
