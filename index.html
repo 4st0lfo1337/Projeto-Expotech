@@ -8,6 +8,7 @@
     <style>
         :root {
             --noise-opacity: 0.8;
+            --noise-max: 0.8;
             --cor-primaria: #7a8a7a;
             --cor-secundaria: #6b7a5a;
             --cor-escura: #1a1510;
@@ -37,6 +38,9 @@
             --window-taskbar-h-real: 44px;
             --window-z-base: 10100;
             --window-z-max: 10800;
+            /* Hero effects (controláveis pelo painel) */
+            --hero-blur-mult: 1;
+            --hero-glow-duration: 4s;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -68,6 +72,8 @@
         body.fx-flicker-off .crt-flicker { display: none !important; }
         body.fx-noise-off .crt-noise { display: none !important; }
         body.fx-marquee-off .sticky-bar-marquee { animation: none; }
+        body.hero-glow-off .hero h1 { animation: none !important; }
+        body.hero-aura-off .hero h1::before { display: none !important; }
 
         /* ===================================================================== */
         /* STICKY BAR */
@@ -500,8 +506,15 @@
             font-size: var(--tamanho-h1); margin-bottom: 1.2rem; font-weight: 800;
             letter-spacing: -0.5px; line-height: 1.2; text-transform: uppercase;
             position: relative; z-index: 10001; color: #ffffff;
-            text-shadow: 0 0 8px rgba(255,255,255,0.95), 0 0 18px rgba(255,255,255,0.75), 0 0 35px rgba(255,255,255,0.55), 0 0 70px rgba(255,255,255,0.35), 0 0 110px rgba(255,245,230,0.25), 3px 3px 8px rgba(0,0,0,0.85);
-            animation: brilho-hero 4s ease-in-out infinite; will-change: text-shadow;
+            text-shadow:
+                0 0 calc(8px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.95),
+                0 0 calc(18px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.75),
+                0 0 calc(35px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.55),
+                0 0 calc(70px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.35),
+                0 0 calc(110px * var(--hero-blur-mult, 1)) rgba(255,245,230,0.25),
+                3px 3px 8px rgba(0,0,0,0.85);
+            animation: brilho-hero var(--hero-glow-duration, 4s) ease-in-out infinite;
+            will-change: text-shadow;
         }
         .hero h1::before {
             content: ''; position: absolute; top: 50%; left: 50%;
@@ -512,8 +525,20 @@
             animation: aura-hero 4s ease-in-out infinite; will-change: opacity;
         }
         @keyframes brilho-hero {
-            0%, 100% { text-shadow: 0 0 8px rgba(255,255,255,0.95), 0 0 18px rgba(255,255,255,0.75), 0 0 35px rgba(255,255,255,0.55), 0 0 70px rgba(255,255,255,0.35), 0 0 110px rgba(255,245,230,0.25), 3px 3px 8px rgba(0,0,0,0.85); }
-            50% { text-shadow: 0 0 12px rgba(255,255,255,1), 0 0 26px rgba(255,255,255,0.9), 0 0 50px rgba(255,255,255,0.7), 0 0 95px rgba(255,255,255,0.5), 0 0 150px rgba(255,245,230,0.38), 3px 3px 8px rgba(0,0,0,0.85); }
+            0%, 100% { text-shadow:
+                0 0 calc(8px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.95),
+                0 0 calc(18px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.75),
+                0 0 calc(35px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.55),
+                0 0 calc(70px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.35),
+                0 0 calc(110px * var(--hero-blur-mult, 1)) rgba(255,245,230,0.25),
+                3px 3px 8px rgba(0,0,0,0.85); }
+            50% { text-shadow:
+                0 0 calc(12px * var(--hero-blur-mult, 1)) rgba(255,255,255,1),
+                0 0 calc(26px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.9),
+                0 0 calc(50px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.7),
+                0 0 calc(95px * var(--hero-blur-mult, 1)) rgba(255,255,255,0.5),
+                0 0 calc(150px * var(--hero-blur-mult, 1)) rgba(255,245,230,0.38),
+                3px 3px 8px rgba(0,0,0,0.85); }
         }
         @keyframes aura-hero { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
         @media (prefers-reduced-motion: reduce) { .hero h1 { animation: none; } .hero h1::before { animation: none; } }
@@ -889,6 +914,9 @@
         .taskbar-item.taskbar-item-help { background: #3a1008; color: #ffb0a0; border-color: #8a2a18 #2a0503 #2a0503 #8a2a18; }
         .taskbar-item.taskbar-item-help:hover { background: #5a1a10; color: #ffd0c0; }
         .taskbar-item.taskbar-item-help.ativo { background: #5a1a10; color: #ffd0c0; border-color: #e89a7a #2a0503 #2a0503 #e89a7a; }
+        .taskbar-item.taskbar-item-fx { background: #1a2418; color: #b8d8a0; border-color: #3a5a2a #0a1505 #0a1505 #3a5a2a; }
+        .taskbar-item.taskbar-item-fx:hover { background: #2a3820; color: #d0e8b8; }
+        .taskbar-item.taskbar-item-fx.ativo { background: #2a3820; color: #d0e8b8; border-color: #6a9a4a #0a1505 #0a1505 #6a9a4a; }
         .taskbar-item-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px; }
         .taskbar-item-close { display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-left: 2px; color: #8a7a6a; font-size: 0.85rem; font-weight: 700; line-height: 1; border-radius: 1px; }
         .taskbar-item-close:hover { background: #5a1a1a; color: #ffb0a0; }
@@ -1101,6 +1129,244 @@
             .help-phone-number { font-size: 2rem; letter-spacing: 2px; }
         }
 
+        /* ===================================================================== */
+        /* PAINEL DE EFEITOS (aberto via comando `effects`)                     */
+        /* ===================================================================== */
+        .os-window.effects-window {
+            border-color: #5a7a4a #0a1505 #0a1505 #5a7a4a;
+            box-shadow: 0 12px 50px rgba(0,0,0,0.92), inset 1px 1px 0 rgba(200,255,180,0.10), 0 0 30px rgba(80, 130, 50, 0.30);
+        }
+        .os-window.effects-window .os-window-titlebar {
+            background: linear-gradient(180deg, #2a3a20 0%, #1a2510 50%, #0a1505 100%);
+            color: #c8e0b0;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.95), 0 0 8px rgba(140,200,120,0.5);
+        }
+        .os-window.effects-window .os-window-titlebar::before {
+            content: '⚙';
+            color: #9ac87a;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.95), 0 0 10px rgba(140,200,120,0.6);
+        }
+        .os-window.effects-window.focused {
+            box-shadow: 0 16px 60px rgba(0,0,0,0.95), inset 1px 1px 0 rgba(200,255,180,0.12), 0 0 0 1px rgba(140, 200, 120, 0.5), 0 0 45px rgba(80, 130, 50, 0.4);
+        }
+        .os-window.effects-window.focused .os-window-titlebar {
+            background: linear-gradient(180deg, #3a5028 0%, #2a3a1a 50%, #0a1505 100%);
+        }
+        .os-window-body.effects-window-body-wrapper {
+            background: linear-gradient(180deg, #0f1408 0%, #0a0f05 100%) !important;
+            padding: 0 !important;
+        }
+
+        .effects-panel {
+            padding: 20px 22px 22px;
+            color: #d8e0c8;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.5;
+        }
+        .effects-panel .fx-intro {
+            color: #9aa888;
+            font-size: 0.82rem;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #2a3a1a;
+            font-style: italic;
+        }
+        .effects-panel .fx-group {
+            background: rgba(20, 28, 12, 0.55);
+            border: 1px solid #2a3a1a;
+            border-left: 3px solid #6a8a4a;
+            padding: 14px 16px 16px;
+            margin-bottom: 14px;
+            border-radius: 2px;
+            box-shadow: inset 0 0 20px rgba(40, 60, 20, 0.25);
+        }
+        .effects-panel .fx-group h3 {
+            margin: 0 0 12px;
+            font-size: 0.92rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #c8e0b0;
+            text-shadow: 0 0 8px rgba(140, 200, 120, 0.4);
+            border-bottom: 1px solid #2a3a1a;
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .effects-panel .fx-group h3::before {
+            content: '▸';
+            color: #9ac87a;
+            font-size: 0.8rem;
+        }
+
+        /* Toggle row */
+        .fx-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 4px;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 2px;
+            transition: background 0.15s;
+            font-size: 0.84rem;
+            color: #b8c8a8;
+        }
+        .fx-toggle:hover { background: rgba(60, 90, 40, 0.18); }
+        .fx-toggle input { display: none; }
+        .fx-switch {
+            flex: 0 0 auto;
+            width: 32px;
+            height: 16px;
+            background: #1a1008;
+            border: 1px solid #3a3028;
+            border-radius: 10px;
+            position: relative;
+            transition: background 0.2s, border-color 0.2s;
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
+        }
+        .fx-switch::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 1px;
+            width: 12px;
+            height: 12px;
+            background: #6a5a4a;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            transition: left 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+        .fx-toggle input:checked ~ .fx-switch {
+            background: #2a3a1a;
+            border-color: #6a8a4a;
+        }
+        .fx-toggle input:checked ~ .fx-switch::before {
+            left: 17px;
+            background: #c8e0b0;
+            box-shadow: 0 0 8px rgba(200, 224, 176, 0.8);
+        }
+        .fx-toggle .fx-toggle-label {
+            flex: 1;
+            letter-spacing: 0.5px;
+        }
+        .fx-toggle .fx-toggle-hint {
+            flex: 0 0 auto;
+            font-size: 0.7rem;
+            color: #7a8a6a;
+            font-style: italic;
+        }
+
+        /* Slider row */
+        .fx-slider-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 6px 10px;
+            padding: 8px 4px 4px;
+            align-items: center;
+        }
+        .fx-slider-row .fx-slider-label {
+            font-size: 0.82rem;
+            color: #b8c8a8;
+            letter-spacing: 0.5px;
+        }
+        .fx-slider-row .fx-slider-val {
+            font-size: 0.78rem;
+            color: #c8e0b0;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            min-width: 48px;
+            text-align: right;
+            text-shadow: 0 0 6px rgba(140, 200, 120, 0.4);
+        }
+        .fx-slider-row input[type="range"] {
+            grid-column: 1 / -1;
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: #0a0f05;
+            border: 1px solid #2a3a1a;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+        .fx-slider-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #9ac87a;
+            border: 1px solid #0a1505;
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(140, 200, 120, 0.7), inset 1px 1px 0 rgba(255,255,255,0.3);
+            cursor: pointer;
+        }
+        .fx-slider-row input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: #9ac87a;
+            border: 1px solid #0a1505;
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(140, 200, 120, 0.7), inset 1px 1px 0 rgba(255,255,255,0.3);
+            cursor: pointer;
+        }
+        .fx-slider-row input[type="range"]:hover::-webkit-slider-thumb { background: #b8e090; }
+        .fx-slider-row input[type="range"]:hover::-moz-range-thumb { background: #b8e090; }
+
+        /* Botões de ação */
+        .fx-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .fx-btn {
+            flex: 1 1 auto;
+            padding: 8px 12px;
+            background: #1a2510;
+            border: 1px solid #3a5a2a;
+            color: #c8e0b0;
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            box-shadow: inset 1px 1px 0 rgba(200,255,180,0.08);
+        }
+        .fx-btn:hover {
+            background: #2a3a1a;
+            border-color: #6a8a4a;
+            color: #e0f0c8;
+        }
+        .fx-btn:active {
+            background: #0a1505;
+            box-shadow: inset -1px -1px 0 rgba(200,255,180,0.08);
+        }
+        .fx-btn.fx-btn-warn {
+            background: #2a1a08;
+            border-color: #6a4a2a;
+            color: #e0c8a0;
+        }
+        .fx-btn.fx-btn-warn:hover {
+            background: #3a2510;
+            border-color: #a87a4a;
+            color: #f0d8b0;
+        }
+
+        .fx-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            color: #6a7a5a;
+            margin-top: 4px;
+            padding: 0 4px;
+            letter-spacing: 0.5px;
+        }
+
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.ativo { transform: translateX(0); }
@@ -1139,6 +1405,7 @@
             .tree-row, .tree-item { min-height: 28px; font-size: 0.82rem; }
             .tree-node:last-child::before { height: 14px; }
             .debug-overlay { font-size: 0.62rem; padding: 6px 8px; min-width: 180px; }
+            .effects-panel { padding: 14px 14px 16px; }
         }
         @media (min-width: 1025px) { .window-taskbar-items { scrollbar-width: thin; } }
     </style>
@@ -1621,6 +1888,53 @@
 
     <script>
         /* ===================================================================== */
+        /* ESTADO GLOBAL DOS EFEITOS (CRT + Hero)                                */
+        /* ===================================================================== */
+        const FX_STORAGE_KEY = 'voceimporta_fx_v1';
+        const FX_DEFAULTS = {
+            crt: true,
+            scanlines: true,
+            flicker: true,
+            noiseCrt: true,
+            marquee: true,
+            noiseMax: 0.8,
+            heroGlow: true,
+            heroAura: true,
+            heroSpeed: 4,
+            heroIntensity: 1
+        };
+        let fxState = Object.assign({}, FX_DEFAULTS);
+        try {
+            const raw = localStorage.getItem(FX_STORAGE_KEY);
+            if (raw) Object.assign(fxState, JSON.parse(raw));
+        } catch (e) {}
+
+        function saveFxState() {
+            try { localStorage.setItem(FX_STORAGE_KEY, JSON.stringify(fxState)); } catch (e) {}
+        }
+
+        function applyFxState() {
+            // CRT master
+            document.body.classList.toggle('crt-off', !fxState.crt);
+            // Efeitos individuais (classes -off)
+            document.body.classList.toggle('fx-scanlines-off', !fxState.scanlines);
+            document.body.classList.toggle('fx-flicker-off', !fxState.flicker);
+            document.body.classList.toggle('fx-noise-off', !fxState.noiseCrt);
+            document.body.classList.toggle('fx-marquee-off', !fxState.marquee);
+            // Hero
+            document.body.classList.toggle('hero-glow-off', !fxState.heroGlow);
+            document.body.classList.toggle('hero-aura-off', !fxState.heroAura);
+            document.documentElement.style.setProperty('--hero-glow-duration', fxState.heroSpeed + 's');
+            document.documentElement.style.setProperty('--hero-blur-mult', String(fxState.heroIntensity));
+            // Noise overlay
+            document.documentElement.style.setProperty('--noise-max', String(fxState.noiseMax));
+            // Sincroniza botão sidebar CRT
+            if (typeof aplicarEstadoCRT === 'function') aplicarEstadoCRT();
+            // Atualiza noise imediatamente
+            if (typeof updateNoiseOpacity === 'function') updateNoiseOpacity();
+        }
+
+        /* ===================================================================== */
         /* BOOT SCREEN                                                            */
         /* ===================================================================== */
         (function iniciarBoot() {
@@ -1826,8 +2140,8 @@
         /* ===================================================================== */
         const crtToggleBtn = document.getElementById('crtToggleBtn');
         function aplicarEstadoCRT() {
-            let crtAtivo = true;
-            try { crtAtivo = localStorage.getItem('voceimporta_crt_ativo') !== '0'; } catch (e) { crtAtivo = true; }
+            // Sincroniza com fxState se existir
+            const crtAtivo = fxState.crt;
             const label = crtToggleBtn ? crtToggleBtn.querySelector('.crt-toggle-label') : null;
             if (crtAtivo) {
                 document.body.classList.remove('crt-off');
@@ -1841,14 +2155,11 @@
         }
         if (crtToggleBtn) {
             crtToggleBtn.addEventListener('click', () => {
-                let crtAtivo = true;
-                try { crtAtivo = localStorage.getItem('voceimporta_crt_ativo') !== '0'; } catch (e) { crtAtivo = true; }
-                const novoEstado = !crtAtivo;
-                try { localStorage.setItem('voceimporta_crt_ativo', novoEstado ? '1' : '0'); } catch (e) {}
-                aplicarEstadoCRT();
+                fxState.crt = !fxState.crt;
+                saveFxState();
+                applyFxState();
             });
         }
-        aplicarEstadoCRT();
 
         /* ===================================================================== */
         /* SIDEBAR + ATALHO ESTILO WINDOWS                                        */
@@ -1950,7 +2261,7 @@
             const targetDistance = ajudaSection.offsetTop;
             const currentScroll = window.scrollY;
             const scrollFraction = Math.min(currentScroll / (targetDistance * 0.85), 1);
-            const maxOpacity = 0.8;
+            const maxOpacity = fxState.noiseMax; // vem do painel
             const currentOpacity = maxOpacity * (1 - scrollFraction);
             document.documentElement.style.setProperty('--noise-opacity', currentOpacity.toFixed(3));
         }
@@ -2053,6 +2364,7 @@
                     item.className = 'taskbar-item';
                     if (w.id === focusedId) item.classList.add('ativo');
                     if (w.isHelp) item.classList.add('taskbar-item-help');
+                    if (w.isFx) item.classList.add('taskbar-item-fx');
                     item.dataset.winId = w.id;
                     item.title = w.title;
                     const label = document.createElement('span');
@@ -2112,6 +2424,19 @@
                 let left = wa.right - w - 40;
                 if (left < sidebarOffset) left = sidebarOffset;
                 let top = wa.top + 20;
+                if (top + h > wa.bottom - 20) top = Math.max(wa.top + 10, wa.bottom - h - 20);
+                return { top, left, width: w, height: h };
+            }
+
+            function computeFxGeometry() {
+                const wa = getWorkArea();
+                if (isMobile()) return { top: wa.top, left: 0, width: wa.width, height: wa.height };
+                const w = Math.min(460, wa.width - 80);
+                const h = Math.min(680, wa.height - 60);
+                const sidebarOffset = document.body.classList.contains('sidebar-oculta-body') ? 20 : 300;
+                let left = sidebarOffset + 40;
+                let top = wa.top + 20;
+                if (left + w > wa.right - 40) left = Math.max(20, wa.right - w - 40);
                 if (top + h > wa.bottom - 20) top = Math.max(wa.top + 10, wa.bottom - h - 20);
                 return { top, left, width: w, height: h };
             }
@@ -2237,6 +2562,7 @@
                     isTerminal: false,
                     isCustom: true,
                     isHelp: !!opts.isHelp,
+                    isFx: !!opts.isFx,
                     customKey: uniqueKey || null
                 };
                 wireWindowChrome(win, id);
@@ -2284,6 +2610,176 @@
                     bodyExtraClass: 'help-window-body-wrapper',
                     geometry: computeHelpGeometry,
                     isHelp: true
+                });
+            }
+
+            /* ---------------------- PAINEL DE EFEITOS ---------------------- */
+            function buildEffectsPanel(body) {
+                const panel = document.createElement('div');
+                panel.className = 'effects-panel';
+
+                function makeToggle(label, key, hint) {
+                    const lbl = document.createElement('label');
+                    lbl.className = 'fx-toggle';
+                    const inp = document.createElement('input');
+                    inp.type = 'checkbox';
+                    inp.checked = !!fxState[key];
+                    inp.dataset.fxKey = key;
+                    const sw = document.createElement('span');
+                    sw.className = 'fx-switch';
+                    const txt = document.createElement('span');
+                    txt.className = 'fx-toggle-label';
+                    txt.textContent = label;
+                    lbl.appendChild(inp);
+                    lbl.appendChild(sw);
+                    lbl.appendChild(txt);
+                    if (hint) {
+                        const h = document.createElement('span');
+                        h.className = 'fx-toggle-hint';
+                        h.textContent = hint;
+                        lbl.appendChild(h);
+                    }
+                    inp.addEventListener('change', () => {
+                        fxState[key] = inp.checked;
+                        saveFxState();
+                        applyFxState();
+                    });
+                    return lbl;
+                }
+
+                function makeSlider(label, key, min, max, step, format) {
+                    const row = document.createElement('div');
+                    row.className = 'fx-slider-row';
+                    const lb = document.createElement('span');
+                    lb.className = 'fx-slider-label';
+                    lb.textContent = label;
+                    const val = document.createElement('span');
+                    val.className = 'fx-slider-val';
+                    val.textContent = format(fxState[key]);
+                    const inp = document.createElement('input');
+                    inp.type = 'range';
+                    inp.min = String(min);
+                    inp.max = String(max);
+                    inp.step = String(step);
+                    inp.value = String(fxState[key]);
+                    inp.dataset.fxKey = key;
+                    inp.addEventListener('input', () => {
+                        const v = parseFloat(inp.value);
+                        fxState[key] = v;
+                        val.textContent = format(v);
+                        saveFxState();
+                        applyFxState();
+                    });
+                    row.appendChild(lb);
+                    row.appendChild(val);
+                    row.appendChild(inp);
+                    return row;
+                }
+
+                // INTRO
+                const intro = document.createElement('div');
+                intro.className = 'fx-intro';
+                intro.textContent = '// painel de controle · ajustes salvos automaticamente neste navegador';
+                panel.appendChild(intro);
+
+                // ---- GRUPO CRT ----
+                const g1 = document.createElement('div');
+                g1.className = 'fx-group';
+                const h1 = document.createElement('h3');
+                h1.textContent = 'Efeitos CRT';
+                g1.appendChild(h1);
+                g1.appendChild(makeToggle('CRT ligado', 'crt', 'master'));
+                g1.appendChild(makeToggle('Scanlines (linhas)', 'scanlines'));
+                g1.appendChild(makeToggle('Flicker (cintilação)', 'flicker'));
+                g1.appendChild(makeToggle('Ruído CRT', 'noiseCrt'));
+                g1.appendChild(makeToggle('Marquee da barra', 'marquee'));
+                g1.appendChild(makeSlider(
+                    'Ruído de fundo (máx.)',
+                    'noiseMax',
+                    0, 1, 0.05,
+                    (v) => v.toFixed(2)
+                ));
+                panel.appendChild(g1);
+
+                // ---- GRUPO HERO ----
+                const g2 = document.createElement('div');
+                g2.className = 'fx-group';
+                const h2 = document.createElement('h3');
+                h2.textContent = 'Título Hero';
+                g2.appendChild(h2);
+                g2.appendChild(makeToggle('Brilho animado', 'heroGlow'));
+                g2.appendChild(makeToggle('Aura radial', 'heroAura'));
+                g2.appendChild(makeSlider(
+                    'Velocidade do brilho',
+                    'heroSpeed',
+                    0.5, 12, 0.5,
+                    (v) => v.toFixed(1) + 's'
+                ));
+                g2.appendChild(makeSlider(
+                    'Intensidade do brilho',
+                    'heroIntensity',
+                    0.3, 2.0, 0.05,
+                    (v) => v.toFixed(2) + '×'
+                ));
+                panel.appendChild(g2);
+
+                // ---- AÇÕES ----
+                const actions = document.createElement('div');
+                actions.className = 'fx-actions';
+
+                const btnReset = document.createElement('button');
+                btnReset.type = 'button';
+                btnReset.className = 'fx-btn';
+                btnReset.textContent = '↺ restaurar padrões';
+                btnReset.addEventListener('click', () => {
+                    Object.assign(fxState, FX_DEFAULTS);
+                    saveFxState();
+                    applyFxState();
+                    // Atualiza UI
+                    panel.querySelectorAll('input[data-fx-key]').forEach(inp => {
+                        const key = inp.dataset.fxKey;
+                        if (inp.type === 'checkbox') inp.checked = !!fxState[key];
+                        else {
+                            inp.value = String(fxState[key]);
+                            const val = inp.parentNode.querySelector('.fx-slider-val');
+                            if (val) {
+                                if (key === 'heroSpeed') val.textContent = fxState.heroSpeed.toFixed(1) + 's';
+                                else if (key === 'heroIntensity') val.textContent = fxState.heroIntensity.toFixed(2) + '×';
+                                else val.textContent = parseFloat(fxState[key]).toFixed(2);
+                            }
+                        }
+                    });
+                });
+                actions.appendChild(btnReset);
+
+                const btnTerminal = document.createElement('button');
+                btnTerminal.type = 'button';
+                btnTerminal.className = 'fx-btn fx-btn-warn';
+                btnTerminal.textContent = '> terminal';
+                btnTerminal.addEventListener('click', () => {
+                    if (typeof abrirTerminal === 'function') abrirTerminal();
+                });
+                actions.appendChild(btnTerminal);
+
+                panel.appendChild(actions);
+
+                // ---- INFO ----
+                const info = document.createElement('div');
+                info.className = 'fx-info-row';
+                info.innerHTML = '<span>// persistência: localStorage</span><span>v1 · fx-panel</span>';
+                panel.appendChild(info);
+
+                body.appendChild(panel);
+            }
+
+            function openEffectsPanel() {
+                return openCustomWindow('efeitos — painel de controle', 'fx-panel', (body) => {
+                    buildEffectsPanel(body);
+                }, {
+                    extraClass: 'effects-window',
+                    bodyExtraClass: 'effects-window-body-wrapper',
+                    geometry: computeFxGeometry,
+                    isFx: true
                 });
             }
 
@@ -2717,6 +3213,7 @@
                 open: openWindow,
                 openTerminal: openTerminal,
                 openAjuda: openAjuda,
+                openEffects: openEffectsPanel,
                 openCustom: openCustomWindow,
                 close: closeWindow,
                 closeAll: closeAllWindows,
@@ -2734,6 +3231,7 @@
                     isTerminal: !!w.isTerminal,
                     isCustom: !!w.isCustom,
                     isHelp: !!w.isHelp,
+                    isFx: !!w.isFx,
                     customKey: w.customKey || null
                 })),
                 count: () => Object.keys(windows).length,
@@ -3028,17 +3526,13 @@
         function cmdCrt(args) {
             const sub = (args[0] || '').toLowerCase();
             if (sub === 'on') {
-                document.body.classList.remove('crt-off');
-                try { localStorage.setItem('voceimporta_crt_ativo', '1'); } catch (e) {}
-                if (typeof aplicarEstadoCRT === 'function') aplicarEstadoCRT();
+                fxState.crt = true; saveFxState(); applyFxState();
                 appendTerminalLinha("crt: ativado", 't-ok');
             } else if (sub === 'off') {
-                document.body.classList.add('crt-off');
-                try { localStorage.setItem('voceimporta_crt_ativo', '0'); } catch (e) {}
-                if (typeof aplicarEstadoCRT === 'function') aplicarEstadoCRT();
+                fxState.crt = false; saveFxState(); applyFxState();
                 appendTerminalLinha("crt: desativado", 't-ok');
             } else {
-                const ativo = !document.body.classList.contains('crt-off');
+                const ativo = fxState.crt;
                 appendTerminalLinha("crt: " + (ativo ? 'on' : 'off'), 't-info');
                 appendTerminalLinha("use 'crt on' ou 'crt off' para alterar", 't-dim');
             }
@@ -3046,9 +3540,8 @@
 
         function cmdNoise(args) {
             if (!args.length) {
-                const v = getComputedStyle(document.documentElement).getPropertyValue('--noise-opacity').trim();
-                appendTerminalLinha("noise: " + (parseFloat(v).toFixed(2)), 't-info');
-                appendTerminalLinha("use 'noise <0..1>' para ajustar", 't-dim');
+                appendTerminalLinha("noise-max: " + fxState.noiseMax.toFixed(2), 't-info');
+                appendTerminalLinha("use 'noise <0..1>' para ajustar o máximo", 't-dim');
                 return;
             }
             const v = parseFloat(args[0]);
@@ -3056,8 +3549,67 @@
                 appendTerminalLinha("noise: valor inválido (use entre 0 e 1)", 't-err');
                 return;
             }
-            document.documentElement.style.setProperty('--noise-opacity', v.toFixed(2));
-            appendTerminalLinha("noise: " + v.toFixed(2), 't-ok');
+            fxState.noiseMax = v;
+            saveFxState();
+            applyFxState();
+            appendTerminalLinha("noise-max: " + v.toFixed(2), 't-ok');
+        }
+
+        function cmdEffects() {
+            if (voceWM && typeof voceWM.openEffects === 'function') {
+                voceWM.openEffects();
+                appendTerminalLinha("abrindo painel de efeitos...", 't-ok');
+            } else {
+                appendTerminalLinha("effects: gerenciador de janelas indisponível", 't-err');
+            }
+        }
+
+        function cmdFxReset() {
+            Object.assign(fxState, FX_DEFAULTS);
+            saveFxState();
+            applyFxState();
+            appendTerminalLinha("fx: todos os efeitos restaurados para o padrão", 't-ok');
+        }
+
+        function cmdFxStatus() {
+            appendTerminalLinha("estado atual dos efeitos:", 't-accent');
+            appendTerminalLinha("  crt          = " + (fxState.crt ? 'on' : 'off'), 't-info');
+            appendTerminalLinha("  scanlines    = " + (fxState.scanlines ? 'on' : 'off'), 't-info');
+            appendTerminalLinha("  flicker      = " + (fxState.flicker ? 'on' : 'off'), 't-info');
+            appendTerminalLinha("  noiseCrt     = " + (fxState.noiseCrt ? 'on' : 'off'), 't-info');
+            appendTerminalLinha("  marquee      = " + (fxState.marquee ? 'on' : 'off'), 't-info');
+            appendTerminalLinha("  noiseMax     = " + fxState.noiseMax.toFixed(2), 't-info');
+            appendTerminalLinha("  heroGlow     = " + (fxState.heroGlow ? 'on' : 'off'), 't-info');
+            appendTerminalLinha("  heroAura     = " + (fxState.heroAura ? 'on' : 'off'), 't-info');
+            appendTerminalLinha("  heroSpeed    = " + fxState.heroSpeed.toFixed(1) + 's', 't-info');
+            appendTerminalLinha("  heroIntensity= " + fxState.heroIntensity.toFixed(2) + 'x', 't-info');
+        }
+
+        function cmdToggleEffect(name) {
+            const map = {
+                'scanlines': 'scanlines',
+                'flicker': 'flicker',
+                'noise': 'noiseCrt',
+                'noise-crt': 'noiseCrt',
+                'marquee': 'marquee',
+                'crt': 'crt',
+                'hero-glow': 'heroGlow',
+                'heroGlow': 'heroGlow',
+                'glow': 'heroGlow',
+                'hero-aura': 'heroAura',
+                'aura': 'heroAura',
+                'heroAura': 'heroAura'
+            };
+            const key = map[name.toLowerCase()];
+            if (!key) {
+                appendTerminalLinha("toggle: efeito desconhecido: " + name, 't-err');
+                appendTerminalLinha("disponíveis: crt, scanlines, flicker, noise, marquee, hero-glow, hero-aura", 't-dim');
+                return;
+            }
+            fxState[key] = !fxState[key];
+            saveFxState();
+            applyFxState();
+            appendTerminalLinha("toggle: " + name + " -> " + (fxState[key] ? 'on' : 'off'), 't-ok');
         }
 
         const efeitos = {
@@ -3135,14 +3687,21 @@
             appendTerminalLinha("  kill <pid>                 — fecha uma janela pelo ID", "t-info");
             appendTerminalLinha("  killall                    — fecha todas as janelas", "t-info");
             appendTerminalLinha("  reset-windows              — restaura o layout das janelas", "t-info");
-            appendTerminalLinha("  help-window                — abre a janela de ajuda urgente", "t-info");
             appendTerminalLinha("");
+            appendTerminalLinha("  effects                    — abre o painel de controle de efeitos", "t-accent");
+            appendTerminalLinha("  fx-reset                   — restaura efeitos ao padrão", "t-info");
+            appendTerminalLinha("  fx-status                  — mostra o estado atual dos efeitos", "t-info");
+            appendTerminalLinha("  toggle <efeito>            — alterna um efeito individual", "t-info");
+            appendTerminalLinha("       efeitos: crt, scanlines, flicker, noise, marquee,", "t-dim");
+            appendTerminalLinha("                hero-glow, hero-aura", "t-dim");
+            appendTerminalLinha("");
+            appendTerminalLinha("  help-window                — abre a janela de ajuda urgente", "t-info");
             appendTerminalLinha("  debug | debug off          — overlay de debug em tempo real", "t-info");
             appendTerminalLinha("  crt | crt on | crt off     — controla o efeito CRT", "t-info");
-            appendTerminalLinha("  noise [0..1]               — vê ou ajusta a intensidade do ruído", "t-info");
-            appendTerminalLinha("  enable <efeito>            — liga um efeito visual", "t-info");
-            appendTerminalLinha("  disable <efeito>           — desliga um efeito visual", "t-info");
-            appendTerminalLinha("       efeitos: scanlines, flicker, noise, marquee", "t-dim");
+            appendTerminalLinha("  noise [0..1]               — vê ou ajusta a intensidade máxima", "t-info");
+            appendTerminalLinha("  enable <efeito>            — liga um efeito visual (legacy)", "t-info");
+            appendTerminalLinha("  disable <efeito>           — desliga um efeito visual (legacy)", "t-info");
+            appendTerminalLinha("       efeitos legacy: scanlines, flicker, noise, marquee", "t-dim");
             appendTerminalLinha("");
             appendTerminalLinha("  rm -rf /                   — não faça isso. só dizendo.", "t-dim");
             appendTerminalLinha("  clear                      — limpa a tela", "t-dim");
@@ -3172,6 +3731,23 @@
                 case 'kill':                     cmdKill(args); break;
                 case 'killall':                  cmdKillall(); break;
                 case 'reset-windows':            cmdResetWindows(); break;
+                case 'effects': case 'efeitos': case 'fx': case 'painel':
+                    cmdEffects();
+                    break;
+                case 'fx-reset': case 'fxreset':
+                    cmdFxReset();
+                    break;
+                case 'fx-status': case 'fxstatus':
+                    cmdFxStatus();
+                    break;
+                case 'toggle':
+                    if (!args.length) {
+                        appendTerminalLinha("uso: toggle <efeito>", 't-dim');
+                        appendTerminalLinha("efeitos: crt, scanlines, flicker, noise, marquee, hero-glow, hero-aura", 't-dim');
+                    } else {
+                        cmdToggleEffect(args[0]);
+                    }
+                    break;
                 case 'help-window': case 'ajuda':
                     if (voceWM) voceWM.openAjuda();
                     appendTerminalLinha("abrir janela de ajuda urgente...", 't-ok');
@@ -3414,6 +3990,9 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !sidebar.classList.contains('escondida')) esconderSidebar();
         });
+
+        /* Aplica estado dos efeitos na carga inicial */
+        applyFxState();
     </script>
 </body>
 </html>
