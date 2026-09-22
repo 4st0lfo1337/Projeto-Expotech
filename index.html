@@ -1478,6 +1478,133 @@
             .effects-panel { padding: 14px 14px 16px; }
         }
         @media (min-width: 1025px) { .window-taskbar-items { scrollbar-width: thin; } }
+
+        /* ===================================================================== */
+        /* GLOSSÁRIO — TERMOS TÉCNICOS COM TOOLTIP                               */
+        /* ===================================================================== */
+        .glossario-termo {
+            color: #d8c898;
+            border-bottom: 1px dotted #b89860;
+            cursor: help;
+            padding-bottom: 1px;
+            transition: color 0.15s ease, border-bottom-color 0.15s ease, background 0.15s ease;
+            outline: none;
+            position: relative;
+        }
+        .glossario-termo:hover,
+        .glossario-termo:focus-visible {
+            color: #f5e6b0;
+            border-bottom-color: #f5e6b0;
+            background: rgba(200, 176, 144, 0.12);
+        }
+        .secao-clara .glossario-termo,
+        section[style*="background: #d0c8b8"] .glossario-termo {
+            color: #5a3a10;
+            border-bottom-color: #8a6a3a;
+        }
+        .secao-clara .glossario-termo:hover,
+        .secao-clara .glossario-termo:focus-visible,
+        section[style*="background: #d0c8b8"] .glossario-termo:hover,
+        section[style*="background: #d0c8b8"] .glossario-termo:focus-visible {
+            color: #2a1a00;
+            border-bottom-color: #2a1a00;
+            background: rgba(120, 90, 40, 0.18);
+        }
+        #respiro .glossario-termo {
+            color: #e8d5a3;
+            border-bottom-color: #c8b090;
+        }
+        .hero .glossario-termo {
+            color: #ffffff;
+            border-bottom-color: #f0e0a8;
+        }
+        .hero .glossario-termo:hover {
+            color: #fff5d0;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .ajuda-item .glossario-termo {
+            color: #5a3a10;
+            border-bottom-color: #8a6a3a;
+        }
+        .ajuda-item .glossario-termo:hover {
+            color: #2a1a00;
+            background: rgba(120, 90, 40, 0.15);
+        }
+
+        /* Tooltip global do glossário */
+        .glossario-tooltip {
+            position: fixed;
+            z-index: 100000;
+            background: #0f0a08;
+            color: #d0c8b8;
+            border: 1px solid #5a4a3a;
+            padding: 9px 13px 10px;
+            max-width: 320px;
+            min-width: 180px;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            font-family: 'Courier New', Courier, monospace;
+            border-radius: 2px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.92), inset 0 0 20px rgba(80,50,30,0.2);
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.15s ease, visibility 0.15s ease;
+            text-align: left;
+            letter-spacing: 0.3px;
+            text-shadow: 0 0 6px rgba(200, 176, 144, 0.2);
+            top: 0;
+            left: 0;
+        }
+        .glossario-tooltip::before {
+            content: '▸ glossário';
+            display: block;
+            font-size: 0.6rem;
+            color: #a89060;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            border-bottom: 1px solid #3a3028;
+            padding-bottom: 3px;
+        }
+        .glossario-tooltip.visivel {
+            opacity: 1;
+            visibility: visible;
+        }
+        .glossario-tooltip::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #0f0a08;
+            border-right: 1px solid #5a4a3a;
+            border-bottom: 1px solid #5a4a3a;
+            transform: rotate(45deg);
+            bottom: -6px;
+            left: var(--arrow-left, 50%);
+            margin-left: -5px;
+        }
+        .glossario-tooltip.embaixo::after {
+            bottom: auto;
+            top: -6px;
+            border-right: none;
+            border-bottom: none;
+            border-left: 1px solid #5a4a3a;
+            border-top: 1px solid #5a4a3a;
+        }
+
+        @media (max-width: 640px) {
+            .glossario-tooltip {
+                max-width: min(300px, 88vw);
+                font-size: 0.78rem;
+                padding: 8px 11px 9px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .glossario-termo,
+            .glossario-tooltip { transition: none; }
+        }
     </style>
 </head>
 <body>
@@ -1501,6 +1628,9 @@
     <div class="crt-flicker" id="crtFlicker"></div>
     <div class="crt-noise" id="crtNoise"></div>
     <div id="noise-overlay"></div>
+
+    <!-- Tooltip de glossário -->
+    <div class="glossario-tooltip" id="glossarioTooltip" role="tooltip" aria-hidden="true"></div>
 
     <!-- DEBUG OVERLAY -->
     <div class="debug-overlay" id="debugOverlay">
@@ -4082,6 +4212,243 @@
 
         /* Aplica estado dos efeitos na carga inicial */
         applyFxState();
+
+        /* ===================================================================== */
+        /* GLOSSÁRIO — TERMOS TÉCNICOS COM TOOLTIP                               */
+        /* ===================================================================== */
+        (function initGlossario() {
+            const GLOSSARIO = {
+                'ideação suicida': 'Pensamentos persistentes sobre a morte, sobre não querer mais viver ou sobre se machucar. É um sinal de alerta que exige ajuda imediata.',
+                'ideação': 'Formação de ideias ou pensamentos. No contexto da saúde mental, geralmente se refere a pensamentos sobre morte ou autolesão.',
+                'cyberbullying': 'Violência verbal, psicológica ou moral praticada por meio de redes sociais, mensagens ou ambientes digitais. Pode causar traumas profundos.',
+                'automutilação': 'Ato de machucar o próprio corpo de forma intencional, geralmente como forma de aliviar sofrimento emocional.',
+                'autolesão': 'O mesmo que automutilação — machucar o próprio corpo de forma intencional para lidar com dor emocional.',
+                'psicoterapia': 'Tratamento feito por meio de conversas com um psicólogo, com técnicas para compreender emoções e modificar padrões de sofrimento.',
+                'terapia cognitivo-comportamental': 'Abordagem psicoterapêutica (TCC) que ajuda a identificar e modificar padrões de pensamento e comportamento negativos.',
+                'tcc': 'Sigla de Terapia Cognitivo-Comportamental — uma das abordagens mais eficazes no tratamento da depressão.',
+                'antidepressivos': 'Medicamentos prescritos por psiquiatras que atuam regulando neurotransmissores no cérebro, aliviando os sintomas da depressão.',
+                'antidepressivo': 'Medicamento prescrito por psiquiatra que ajuda a regular neurotransmissores ligados ao humor.',
+                'psiquiatra': 'Médico especializado em saúde mental, que pode diagnosticar transtornos e prescrever medicamentos.',
+                'psicólogo': 'Profissional de saúde mental que realiza psicoterapia e avaliação psicológica, mas não prescreve medicamentos.',
+                'caps': 'Centro de Atenção Psicossocial — serviço público do SUS que oferece atendimento psicológico e psiquiátrico gratuito.',
+                'cvv': 'Centro de Valorização da Vida — serviço gratuito de apoio emocional por telefone, chat e e-mail. Ligue 188.',
+                'sus': 'Sistema Único de Saúde — sistema público de saúde do Brasil, que oferece atendimento gratuito a toda a população.',
+                'ubs': 'Unidade Básica de Saúde — porta de entrada do SUS, onde você pode pedir encaminhamento para atendimento especializado.',
+                'samu': 'Serviço de Atendimento Móvel de Urgência — ligue 192 em casos de emergência médica.',
+                'oms': 'Organização Mundial da Saúde — agência da ONU responsável por diretrizes globais de saúde.',
+                'ibge': 'Instituto Brasileiro de Geografia e Estatística — órgão responsável por dados oficiais do Brasil.',
+                'abp': 'Associação Brasileira de Psiquiatria — entidade que reúne psiquiatras brasileiros.',
+                'estigma': 'Marca social negativa associada a uma condição, que leva ao preconceito, à exclusão e ao silêncio de quem sofre.',
+                'dopamina': 'Neurotransmissor ligado à sensação de prazer, motivação e recompensa. Recompensas rápidas tendem a dessensibilizar o cérebro.',
+                'neurotransmissor': 'Substância química que transmite sinais entre neurônios no cérebro.',
+                'grounding': 'Técnica de "ancoragem" que usa os cinco sentidos para trazer a atenção ao momento presente, reduzindo a ansiedade.',
+                'respiração diafragmática': 'Técnica de respiração profunda usando o diafragma (músculo abaixo dos pulmões), que acalma o sistema nervoso.',
+                'detox digital': 'Período de pausa consciente no uso de telas e redes sociais, para reequilibrar a relação com a tecnologia.',
+                'comparação social': 'Tendência a comparar a própria vida com a dos outros, geralmente de forma desfavorável — fator que alimenta ansiedade e depressão.',
+                'privação de sono': 'Falta de sono suficiente ou de qualidade, que afeta o humor, a concentração e a saúde mental.',
+                'psicossocial': 'Relativo à relação entre fatores psicológicos e sociais, como família, trabalho e comunidade.',
+                'vínculos sociais': 'Relações afetivas e de apoio entre pessoas — amizades, família, comunidade.',
+                'transtorno': 'Conjunto de sintomas que caracterizam uma condição de saúde mental, com impacto no funcionamento da pessoa.',
+                'autocompaixão': 'Capacidade de tratar a si mesmo com gentileza e compreensão, especialmente em momentos difíceis.',
+                'escuta ativa': 'Prática de ouvir com atenção plena, sem julgar ou interromper, demonstrando interesse genuíno pelo outro.',
+                'acolhimento': 'Ato de receber alguém com atenção, respeito e cuidado, sem julgamentos.',
+                'preconceito': 'Opinião negativa formada sem conhecimento ou reflexão, geralmente baseada em estereótipos.'
+            };
+
+            const tooltip = document.getElementById('glossarioTooltip');
+            const raiz = document.getElementById('mainContent');
+            if (!tooltip || !raiz) return;
+
+            // Ordena por tamanho (maior primeiro) para evitar matches parciais
+            const termos = Object.keys(GLOSSARIO).sort((a, b) => b.length - a.length);
+            const escapados = termos.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+            const regex = new RegExp('(?:' + escapados.join('|') + ')', 'gi');
+            const LETTER_RE = /[A-Za-zÀ-ÖØ-öø-ÿ]/;
+
+            const SKIP_SELECTORS = [
+                '.glossario-termo',
+                '.os-window-titlebar',
+                '.terminal-body-windowed',
+                '.terminal-input-row',
+                '.terminal-input',
+                '.sidebar',
+                '.sticky-bar',
+                '.help-window-content',
+                '.effects-panel',
+                '.debug-overlay',
+                '#bootScreen',
+                '.pop-out-btn',
+                '.window-placeholder',
+                '.snap-preview',
+                '.window-taskbar',
+                '.botao-ajuda-flutuante'
+            ];
+
+            function deveIgnorar(node) {
+                let el = node.parentNode;
+                while (el && el !== raiz) {
+                    if (el.nodeType === 1) {
+                        const tag = el.tagName;
+                        if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT' ||
+                            tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON') {
+                            return true;
+                        }
+                        for (let i = 0; i < SKIP_SELECTORS.length; i++) {
+                            try { if (el.matches(SKIP_SELECTORS[i])) return true; } catch (e) {}
+                        }
+                    }
+                    el = el.parentNode;
+                }
+                return false;
+            }
+
+            function envolverTexto(node) {
+                const texto = node.nodeValue;
+                if (!texto || !texto.trim()) return;
+                regex.lastIndex = 0;
+                let m;
+                let last = 0;
+                let achou = false;
+                let frag = null;
+                while ((m = regex.exec(texto)) !== null) {
+                    const original = m[0];
+                    // Verifica limites (não casar dentro de palavra maior)
+                    const antes = m.index > 0 ? texto[m.index - 1] : '';
+                    const depois = m.index + original.length < texto.length ? texto[m.index + original.length] : '';
+                    if (antes && LETTER_RE.test(antes)) continue;
+                    if (depois && LETTER_RE.test(depois)) continue;
+
+                    const chave = original.toLowerCase();
+                    const def = GLOSSARIO[chave];
+                    if (!def) continue;
+
+                    if (!frag) frag = document.createDocumentFragment();
+                    achou = true;
+                    if (m.index > last) {
+                        frag.appendChild(document.createTextNode(texto.slice(last, m.index)));
+                    }
+                    const span = document.createElement('span');
+                    span.className = 'glossario-termo';
+                    span.textContent = original;
+                    span.dataset.glossario = def;
+                    span.setAttribute('tabindex', '0');
+                    span.setAttribute('role', 'button');
+                    span.setAttribute('aria-label', original + ': ' + def);
+                    frag.appendChild(span);
+                    last = m.index + original.length;
+                }
+                if (!achou) return;
+                if (last < texto.length) {
+                    frag.appendChild(document.createTextNode(texto.slice(last)));
+                }
+                try { node.parentNode.replaceChild(frag, node); } catch (e) {}
+            }
+
+            function aplicar() {
+                if (!document.createTreeWalker) return;
+                const walker = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, {
+                    acceptNode: function(n) {
+                        if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                        if (deveIgnorar(n)) return NodeFilter.FILTER_REJECT;
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                });
+                const nodes = [];
+                let n;
+                while ((n = walker.nextNode())) nodes.push(n);
+                nodes.forEach(envolverTexto);
+            }
+
+            // ---------- Tooltip positioning ----------
+            let rafPos = null;
+            function posicionar(el) {
+                if (!tooltip.classList.contains('visivel')) return;
+                const rect = el.getBoundingClientRect();
+                const tipRect = tooltip.getBoundingClientRect();
+                const gap = 12;
+                let top = rect.top - tipRect.height - gap;
+                let left = rect.left + rect.width / 2 - tipRect.width / 2;
+                let embaixo = false;
+                if (top < 8) {
+                    top = rect.bottom + gap;
+                    embaixo = true;
+                }
+                if (left < 8) left = 8;
+                const maxLeft = window.innerWidth - tipRect.width - 8;
+                if (left > maxLeft) left = Math.max(8, maxLeft);
+                tooltip.style.top = top + 'px';
+                tooltip.style.left = left + 'px';
+                const arrow = rect.left + rect.width / 2 - left;
+                tooltip.style.setProperty('--arrow-left',
+                    Math.max(10, Math.min(tipRect.width - 10, arrow)) + 'px');
+                tooltip.classList.toggle('embaixo', embaixo);
+            }
+
+            function mostrar(el) {
+                const def = el.dataset.glossario;
+                if (!def) return;
+                tooltip.textContent = def;
+                tooltip.classList.add('visivel');
+                tooltip.setAttribute('aria-hidden', 'false');
+                if (rafPos) cancelAnimationFrame(rafPos);
+                rafPos = requestAnimationFrame(() => posicionar(el));
+            }
+
+            function esconder() {
+                tooltip.classList.remove('visivel');
+                tooltip.setAttribute('aria-hidden', 'true');
+            }
+
+            document.addEventListener('mouseover', (e) => {
+                const t = e.target && e.target.closest ? e.target.closest('.glossario-termo') : null;
+                if (t) mostrar(t);
+            }, { passive: true });
+            document.addEventListener('mouseout', (e) => {
+                const t = e.target && e.target.closest ? e.target.closest('.glossario-termo') : null;
+                if (t) esconder();
+            }, { passive: true });
+            document.addEventListener('focusin', (e) => {
+                const t = e.target && e.target.closest ? e.target.closest('.glossario-termo') : null;
+                if (t) mostrar(t);
+            });
+            document.addEventListener('focusout', (e) => {
+                const t = e.target && e.target.closest ? e.target.closest('.glossario-termo') : null;
+                if (t) esconder();
+            });
+
+            // Suporte a toque: tap alterna o tooltip
+            let ultimoToque = null;
+            document.addEventListener('touchstart', (e) => {
+                const t = e.target && e.target.closest ? e.target.closest('.glossario-termo') : null;
+                if (t) {
+                    if (ultimoToque === t && tooltip.classList.contains('visivel')) {
+                        esconder();
+                        ultimoToque = null;
+                    } else {
+                        ultimoToque = t;
+                        mostrar(t);
+                    }
+                } else {
+                    esconder();
+                    ultimoToque = null;
+                }
+            }, { passive: true });
+
+            // Reposiciona ao rolar/redimensionar
+            window.addEventListener('scroll', () => {
+                if (tooltip.classList.contains('visivel') && ultimoToque) posicionar(ultimoToque);
+            }, { passive: true });
+            window.addEventListener('resize', () => {
+                if (tooltip.classList.contains('visivel') && ultimoToque) posicionar(ultimoToque);
+            });
+
+            // Roda após o resto da inicialização
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', aplicar);
+            } else {
+                setTimeout(aplicar, 0);
+            }
+        })();
     </script>
 </body>
 </html>
