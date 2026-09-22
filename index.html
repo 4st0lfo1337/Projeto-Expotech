@@ -286,47 +286,78 @@
         }
 
         /* ===================================================================== */
-        /* DEBUG OVERLAY */
+        /* DEBUG OVERLAY — MONITOR DE SISTEMA / HERO / CRT                      */
         /* ===================================================================== */
         .debug-overlay {
             position: fixed;
             top: calc(var(--sticky-bar-h) + 8px);
             right: 10px;
             z-index: 10990;
-            background: rgba(15, 10, 8, 0.94);
-            border: 1px solid #3a3028;
+            width: min(360px, calc(100vw - 20px));
+            max-height: calc(100vh - var(--sticky-bar-h) - 18px);
+            overflow-y: auto;
+            background:
+                linear-gradient(135deg, rgba(38, 29, 20, 0.98), rgba(9, 8, 7, 0.98) 62%),
+                repeating-linear-gradient(0deg, transparent 0 3px, rgba(224, 203, 160, 0.025) 3px 4px);
+            border: 1px solid #806c4d;
+            border-left: 3px solid #c8b090;
             color: #c8b090;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 0.7rem;
-            line-height: 1.55;
-            padding: 8px 12px;
+            font-size: 0.68rem;
+            line-height: 1.45;
+            padding: 10px 12px 11px;
             pointer-events: none;
             display: none;
-            letter-spacing: 0.5px;
-            text-shadow: 0 0 6px rgba(200, 160, 100, 0.35);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.85);
-            min-width: 220px;
+            letter-spacing: 0.35px;
+            text-shadow: 0 0 6px rgba(200, 160, 100, 0.3);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.9), 0 0 22px rgba(200, 160, 100, 0.12), inset 0 0 24px rgba(0,0,0,0.38);
+            scrollbar-width: thin;
+            scrollbar-color: #806c4d #15100c;
         }
-        .debug-overlay.ativo { display: block; }
+        .debug-overlay::-webkit-scrollbar { width: 5px; }
+        .debug-overlay::-webkit-scrollbar-track { background: #15100c; }
+        .debug-overlay::-webkit-scrollbar-thumb { background: #806c4d; }
+        .debug-overlay.ativo { display: block; animation: debug-in 0.18s ease-out; }
+        @keyframes debug-in { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         .debug-overlay::before {
-            content: 'DEBUG';
+            content: 'DEBUG // VOCEIMPORTA MONITOR';
             display: block;
             font-weight: 700;
-            color: #e0cba0;
-            border-bottom: 1px solid #3a3028;
-            padding-bottom: 4px;
-            margin-bottom: 6px;
-            letter-spacing: 2px;
-            font-size: 0.66rem;
+            color: #f0d9a8;
+            border-bottom: 1px solid #806c4d;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            letter-spacing: 1.5px;
+            font-size: 0.67rem;
+            text-shadow: 0 0 10px rgba(240, 217, 168, 0.45);
         }
+        .debug-section {
+            margin: 8px 0 4px;
+            padding: 3px 5px;
+            color: #d0a860;
+            background: rgba(200, 160, 100, 0.08);
+            border-left: 2px solid #a89060;
+            font-size: 0.61rem;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+        .debug-section:first-child { margin-top: 0; }
         .debug-row {
             display: flex;
             justify-content: space-between;
+            align-items: baseline;
             gap: 12px;
-            white-space: nowrap;
+            min-height: 1.45em;
         }
         .debug-key { color: #8a7a6a; }
-        .debug-val { color: #e0cba0; font-weight: 700; }
+        .debug-val { color: #e0cba0; font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+        .debug-val.ok { color: #9fd49a; }
+        .debug-val.warn { color: #e0b86a; }
+        .debug-val.off { color: #b87868; }
+        @media (max-width: 768px) {
+            .debug-overlay { top: 8px; right: 8px; width: min(310px, calc(100vw - 16px)); font-size: 0.62rem; padding: 8px 9px; }
+        }
 
         /* ===================================================================== */
         /* SIDEBAR */
@@ -1783,16 +1814,39 @@
     <!-- Tooltip de glossário -->
     <div class="glossario-tooltip" id="glossarioTooltip" role="tooltip" aria-hidden="true"></div>
 
-    <!-- DEBUG OVERLAY -->
-    <div class="debug-overlay" id="debugOverlay">
+    <!-- DEBUG OVERLAY — ativado pelo comando: debug -->
+    <div class="debug-overlay" id="debugOverlay" role="status" aria-live="polite">
+        <div class="debug-section">runtime / viewport</div>
+        <div class="debug-row"><span class="debug-key">fps</span><span class="debug-val" id="dbgFPS">—</span></div>
+        <div class="debug-row"><span class="debug-key">viewport</span><span class="debug-val" id="dbgViewport">—</span></div>
         <div class="debug-row"><span class="debug-key">scroll</span><span class="debug-val" id="dbgScroll">0</span></div>
         <div class="debug-row"><span class="debug-key">section</span><span class="debug-val" id="dbgSection">—</span></div>
-        <div class="debug-row"><span class="debug-key">windows</span><span class="debug-val" id="dbgWindows">0</span></div>
+        <div class="debug-row"><span class="debug-key">documento</span><span class="debug-val" id="dbgDocument">—</span></div>
+        <div class="debug-row"><span class="debug-key">motion</span><span class="debug-val" id="dbgMotion">—</span></div>
+        <div class="debug-row"><span class="debug-key">windows / z-max</span><span class="debug-val" id="dbgWindows">0 / —</span></div>
         <div class="debug-row"><span class="debug-key">focus</span><span class="debug-val" id="dbgFocus">—</span></div>
-        <div class="debug-row"><span class="debug-key">z-max</span><span class="debug-val" id="dbgZmax">—</span></div>
-        <div class="debug-row"><span class="debug-key">crt</span><span class="debug-val" id="dbgCRT">—</span></div>
-        <div class="debug-row"><span class="debug-key">noise</span><span class="debug-val" id="dbgNoise">—</span></div>
-        <div class="debug-row"><span class="debug-key">fps</span><span class="debug-val" id="dbgFPS">—</span></div>
+
+        <div class="debug-section">hero / #inicio</div>
+        <div class="debug-row"><span class="debug-key">h1</span><span class="debug-val" id="dbgHeroTitle">—</span></div>
+        <div class="debug-row"><span class="debug-key">hero box</span><span class="debug-val" id="dbgHeroBox">—</span></div>
+        <div class="debug-row"><span class="debug-key">glow / aura</span><span class="debug-val" id="dbgHeroFx">—</span></div>
+        <div class="debug-row"><span class="debug-key">glow speed</span><span class="debug-val" id="dbgHeroSpeed">—</span></div>
+        <div class="debug-row"><span class="debug-key">intensidade</span><span class="debug-val" id="dbgHeroIntensity">—</span></div>
+        <div class="debug-row"><span class="debug-key">hero visibility</span><span class="debug-val" id="dbgHeroVisibility">—</span></div>
+
+        <div class="debug-section">crt / render pipeline</div>
+        <div class="debug-row"><span class="debug-key">master</span><span class="debug-val" id="dbgCRT">—</span></div>
+        <div class="debug-row"><span class="debug-key">device / pointer</span><span class="debug-val" id="dbgCRTDevice">—</span></div>
+        <div class="debug-row"><span class="debug-key">scanlines</span><span class="debug-val" id="dbgCRTScanlines">—</span></div>
+        <div class="debug-row"><span class="debug-key">flicker</span><span class="debug-val" id="dbgCRTFlicker">—</span></div>
+        <div class="debug-row"><span class="debug-key">noise</span><span class="debug-val" id="dbgCRTNoise">—</span></div>
+        <div class="debug-row"><span class="debug-key">opacity / max</span><span class="debug-val" id="dbgNoise">—</span></div>
+        <div class="debug-row"><span class="debug-key">overlay opacity</span><span class="debug-val" id="dbgCRTOpacity">—</span></div>
+        <div class="debug-row"><span class="debug-key">z-base</span><span class="debug-val" id="dbgCRTZ">—</span></div>
+
+        <div class="debug-section">theme / estado</div>
+        <div class="debug-row"><span class="debug-key">tema</span><span class="debug-val" id="dbgTheme">dark-amber / CRT</span></div>
+        <div class="debug-row"><span class="debug-key">classes</span><span class="debug-val" id="dbgClasses">—</span></div>
     </div>
 
     <!-- Controles mobile -->
@@ -3670,6 +3724,23 @@
         const dbgCRT     = document.getElementById('dbgCRT');
         const dbgNoise   = document.getElementById('dbgNoise');
         const dbgFPS     = document.getElementById('dbgFPS');
+        const dbgViewport = document.getElementById('dbgViewport');
+        const dbgDocument = document.getElementById('dbgDocument');
+        const dbgMotion = document.getElementById('dbgMotion');
+        const dbgHeroTitle = document.getElementById('dbgHeroTitle');
+        const dbgHeroBox = document.getElementById('dbgHeroBox');
+        const dbgHeroFx = document.getElementById('dbgHeroFx');
+        const dbgHeroSpeed = document.getElementById('dbgHeroSpeed');
+        const dbgHeroIntensity = document.getElementById('dbgHeroIntensity');
+        const dbgHeroVisibility = document.getElementById('dbgHeroVisibility');
+        const dbgCRTDevice = document.getElementById('dbgCRTDevice');
+        const dbgCRTScanlines = document.getElementById('dbgCRTScanlines');
+        const dbgCRTFlicker = document.getElementById('dbgCRTFlicker');
+        const dbgCRTNoise = document.getElementById('dbgCRTNoise');
+        const dbgCRTOpacity = document.getElementById('dbgCRTOpacity');
+        const dbgCRTZ = document.getElementById('dbgCRTZ');
+        const dbgTheme = document.getElementById('dbgTheme');
+        const dbgClasses = document.getElementById('dbgClasses');
 
         let debugAtivo = false;
         let debugInterval = null;
@@ -3700,36 +3771,69 @@
             return atual;
         }
 
+        function setDebugValue(el, value, state) {
+            if (!el) return;
+            el.textContent = value;
+            el.classList.remove('ok', 'warn', 'off');
+            if (state) el.classList.add(state);
+        }
+        function formatPx(value) { return Math.round(value) + 'px'; }
         function atualizarDebug() {
             if (!debugOverlay || !debugAtivo) return;
+            const rootStyle = getComputedStyle(document.documentElement);
+            const bodyStyle = getComputedStyle(document.body);
             const scrollY = Math.round(window.pageYOffset || document.documentElement.scrollTop);
-            const docH = document.documentElement.scrollHeight - window.innerHeight;
-            const pct = docH > 0 ? Math.round((scrollY / docH) * 100) : 0;
-            dbgScroll.textContent  = scrollY + 'px (' + pct + '%)';
-            dbgSection.textContent = getSecaoAtual();
-            if (voceWM) {
-                dbgWindows.textContent = voceWM.count();
-                const foc = voceWM.getFocused();
-                if (foc) {
-                    const list = voceWM.list();
-                    const w = list.find(x => x.id === foc);
-                    dbgFocus.textContent = w ? (foc + ' · ' + w.title) : foc;
-                } else {
-                    dbgFocus.textContent = '—';
-                }
-                dbgZmax.textContent = voceWM.getMaxZ() || '—';
-            } else {
-                dbgWindows.textContent = '0';
-                dbgFocus.textContent = '—';
-                dbgZmax.textContent = '—';
-            }
-            const crtOn = !document.body.classList.contains('crt-off');
-            dbgCRT.textContent = crtOn ? 'on' : 'off';
-            const noiseVal = getComputedStyle(document.documentElement).getPropertyValue('--noise-opacity').trim() || '0';
-            dbgNoise.textContent = parseFloat(noiseVal).toFixed(2);
-            dbgFPS.textContent = currentFPS;
-        }
+            const docHeight = document.documentElement.scrollHeight;
+            const docH = Math.max(0, docHeight - window.innerHeight);
+            const pct = docH > 0 ? Math.min(100, Math.round((scrollY / docH) * 100)) : 0;
+            const hero = document.getElementById('inicio');
+            const heroTitle = hero ? hero.querySelector('h1') : null;
+            const heroRect = hero ? hero.getBoundingClientRect() : null;
+            const heroTitleText = heroTitle ? heroTitle.textContent.trim() : 'não encontrado';
+            const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const desktopCRT = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1025px)').matches;
+            const crtOn = !!fxState.crt && !document.body.classList.contains('crt-off');
+            const scanlinesOn = crtOn && !!fxState.scanlines && !document.body.classList.contains('fx-scanlines-off');
+            const flickerOn = crtOn && !!fxState.flicker && !document.body.classList.contains('fx-flicker-off');
+            const noiseCrtOn = crtOn && !!fxState.noiseCrt && !document.body.classList.contains('fx-noise-off');
+            const visibility = heroTitle ? getComputedStyle(heroTitle).visibility : '—';
+            const noiseVal = parseFloat(rootStyle.getPropertyValue('--noise-opacity')) || 0;
+            const crtOpacity = crtOverlay ? parseFloat(getComputedStyle(crtOverlay).opacity) : 0;
+            const activeClasses = Array.from(document.body.classList).filter(c => /^(crt|fx-|hero-)/.test(c));
 
+            setDebugValue(dbgFPS, currentFPS + ' fps', currentFPS >= 30 ? 'ok' : 'warn');
+            setDebugValue(dbgViewport, window.innerWidth + '×' + window.innerHeight + ' · dpr ' + (window.devicePixelRatio || 1).toFixed(2));
+            setDebugValue(dbgScroll, scrollY + 'px (' + pct + '%)');
+            setDebugValue(dbgSection, getSecaoAtual());
+            setDebugValue(dbgDocument, formatPx(docHeight) + ' / max ' + formatPx(docH));
+            setDebugValue(dbgMotion, reducedMotion ? 'reduced' : 'full', reducedMotion ? 'warn' : 'ok');
+            if (voceWM) {
+                const foc = voceWM.getFocused();
+                const list = voceWM.list();
+                const w = foc ? list.find(x => x.id === foc) : null;
+                setDebugValue(dbgWindows, voceWM.count() + ' / ' + (voceWM.getMaxZ() || '—'));
+                setDebugValue(dbgFocus, w ? (foc + ' · ' + w.title) : (foc || '—'));
+            } else {
+                setDebugValue(dbgWindows, '0 / —');
+                setDebugValue(dbgFocus, '—');
+            }
+            setDebugValue(dbgHeroTitle, heroTitleText);
+            setDebugValue(dbgHeroBox, heroRect ? formatPx(heroRect.width) + '×' + formatPx(heroRect.height) : '—');
+            setDebugValue(dbgHeroFx, (fxState.heroGlow ? 'glow:on' : 'glow:off') + ' · ' + (fxState.heroAura ? 'aura:on' : 'aura:off'), fxState.heroGlow && fxState.heroAura ? 'ok' : 'warn');
+            setDebugValue(dbgHeroSpeed, Number(fxState.heroSpeed).toFixed(1) + 's / CSS ' + (rootStyle.getPropertyValue('--hero-glow-duration').trim() || '—'));
+            setDebugValue(dbgHeroIntensity, Number(fxState.heroIntensity).toFixed(2) + '× blur');
+            setDebugValue(dbgHeroVisibility, visibility + (heroTitle && heroTitle.getAnimations ? ' · ' + heroTitle.getAnimations().length + ' anim' : ''), visibility === 'visible' ? 'ok' : 'off');
+            setDebugValue(dbgCRT, crtOn ? 'ON' : 'OFF', crtOn ? 'ok' : 'off');
+            setDebugValue(dbgCRTDevice, desktopCRT ? 'desktop / pointer fine' : 'mobile ou touch', desktopCRT ? 'ok' : 'warn');
+            setDebugValue(dbgCRTScanlines, scanlinesOn ? 'on · ' + Number(fxState.scanlinesIntensity).toFixed(2) + '×' : 'off', scanlinesOn ? 'ok' : 'off');
+            setDebugValue(dbgCRTFlicker, flickerOn ? 'on · ' + Number(fxState.flickerIntensity).toFixed(2) + '×' : 'off', flickerOn ? 'ok' : 'off');
+            setDebugValue(dbgCRTNoise, noiseCrtOn ? 'on' : 'off', noiseCrtOn ? 'ok' : 'off');
+            setDebugValue(dbgNoise, noiseVal.toFixed(3) + ' / max ' + Number(fxState.noiseMax).toFixed(2));
+            setDebugValue(dbgCRTOpacity, isFinite(crtOpacity) ? crtOpacity.toFixed(2) : '—');
+            setDebugValue(dbgCRTZ, rootStyle.getPropertyValue('--crt-z-base').trim() || '—');
+            setDebugValue(dbgTheme, 'dark-amber / ' + (crtOn ? 'CRT' : 'flat'), crtOn ? 'ok' : 'warn');
+            setDebugValue(dbgClasses, activeClasses.length ? activeClasses.join(' ') : 'base');
+        }
         function ativarDebug() {
             if (!debugOverlay || debugAtivo) return;
             debugAtivo = true;
@@ -3903,12 +4007,15 @@
         }
 
         function cmdDebug(args) {
-            if (args[0] === 'off') {
+            const sub = (args[0] || '').toLowerCase();
+            if (sub === 'off' || sub === 'stop') {
                 desativarDebug();
                 appendTerminalLinha("debug: desativado", 't-info');
             } else {
                 ativarDebug();
-                appendTerminalLinha("debug: ativado — overlay no canto superior direito", 't-ok');
+                atualizarDebug();
+                appendTerminalLinha("debug: monitor completo ativado — runtime, hero, CRT e tema", 't-ok');
+                appendTerminalLinha("use 'debug off' para fechar o painel", 't-dim');
             }
         }
 
@@ -4087,7 +4194,7 @@
             appendTerminalLinha("                hero-glow, hero-aura", "t-dim");
             appendTerminalLinha("");
             appendTerminalLinha("  help-window                — abre a janela de ajuda urgente", "t-info");
-            appendTerminalLinha("  debug | debug off          — overlay de debug em tempo real", "t-info");
+            appendTerminalLinha("  debug | debug off          — monitor completo: runtime, hero, CRT e tema", "t-info");
             appendTerminalLinha("  crt | crt on | crt off     — controla o efeito CRT", "t-info");
             appendTerminalLinha("  noise [0..1]               — vê ou ajusta a intensidade máxima", "t-info");
             appendTerminalLinha("  enable <efeito>            — liga um efeito visual (legacy)", "t-info");
