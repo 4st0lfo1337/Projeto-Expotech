@@ -1605,6 +1605,94 @@
             .glossario-termo,
             .glossario-tooltip { transition: none; }
         }
+
+        /* ===================================================================== */
+        /* SCROLLBAR PERSONALIZADA — TEMA voceimporta                             */
+        /* Trilho escuro, thumb âmbar/marrom com hover mais claro                 */
+        /* ===================================================================== */
+        :root {
+            --scrollbar-track: #1e1812;
+            --scrollbar-thumb: #4a3a2a;
+            --scrollbar-thumb-hover: #6a5a4a;
+            --scrollbar-border: #3a3028;
+            --scrollbar-width: 10px;
+            --scrollbar-width-thin: 6px;
+        }
+
+        /* Firefox — scrollbar-color e scrollbar-width */
+        html {
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+            scrollbar-width: thin;
+        }
+
+        /* WebKit — Chrome, Safari, Edge */
+        ::-webkit-scrollbar {
+            width: var(--scrollbar-width);
+            height: var(--scrollbar-width);
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-left: 1px solid var(--scrollbar-border);
+            border-radius: 0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border: 1px solid var(--scrollbar-border);
+            border-radius: 0;
+            min-height: 40px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover);
+            border-color: #5a4a3a;
+        }
+        ::-webkit-scrollbar-thumb:active {
+            background: #7a6a5a;
+        }
+        ::-webkit-scrollbar-corner {
+            background: var(--scrollbar-track);
+        }
+        ::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* Scrollbar fina para elementos internos */
+        .os-window-body::-webkit-scrollbar,
+        .tree-container::-webkit-scrollbar,
+        .terminal-body-windowed::-webkit-scrollbar,
+        .window-taskbar-items::-webkit-scrollbar,
+        .glossario-tooltip::-webkit-scrollbar {
+            width: var(--scrollbar-width-thin);
+            height: var(--scrollbar-width-thin);
+        }
+        .os-window-body::-webkit-scrollbar-track,
+        .tree-container::-webkit-scrollbar-track,
+        .terminal-body-windowed::-webkit-scrollbar-track,
+        .window-taskbar-items::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-left: 1px solid var(--scrollbar-border);
+        }
+        .os-window-body::-webkit-scrollbar-thumb,
+        .tree-container::-webkit-scrollbar-thumb,
+        .terminal-body-windowed::-webkit-scrollbar-thumb,
+        .window-taskbar-items::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border: 1px solid var(--scrollbar-border);
+            border-radius: 0;
+        }
+        .os-window-body::-webkit-scrollbar-thumb:hover,
+        .tree-container::-webkit-scrollbar-thumb:hover,
+        .terminal-body-windowed::-webkit-scrollbar-thumb:hover,
+        .window-taskbar-items::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover);
+            border-color: #5a4a3a;
+        }
+
+        /* Sobrescreve estilos antigos de scrollbar que existiam no código */
+        .tree-container { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
+        .os-window-body { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
+        .terminal-body-windowed { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
+        .window-taskbar-items { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparent; }
+        .glossario-tooltip { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
     </style>
 </head>
 <body>
@@ -3578,7 +3666,7 @@
 
         /* ===================================================================== */
         /* TERMINAL — COMANDOS                                                   */
-        /* ==================================================================== */
+        /* ===================================================================== */
         let keystrokeBuffer = '';
 
         function listarSecoes() {
