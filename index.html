@@ -9,6 +9,8 @@
         :root {
             --noise-opacity: 0.8;
             --noise-max: 0.8;
+            --flicker-intensity: 1;
+            --scanlines-intensity: 1;
             --cor-primaria: #7a8a7a;
             --cor-secundaria: #6b7a5a;
             --cor-escura: #1a1510;
@@ -41,6 +43,8 @@
             /* Hero effects (controláveis pelo painel) */
             --hero-blur-mult: 1;
             --hero-glow-duration: 4s;
+            /* CRT z-index — fica abaixo das janelas/sidebar mas acima do conteúdo */
+            --crt-z-base: 9600;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -213,18 +217,48 @@
         }
 
         /* ===================================================================== */
-        /* CRT */
+        /* CRT — agora ABAIXO das janelas (--crt-z-base) e da sidebar           */
+        /* Sidebar = 10000 | Windows = 10101+ | Sticky bar = 9990                */
+        /* CRT fica em ~9600, acima do conteúdo da página mas abaixo da UI      */
         /* ===================================================================== */
         .crt-overlay, .crt-flicker, .crt-noise { display: none; }
         @media (hover: hover) and (pointer: fine) and (min-width: 1025px) {
-            .crt-overlay { display: block; position: fixed; inset: 0; pointer-events: none; z-index: 11002; opacity: 1; transition: opacity 0.3s ease; mix-blend-mode: overlay; will-change: opacity; }
-            .crt-overlay::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.65) 0px, rgba(0,0,0,0.65) 2px, transparent 2px, transparent 3px); animation: scanlineMove 8s linear infinite; }
-            .crt-overlay::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 0%, transparent 45%, rgba(0,0,0,0.8) 100%); box-shadow: inset 0 0 100px rgba(0,0,0,0.85); }
-            .crt-flicker { display: block; position: fixed; inset: 0; pointer-events: none; z-index: 11001; background: rgba(200,176,144,0.08); animation: flicker 0.09s infinite; opacity: 1; transition: opacity 0.3s ease; mix-blend-mode: screen; will-change: opacity; }
-            .crt-noise { display: block; position: fixed; top: -25%; left: -25%; width: 150%; height: 150%; pointer-events: none; z-index: 11000; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E"); animation: noiseMove 0.1s steps(10) infinite; opacity: 1; transition: opacity 0.3s ease; mix-blend-mode: overlay; will-change: opacity; }
+            .crt-overlay {
+                display: block; position: fixed; inset: 0; pointer-events: none;
+                z-index: calc(var(--crt-z-base) + 2); opacity: 1;
+                transition: opacity 0.3s ease; mix-blend-mode: overlay; will-change: opacity;
+            }
+            .crt-overlay::before {
+                content: ''; position: absolute; inset: 0;
+                background: repeating-linear-gradient(0deg, rgba(0,0,0,0.65) 0px, rgba(0,0,0,0.65) 2px, transparent 2px, transparent 3px);
+                opacity: var(--scanlines-intensity, 1);
+                animation: scanlineMove 8s linear infinite;
+            }
+            .crt-overlay::after {
+                content: ''; position: absolute; inset: 0;
+                background: radial-gradient(ellipse at center, transparent 0%, transparent 45%, rgba(0,0,0,0.8) 100%);
+                box-shadow: inset 0 0 100px rgba(0,0,0,0.85);
+            }
+            .crt-flicker {
+                display: block; position: fixed; inset: 0; pointer-events: none;
+                z-index: calc(var(--crt-z-base) + 1);
+                background: rgba(200,176,144,0.08);
+                animation: flicker 0.09s infinite; opacity: 1;
+                transition: opacity 0.3s ease; mix-blend-mode: screen; will-change: opacity;
+            }
+            .crt-noise {
+                display: block; position: fixed; top: -25%; left: -25%; width: 150%; height: 150%;
+                pointer-events: none; z-index: var(--crt-z-base);
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E");
+                animation: noiseMove 0.1s steps(10) infinite; opacity: 1;
+                transition: opacity 0.3s ease; mix-blend-mode: overlay; will-change: opacity;
+            }
         }
         @keyframes scanlineMove { 0% { transform: translateY(0); } 100% { transform: translateY(10px); } }
-        @keyframes flicker { 0%, 100% { opacity: 0.08; } 50% { opacity: 0.18; } }
+        @keyframes flicker {
+            0%, 100% { opacity: calc(0.08 * var(--flicker-intensity, 1)); }
+            50%      { opacity: calc(0.18 * var(--flicker-intensity, 1)); }
+        }
         @keyframes noiseMove {
             0% { transform: translate(0, 0); } 10% { transform: translate(-5%, -5%); } 20% { transform: translate(-10%, 5%); }
             30% { transform: translate(5%, -10%); } 40% { transform: translate(-5%, 15%); } 50% { transform: translate(-10%, 5%); }
@@ -232,7 +266,8 @@
             90% { transform: translate(10%, 5%); } 100% { transform: translate(5%, 0); }
         }
         #noise-overlay {
-            position: fixed; inset: 0; pointer-events: none; z-index: 9000;
+            position: fixed; inset: 0; pointer-events: none;
+            z-index: calc(var(--crt-z-base) - 100);
             opacity: var(--noise-opacity);
             background-image:
                 repeating-linear-gradient(0deg, rgba(0,0,0,0.45) 0px, rgba(0,0,0,0.45) 1px, transparent 1px, transparent 3px),
@@ -685,6 +720,41 @@
         .respiro-passo { color: #d0c8b8; text-decoration: underline; margin-bottom: 0.5rem; }
         .respiro-passo strong { color: #d0c8b8; }
         .respiro-grounding { margin-top: 1.5rem; color: #1a1510; font-weight: 600; }
+
+        /* ===================================================================== */
+        /* SEÇÃO COMPARTILHAR                                                    */
+        /* ===================================================================== */
+        .compartilhar-container { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+        .btn-compartilhar {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2px;
+            border: 1px solid #4a3a2a;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s, color 0.2s;
+            font-family: inherit;
+            text-decoration: none;
+            color: #d0c8b8;
+            letter-spacing: 1px;
+            background: #4a3a2a;
+            text-transform: uppercase;
+        }
+        .btn-compartilhar:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .btn-compartilhar:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+        .btn-whatsapp { background: #2a3a2a; border-color: #4a5a4a; color: #c8e0b8; }
+        .btn-whatsapp:hover { background: #3a4a3a; border-color: #6a8a6a; }
+        .btn-facebook { background: #1a2a3a; border-color: #3a4a5a; color: #b8c8e0; }
+        .btn-facebook:hover { background: #2a3a4a; border-color: #5a6a8a; }
+        .btn-twitter  { background: #1a1a2a; border-color: #3a3a4a; color: #c8c8e0; }
+        .btn-twitter:hover { background: #2a2a3a; border-color: #5a5a7a; }
+        .btn-link     { background: #3a3a3a; border-color: #5a5a5a; color: #d0d0d0; }
+        .btn-link:hover { background: #4a4a4a; border-color: #7a7a7a; }
+        @media (max-width: 640px) {
+            .compartilhar-container { gap: 0.6rem; margin-top: 1.5rem; }
+            .btn-compartilhar { padding: 0.6rem 1rem; font-size: 0.82rem; letter-spacing: 0.5px; }
+        }
 
         /* ===================================================================== */
         /* BOTÃO DE AJUDA FLUTUANTE — ESTILO JANELA RETRÔ                        */
@@ -1898,6 +1968,8 @@
             noiseCrt: true,
             marquee: true,
             noiseMax: 0.8,
+            flickerIntensity: 1,
+            scanlinesIntensity: 1,
             heroGlow: true,
             heroAura: true,
             heroSpeed: 4,
@@ -1928,6 +2000,9 @@
             document.documentElement.style.setProperty('--hero-blur-mult', String(fxState.heroIntensity));
             // Noise overlay
             document.documentElement.style.setProperty('--noise-max', String(fxState.noiseMax));
+            // Novas intensidades
+            document.documentElement.style.setProperty('--flicker-intensity', String(fxState.flickerIntensity));
+            document.documentElement.style.setProperty('--scanlines-intensity', String(fxState.scanlinesIntensity));
             // Sincroniza botão sidebar CRT
             if (typeof aplicarEstadoCRT === 'function') aplicarEstadoCRT();
             // Atualiza noise imediatamente
@@ -2140,7 +2215,6 @@
         /* ===================================================================== */
         const crtToggleBtn = document.getElementById('crtToggleBtn');
         function aplicarEstadoCRT() {
-            // Sincroniza com fxState se existir
             const crtAtivo = fxState.crt;
             const label = crtToggleBtn ? crtToggleBtn.querySelector('.crt-toggle-label') : null;
             if (crtAtivo) {
@@ -2261,7 +2335,7 @@
             const targetDistance = ajudaSection.offsetTop;
             const currentScroll = window.scrollY;
             const scrollFraction = Math.min(currentScroll / (targetDistance * 0.85), 1);
-            const maxOpacity = fxState.noiseMax; // vem do painel
+            const maxOpacity = fxState.noiseMax;
             const currentOpacity = maxOpacity * (1 - scrollFraction);
             document.documentElement.style.setProperty('--noise-opacity', currentOpacity.toFixed(3));
         }
@@ -2431,8 +2505,8 @@
             function computeFxGeometry() {
                 const wa = getWorkArea();
                 if (isMobile()) return { top: wa.top, left: 0, width: wa.width, height: wa.height };
-                const w = Math.min(460, wa.width - 80);
-                const h = Math.min(680, wa.height - 60);
+                const w = Math.min(480, wa.width - 80);
+                const h = Math.min(760, wa.height - 60);
                 const sidebarOffset = document.body.classList.contains('sidebar-oculta-body') ? 20 : 300;
                 let left = sidebarOffset + 40;
                 let top = wa.top + 20;
@@ -2699,6 +2773,18 @@
                     0, 1, 0.05,
                     (v) => v.toFixed(2)
                 ));
+                g1.appendChild(makeSlider(
+                    'Intensidade do flicker',
+                    'flickerIntensity',
+                    0, 2, 0.05,
+                    (v) => v.toFixed(2) + '×'
+                ));
+                g1.appendChild(makeSlider(
+                    'Intensidade das scanlines',
+                    'scanlinesIntensity',
+                    0, 2, 0.05,
+                    (v) => v.toFixed(2) + '×'
+                ));
                 panel.appendChild(g1);
 
                 // ---- GRUPO HERO ----
@@ -2745,6 +2831,7 @@
                             if (val) {
                                 if (key === 'heroSpeed') val.textContent = fxState.heroSpeed.toFixed(1) + 's';
                                 else if (key === 'heroIntensity') val.textContent = fxState.heroIntensity.toFixed(2) + '×';
+                                else if (key === 'flickerIntensity' || key === 'scanlinesIntensity') val.textContent = fxState[key].toFixed(2) + '×';
                                 else val.textContent = parseFloat(fxState[key]).toFixed(2);
                             }
                         }
@@ -3579,6 +3666,8 @@
             appendTerminalLinha("  noiseCrt     = " + (fxState.noiseCrt ? 'on' : 'off'), 't-info');
             appendTerminalLinha("  marquee      = " + (fxState.marquee ? 'on' : 'off'), 't-info');
             appendTerminalLinha("  noiseMax     = " + fxState.noiseMax.toFixed(2), 't-info');
+            appendTerminalLinha("  flickerInt.  = " + fxState.flickerIntensity.toFixed(2) + 'x', 't-info');
+            appendTerminalLinha("  scanlinesInt.= " + fxState.scanlinesIntensity.toFixed(2) + 'x', 't-info');
             appendTerminalLinha("  heroGlow     = " + (fxState.heroGlow ? 'on' : 'off'), 't-info');
             appendTerminalLinha("  heroAura     = " + (fxState.heroAura ? 'on' : 'off'), 't-info');
             appendTerminalLinha("  heroSpeed    = " + fxState.heroSpeed.toFixed(1) + 's', 't-info');
