@@ -79,6 +79,43 @@
         body.hero-glow-off .hero h1 { animation: none !important; }
         body.hero-aura-off .hero h1::before { display: none !important; }
 
+        /* Leitura calma: modo sem distrações e com contraste reduzido. */
+        body.leitura-calma {
+            color: #aaa69f;
+            line-height: 2.2;
+            background-color: #171513;
+            background-image: none;
+        }
+        body.leitura-calma .crt-overlay,
+        body.leitura-calma .crt-flicker,
+        body.leitura-calma .crt-noise,
+        body.leitura-calma #noise-overlay,
+        body.leitura-calma .sticky-bar-marquee { display: none !important; }
+        body.leitura-calma *,
+        body.leitura-calma *::before,
+        body.leitura-calma *::after {
+            animation: none !important;
+            transition: none !important;
+            text-shadow: none !important;
+            filter: none !important;
+        }
+        body.leitura-calma .main-content {
+            color: #aaa69f;
+            filter: saturate(0.72) contrast(0.84);
+        }
+        body.leitura-calma .main-content p,
+        body.leitura-calma .main-content li,
+        body.leitura-calma .main-content dd,
+        body.leitura-calma .main-content dt {
+            line-height: 2.2;
+        }
+        body.leitura-calma .main-content h1,
+        body.leitura-calma .main-content h2,
+        body.leitura-calma .main-content h3,
+        body.leitura-calma .main-content h4 { line-height: 1.45; }
+        body.leitura-calma .main-content * { box-shadow: none !important; }
+        body.leitura-calma .sticky-bar { text-shadow: none; }
+
         /* ===================================================================== */
         /* STICKY BAR */
         /* ===================================================================== */
@@ -457,6 +494,12 @@
         .hero-fx-toggle-btn:focus-visible { outline-color: #c8b090; }
         .hero-fx-toggle-indicator { background: #7ac87a; box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 5px rgba(120,200,120,0.55); }
         .hero-fx-toggle-btn.hero-fx-off .hero-fx-toggle-indicator { background: #8a3a3a; box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 4px rgba(180,60,60,0.4); }
+
+        .calm-toggle-btn { border-color: #6a6a5a #1a1008 #1a1008 #6a6a5a; color: #c4c4b8; }
+        .calm-toggle-btn:hover { background: #34342c; color: #e0dfcf; }
+        .calm-toggle-btn:focus-visible { outline-color: #c4c4b8; }
+        .calm-toggle-indicator { background: #b8b8a0; box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 5px rgba(200,200,170,0.5); }
+        .calm-toggle-btn.calm-off .calm-toggle-indicator { background: #8a3a3a; box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 4px rgba(180,60,60,0.4); }
         
         /* ===================================================================== */
         /* ATALHO ESTILO WINDOWS */
@@ -1939,6 +1982,10 @@
             </ul>
         </div>
         <div class="sidebar-footer">
+            <button class="crt-toggle-btn calm-toggle-btn" id="calmToggleBtn" type="button" aria-pressed="false" title="Ativar modo Leitura calma">
+                <span class="crt-toggle-indicator calm-toggle-indicator" aria-hidden="true"></span>
+                <span class="crt-toggle-label calm-toggle-label">Leitura calma: Inativa</span>
+            </button>
             <button class="crt-toggle-btn hero-fx-toggle-btn" id="heroFxToggleBtn" type="button" aria-pressed="true" title="Desativar brilho animado e aura radial">
                 <span class="crt-toggle-indicator hero-fx-toggle-indicator" aria-hidden="true"></span>
                 <span class="crt-toggle-label hero-fx-toggle-label">Brilho + aura: Ativos</span>
@@ -2319,7 +2366,8 @@
             heroGlow: true,
             heroAura: true,
             heroSpeed: 4,
-            heroIntensity: 1
+            heroIntensity: 1,
+            leituraCalma: false
         };
         let fxState = Object.assign({}, FX_DEFAULTS);
         try {
@@ -2343,6 +2391,8 @@
             document.body.classList.toggle('hero-glow-off', !fxState.heroGlow);
             document.body.classList.toggle('hero-aura-off', !fxState.heroAura);
             if (typeof aplicarEstadoHeroFX === 'function') aplicarEstadoHeroFX();
+            document.body.classList.toggle('leitura-calma', !!fxState.leituraCalma);
+            if (typeof aplicarEstadoLeituraCalma === 'function') aplicarEstadoLeituraCalma();
             document.documentElement.style.setProperty('--hero-glow-duration', fxState.heroSpeed + 's');
             document.documentElement.style.setProperty('--hero-blur-mult', String(fxState.heroIntensity));
             // Noise overlay
@@ -2562,6 +2612,24 @@
         /* ===================================================================== */
         const crtToggleBtn = document.getElementById('crtToggleBtn');
         const heroFxToggleBtn = document.getElementById('heroFxToggleBtn');
+        const calmToggleBtn = document.getElementById('calmToggleBtn');
+        function aplicarEstadoLeituraCalma() {
+            const calmaAtiva = !!fxState.leituraCalma;
+            const label = calmToggleBtn ? calmToggleBtn.querySelector('.calm-toggle-label') : null;
+            if (calmToggleBtn) {
+                calmToggleBtn.classList.toggle('calm-off', !calmaAtiva);
+                calmToggleBtn.setAttribute('aria-pressed', calmaAtiva ? 'true' : 'false');
+                calmToggleBtn.setAttribute('title', calmaAtiva ? 'Desativar modo Leitura calma' : 'Ativar modo Leitura calma');
+            }
+            if (label) label.textContent = calmaAtiva ? 'Leitura calma: Ativa' : 'Leitura calma: Inativa';
+        }
+        if (calmToggleBtn) {
+            calmToggleBtn.addEventListener('click', () => {
+                fxState.leituraCalma = !fxState.leituraCalma;
+                saveFxState();
+                applyFxState();
+            });
+        }
         function aplicarEstadoHeroFX() {
             const heroFxAtivo = fxState.heroGlow && fxState.heroAura;
             const label = heroFxToggleBtn ? heroFxToggleBtn.querySelector('.hero-fx-toggle-label') : null;
