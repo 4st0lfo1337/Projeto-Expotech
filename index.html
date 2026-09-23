@@ -771,6 +771,47 @@
         footer .links-footer a { color: #a09080; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; }
         footer .links-footer a:hover { color: #c8b898; }
 
+        /* ===================================================================== */
+        /* SEÇÃO DE FONTES — referências bibliográficas (ABNT)                   */
+        /* ===================================================================== */
+        .secao-fontes { padding: 2.5rem 0 1rem; border-top: 1px solid #3a3028; }
+        .secao-fontes .container { max-width: 900px; }
+        .secao-fontes .section-titulo { margin-bottom: 1.4rem; }
+        .secao-fontes .section-titulo h2 {
+            font-size: 1.15rem;
+            letter-spacing: 2px;
+        }
+        .fontes-lista {
+            list-style: none;
+            counter-reset: fontes-contador;
+            color: #8a7a6a;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .fontes-lista li {
+            counter-increment: fontes-contador;
+            padding-left: 1.7em;
+            text-indent: -1.7em;
+        }
+        .fontes-lista li::before {
+            content: counter(fontes-contador) '. ';
+            color: #6a5a4a;
+        }
+        .fontes-lista em { color: #a09080; font-style: italic; }
+        .fontes-lista a { color: #a89060; text-decoration: none; word-break: break-all; }
+        .fontes-lista a:hover { color: #c8b898; text-decoration: underline; }
+        .secao-clara.secao-fontes { border-top-color: #9a8a7a; }
+        .secao-clara .fontes-lista { color: #4a4038; }
+        .secao-clara .fontes-lista li::before { color: #6a5a4a; }
+        .secao-clara .fontes-lista em { color: #2a2018; }
+        .secao-clara .fontes-lista a { color: #5a4a2a; }
+        .secao-clara .fontes-lista a:hover { color: #2a1a00; }
+
         .secao-clara { background-color: #d0c8b8; color: #1a1510; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(80,60,40,0.05) 2px, rgba(80,60,40,0.05) 4px); }
         .secao-clara .section-titulo h2 { color: #1a1510; text-shadow: none; }
         .secao-clara .section-titulo p { color: #3a3028; }
@@ -2311,6 +2352,33 @@
             </div>
         </section>
 
+        <section id="fontes" class="secao-fontes secao-clara" style="padding-top: 2rem;">
+            <div class="container">
+                <div class="section-titulo">
+                    <h2>Fontes</h2>
+                    <p>Referências utilizadas na produção deste material.</p>
+                </div>
+                <ol class="fontes-lista">
+                    <li>AHMED, Oli et al. Social media use, mental health and sleep: a systematic review with meta-analyses. <em>Journal of Affective Disorders</em>, v. 367, p. 701-712, 2024. DOI: 10.1016/j.jad.2024.08.193. Disponível em: <a href="https://pubmed.ncbi.nlm.nih.gov/39242043/" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/39242043/</a>. Acesso em: 23 set. 2026.</li>
+                    <li>ALONZO, Rea et al. Interplay between social media use, sleep quality, and mental health in youth: a systematic review. <em>Sleep Medicine Reviews</em>, v. 56, 101414, 2021. DOI: 10.1016/j.smrv.2020.101414. Disponível em: <a href="https://pubmed.ncbi.nlm.nih.gov/33385767/" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/33385767/</a>. Acesso em: 23 set. 2026.</li>
+                    <li>ASSOCIAÇÃO BRASILEIRA DE PSIQUIATRIA. <em>ABP TV: tratamento da depressão</em>. Rio de Janeiro: ABP, 2023. Disponível em: <a href="https://www.abp.org.br/post/abp-tv-tratamento-depressao" target="_blank" rel="noopener">https://www.abp.org.br/post/abp-tv-tratamento-depressao</a>. Acesso em: 23 set. 2026.</li>
+                    <li>ASSOCIAÇÃO BRASILEIRA DE PSIQUIATRIA. <em>Diretrizes para um modelo de assistência integral em saúde mental no Brasil</em>. Rio de Janeiro: ABP, [s. d.]. Disponível em: <a href="https://www.abp.org.br/diretrizes" target="_blank" rel="noopener">https://www.abp.org.br/diretrizes</a>. Acesso em: 23 set. 2026.</li>
+                    <li>ASSOCIAÇÃO BRASILEIRA DE PSIQUIATRIA. <em>Diretrizes da Associação Brasileira de Psiquiatria para o manejo do comportamento suicida</em>. Rio de Janeiro: ABP, 2020. Disponível em: <a href="https://www.abp.org.br/post/abp-lanca-diretrizes-tratmento-comportamento-suicida" target="_blank" rel="noopener">https://www.abp.org.br/post/abp-lanca-diretrizes-tratmento-comportamento-suicida</a>. Acesso em: 23 set. 2026.</li>
+                    <li>BRASIL. Ministério da Saúde. <em>Centros de Atenção Psicossocial — CAPS</em>. Brasília, DF: Ministério da Saúde, [s. d.]. Disponível em: <a href="https://www.gov.br/saude/pt-br/composicao/saes/desmad/raps/caps" target="_blank" rel="noopener">https://www.gov.br/saude/pt-br/composicao/saes/desmad/raps/caps</a>. Acesso em: 23 set. 2026.</li>
+                    <li>BRASIL. Ministério da Saúde. <em>Depressão</em>. Brasília, DF: Ministério da Saúde, [s. d.]. Disponível em: <a href="https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/d/depressao" target="_blank" rel="noopener">https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/d/depressao</a>. Acesso em: 23 set. 2026.</li>
+                    <li>BRASIL. Ministério da Saúde. <em>Manejo inicial/conduta — situações agudas: transtornos de ansiedade no adulto</em>. Brasília, DF: Ministério da Saúde, [s. d.]. Disponível em: <a href="https://linhasdecuidado.saude.gov.br/portal/ansiedade/unidade-de-atencao-primaria/manejo-inicial-conduta/" target="_blank" rel="noopener">https://linhasdecuidado.saude.gov.br/portal/ansiedade/unidade-de-atencao-primaria/manejo-inicial-conduta/</a>. Acesso em: 23 set. 2026.</li>
+                    <li>BRASIL. Ministério da Saúde. <em>SAMU 192 — Serviço de Atendimento Móvel de Urgência</em>. Brasília, DF: Ministério da Saúde, [s. d.]. Disponível em: <a href="https://www.gov.br/saude/pt-br/composicao/saes/samu-192" target="_blank" rel="noopener">https://www.gov.br/saude/pt-br/composicao/saes/samu-192</a>. Acesso em: 23 set. 2026.</li>
+                    <li>CENTRO DE VALORIZAÇÃO DA VIDA. <em>Informações sobre o atendimento pelo número 188</em>. São Paulo: CVV, [s. d.]. Disponível em: <a href="https://cvv.org.br/informacoes-sobre-o-atendimento-pelo-numero-188/" target="_blank" rel="noopener">https://cvv.org.br/informacoes-sobre-o-atendimento-pelo-numero-188/</a>. Acesso em: 23 set. 2026.</li>
+                    <li>INSTITUTO BRASILEIRO DE GEOGRAFIA E ESTATÍSTICA. <em>PNS 2013: IBGE faz um amplo retrato da saúde dos adultos brasileiros</em>. Rio de Janeiro: IBGE, 2014. Disponível em: <a href="https://agenciadenoticias.ibge.gov.br/agencia-de-noticias/releases/14724-asi-pns-2013-faz-um-amplo-retrato-da-saude-dos-adultos-brasileiros" target="_blank" rel="noopener">https://agenciadenoticias.ibge.gov.br/agencia-de-noticias/releases/14724-asi-pns-2013-faz-um-amplo-retrato-da-saude-dos-adultos-brasileiros</a>. Acesso em: 23 set. 2026.</li>
+                    <li>INSTITUTO BRASILEIRO DE GEOGRAFIA E ESTATÍSTICA. <em>PNS 2019: cai o consumo de tabaco, mas aumenta o de bebida alcoólica</em>. Rio de Janeiro: IBGE, 2020. Disponível em: <a href="https://agenciadenoticias.ibge.gov.br/agencia-de-noticias/releases/29471-pns-2019-cai-o-consumo-de-tabaco-mas-aumenta-o-de-bebida-alcoolica" target="_blank" rel="noopener">https://agenciadenoticias.ibge.gov.br/agencia-de-noticias/releases/29471-pns-2019-cai-o-consumo-de-tabaco-mas-aumenta-o-de-bebida-alcoolica</a>. Acesso em: 23 set. 2026.</li>
+                    <li>ORGANIZAÇÃO MUNDIAL DA SAÚDE. <em>Depressive disorder (depression)</em>. Geneva: World Health Organization, 2026. Disponível em: <a href="https://www.who.int/news-room/fact-sheets/detail/depression" target="_blank" rel="noopener">https://www.who.int/news-room/fact-sheets/detail/depression</a>. Acesso em: 23 set. 2026.</li>
+                    <li>ORGANIZAÇÃO MUNDIAL DA SAÚDE. <em>Guidelines on mental health promotive and preventive interventions for adolescents: helping adolescents thrive</em>. Geneva: World Health Organization, 2021. Disponível em: <a href="https://www.who.int/publications/i/item/guidelines-on-mental-health-promotive-and-preventive-interventions-for-adolescents" target="_blank" rel="noopener">https://www.who.int/publications/i/item/guidelines-on-mental-health-promotive-and-preventive-interventions-for-adolescents</a>. Acesso em: 23 set. 2026.</li>
+                    <li>ORGANIZAÇÃO MUNDIAL DA SAÚDE. <em>Mental health of adolescents</em>. Geneva: World Health Organization, 2025. Disponível em: <a href="https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health" target="_blank" rel="noopener">https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health</a>. Acesso em: 23 set. 2026.</li>
+                    <li>SALEEM, Naila; YOUNG, Paul; YOUSUF, Saman. Exploring the relationship between social media use and symptoms of depression and anxiety among children and adolescents: a systematic narrative review. <em>Cyberpsychology, Behavior, and Social Networking</em>, v. 27, n. 11, p. 771-797, 2024. DOI: 10.1089/cyber.2023.0456. Disponível em: <a href="https://pubmed.ncbi.nlm.nih.gov/39446668/" target="_blank" rel="noopener">https://pubmed.ncbi.nlm.nih.gov/39446668/</a>. Acesso em: 23 set. 2026.</li>
+                </ol>
+            </div>
+        </section>
+
         <footer>
             <div class="container">
                 <div class="links-footer">
@@ -2330,8 +2398,9 @@
                     <a href="#compartilhar">Compartilhar</a>
                     <a href="#equipe">Equipe</a>
                     <a href="#contato">Contato</a>
+                    <a href="#fontes">Fontes</a>
                 </div>
-                <p>Projeto <strong>voceimporta</strong> — Conscientização sobre Depressão para a Expotech 2026.<br>Fontes: OMS, Ministério da Saúde, ABP — Se precisar de ajuda, ligue CVV 188.</p>
+                <p>Projeto <strong>voceimporta</strong> — Conscientização sobre Depressão para a Expotech 2026.</p>
                 <p style="margin-top: 0.5rem; font-size: 0.8rem;">Feito por estudantes de Desenvolvimento de Sistemas - 2ºB DS.</p>
                 <p style="margin-top: 0.5rem; font-size: 0.8rem;">- Colégio Gastão Vidal -</p>
             </div>
