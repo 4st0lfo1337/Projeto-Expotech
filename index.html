@@ -451,6 +451,13 @@
         .crt-toggle-btn.crt-off .crt-toggle-indicator { background: #8a3a3a; box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 4px rgba(180,60,60,0.4); }
         .crt-toggle-label { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; }
 
+        /* Bloco hero-fx-toggle — mesma tonalidade do crt-toggle (âmbar/marrom) */
+        .hero-fx-toggle-btn { border-color: #5a4a3a #1a1008 #1a1008 #5a4a3a; color: #c8b090; }
+        .hero-fx-toggle-btn:hover { background: #3a2a1a; color: #e8d5a3; }
+        .hero-fx-toggle-btn:focus-visible { outline-color: #c8b090; }
+        .hero-fx-toggle-indicator { background: #7ac87a; box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 5px rgba(120,200,120,0.55); }
+        .hero-fx-toggle-btn.hero-fx-off .hero-fx-toggle-indicator { background: #8a3a3a; box-shadow: inset 0 0 3px rgba(0,0,0,0.6), 0 0 4px rgba(180,60,60,0.4); }
+        
         /* ===================================================================== */
         /* ATALHO ESTILO WINDOWS */
         /* ===================================================================== */
@@ -1932,6 +1939,10 @@
             </ul>
         </div>
         <div class="sidebar-footer">
+            <button class="crt-toggle-btn hero-fx-toggle-btn" id="heroFxToggleBtn" type="button" aria-pressed="true" title="Desativar brilho animado e aura radial">
+                <span class="crt-toggle-indicator hero-fx-toggle-indicator" aria-hidden="true"></span>
+                <span class="crt-toggle-label hero-fx-toggle-label">Brilho + aura: Ativos</span>
+            </button>
             <button class="crt-toggle-btn" id="crtToggleBtn" type="button" aria-pressed="true" title="Ativar/desativar efeito CRT">
                 <span class="crt-toggle-indicator" aria-hidden="true"></span>
                 <span class="crt-toggle-label">CRT: Ativo</span>
@@ -2331,6 +2342,7 @@
             // Hero
             document.body.classList.toggle('hero-glow-off', !fxState.heroGlow);
             document.body.classList.toggle('hero-aura-off', !fxState.heroAura);
+            if (typeof aplicarEstadoHeroFX === 'function') aplicarEstadoHeroFX();
             document.documentElement.style.setProperty('--hero-glow-duration', fxState.heroSpeed + 's');
             document.documentElement.style.setProperty('--hero-blur-mult', String(fxState.heroIntensity));
             // Noise overlay
@@ -2549,6 +2561,35 @@
         /* CRT TOGGLE (sidebar)                                                  */
         /* ===================================================================== */
         const crtToggleBtn = document.getElementById('crtToggleBtn');
+        const heroFxToggleBtn = document.getElementById('heroFxToggleBtn');
+        function aplicarEstadoHeroFX() {
+            const heroFxAtivo = fxState.heroGlow && fxState.heroAura;
+            const label = heroFxToggleBtn ? heroFxToggleBtn.querySelector('.hero-fx-toggle-label') : null;
+            if (heroFxAtivo) {
+                if (heroFxToggleBtn) {
+                    heroFxToggleBtn.classList.remove('hero-fx-off');
+                    heroFxToggleBtn.setAttribute('aria-pressed', 'true');
+                    heroFxToggleBtn.setAttribute('title', 'Desativar brilho animado e aura radial');
+                }
+                if (label) label.textContent = 'Brilho + aura: Ativos';
+            } else {
+                if (heroFxToggleBtn) {
+                    heroFxToggleBtn.classList.add('hero-fx-off');
+                    heroFxToggleBtn.setAttribute('aria-pressed', 'false');
+                    heroFxToggleBtn.setAttribute('title', 'Ativar brilho animado e aura radial');
+                }
+                if (label) label.textContent = 'Brilho + aura: Inativos';
+            }
+        }
+        if (heroFxToggleBtn) {
+            heroFxToggleBtn.addEventListener('click', () => {
+                const ativar = !(fxState.heroGlow && fxState.heroAura);
+                fxState.heroGlow = ativar;
+                fxState.heroAura = ativar;
+                saveFxState();
+                applyFxState();
+            });
+        }
         function aplicarEstadoCRT() {
             const crtAtivo = fxState.crt;
             const label = crtToggleBtn ? crtToggleBtn.querySelector('.crt-toggle-label') : null;
