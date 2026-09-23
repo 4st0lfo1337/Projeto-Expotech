@@ -1895,6 +1895,7 @@
         <div class="debug-row"><span class="debug-key">z-base</span><span class="debug-val" id="dbgCRTZ">—</span></div>
 
         <div class="debug-section">theme / estado</div>
+        <div class="debug-row"><span class="debug-key">leitura calma</span><span class="debug-val" id="dbgCalmMode">OFF</span></div>
         <div class="debug-row"><span class="debug-key">tema</span><span class="debug-val" id="dbgTheme">dark-amber / CRT</span></div>
         <div class="debug-row"><span class="debug-key">classes</span><span class="debug-val" id="dbgClasses">—</span></div>
     </div>
@@ -2354,6 +2355,12 @@
         /* ESTADO GLOBAL DOS EFEITOS (CRT + Hero)                                */
         /* ===================================================================== */
         const FX_STORAGE_KEY = 'voceimporta_fx_v1';
+        const FX_CALM_BACKUP_KEY = 'voceimporta_fx_calm_backup_v1';
+        const FX_CONFIG_KEYS = [
+            'crt', 'scanlines', 'flicker', 'noiseCrt', 'marquee',
+            'noiseMax', 'flickerIntensity', 'scanlinesIntensity',
+            'heroGlow', 'heroAura', 'heroSpeed', 'heroIntensity'
+        ];
         const FX_DEFAULTS = {
             crt: true,
             scanlines: true,
@@ -2370,13 +2377,80 @@
             leituraCalma: false
         };
         let fxState = Object.assign({}, FX_DEFAULTS);
+        let leituraCalmaBackup = null;
         try {
             const raw = localStorage.getItem(FX_STORAGE_KEY);
             if (raw) Object.assign(fxState, JSON.parse(raw));
+            const calmBackup = localStorage.getItem(FX_CALM_BACKUP_KEY);
+            if (calmBackup) leituraCalmaBackup = JSON.parse(calmBackup);
         } catch (e) {}
 
         function saveFxState() {
             try { localStorage.setItem(FX_STORAGE_KEY, JSON.stringify(fxState)); } catch (e) {}
+        }
+
+        function salvarBackupLeituraCalma() {
+            try {
+                if (leituraCalmaBackup) localStorage.setItem(FX_CALM_BACKUP_KEY, JSON.stringify(leituraCalmaBackup));
+                else localStorage.removeItem(FX_CALM_BACKUP_KEY);
+            } catch (e) {}
+        }
+
+        function ativarLeituraCalma() {
+            if (!leituraCalmaBackup) {
+                leituraCalmaBackup = {};
+                FX_CONFIG_KEYS.forEach(key => { leituraCalmaBackup[key] = fxState[key]; });
+                salvarBackupLeituraCalma();
+            }
+            fxState.crt = false;
+            fxState.scanlines = false;
+            fxState.flicker = false;
+            fxState.noiseCrt = false;
+            fxState.marquee = false;
+            fxState.noiseMax = 0;
+            fxState.flickerIntensity = 0;
+            fxState.scanlinesIntensity = 0;
+            fxState.heroGlow = false;
+            fxState.heroAura = false;
+            fxState.heroIntensity = 0.3;
+            fxState.leituraCalma = true;
+        }
+
+        function desativarLeituraCalma() {
+            if (leituraCalmaBackup) {
+                FX_CONFIG_KEYS.forEach(key => {
+                    if (Object.prototype.hasOwnProperty.call(leituraCalmaBackup, key)) fxState[key] = leituraCalmaBackup[key];
+                });
+            }
+            leituraCalmaBackup = null;
+            salvarBackupLeituraCalma();
+            fxState.leituraCalma = false;
+        }
+
+        function alternarLeituraCalma() {
+            if (fxState.leituraCalma) desativarLeituraCalma();
+            else ativarLeituraCalma();
+            saveFxState();
+            applyFxState();
+        }
+
+        function sincronizarPainelEfeitos() {
+            document.querySelectorAll('input[data-fx-key]').forEach(inp => {
+                const key = inp.dataset.fxKey;
+                if (!Object.prototype.hasOwnProperty.call(fxState, key)) return;
+                inp.disabled = !!fxState.leituraCalma;
+                if (inp.type === 'checkbox') {
+                    inp.checked = !!fxState[key];
+                    return;
+                }
+                inp.value = String(fxState[key]);
+                const val = inp.parentNode.querySelector('.fx-slider-val');
+                if (!val) return;
+                if (key === 'heroSpeed') val.textContent = Number(fxState[key]).toFixed(1) + 's';
+                else if (key === 'heroIntensity') val.textContent = Number(fxState[key]).toFixed(2) + '×';
+                else if (key === 'flickerIntensity' || key === 'scanlinesIntensity') val.textContent = Number(fxState[key]).toFixed(2) + '×';
+                else val.textContent = Number(fxState[key]).toFixed(2);
+            });
         }
 
         function applyFxState() {
@@ -2404,6 +2478,7 @@
             if (typeof aplicarEstadoCRT === 'function') aplicarEstadoCRT();
             // Atualiza noise imediatamente
             if (typeof updateNoiseOpacity === 'function') updateNoiseOpacity();
+            if (typeof sincronizarPainelEfeitos === 'function') sincronizarPainelEfeitos();
         }
 
         /* ===================================================================== */
@@ -2625,9 +2700,7 @@
         }
         if (calmToggleBtn) {
             calmToggleBtn.addEventListener('click', () => {
-                fxState.leituraCalma = !fxState.leituraCalma;
-                saveFxState();
-                applyFxState();
+                alternarLeituraCalma();
             });
         }
         function aplicarEstadoHeroFX() {
@@ -3263,23 +3336,11 @@
                 btnReset.textContent = '↺ restaurar padrões';
                 btnReset.addEventListener('click', () => {
                     Object.assign(fxState, FX_DEFAULTS);
+                    leituraCalmaBackup = null;
+                    salvarBackupLeituraCalma();
                     saveFxState();
                     applyFxState();
-                    // Atualiza UI
-                    panel.querySelectorAll('input[data-fx-key]').forEach(inp => {
-                        const key = inp.dataset.fxKey;
-                        if (inp.type === 'checkbox') inp.checked = !!fxState[key];
-                        else {
-                            inp.value = String(fxState[key]);
-                            const val = inp.parentNode.querySelector('.fx-slider-val');
-                            if (val) {
-                                if (key === 'heroSpeed') val.textContent = fxState.heroSpeed.toFixed(1) + 's';
-                                else if (key === 'heroIntensity') val.textContent = fxState.heroIntensity.toFixed(2) + '×';
-                                else if (key === 'flickerIntensity' || key === 'scanlinesIntensity') val.textContent = fxState[key].toFixed(2) + '×';
-                                else val.textContent = parseFloat(fxState[key]).toFixed(2);
-                            }
-                        }
-                    });
+                    sincronizarPainelEfeitos();
                 });
                 actions.appendChild(btnReset);
 
@@ -3848,6 +3909,7 @@
         const dbgCRTNoise = document.getElementById('dbgCRTNoise');
         const dbgCRTOpacity = document.getElementById('dbgCRTOpacity');
         const dbgCRTZ = document.getElementById('dbgCRTZ');
+        const dbgCalmMode = document.getElementById('dbgCalmMode');
         const dbgTheme = document.getElementById('dbgTheme');
         const dbgClasses = document.getElementById('dbgClasses');
 
@@ -3905,10 +3967,11 @@
             const scanlinesOn = crtOn && !!fxState.scanlines && !document.body.classList.contains('fx-scanlines-off');
             const flickerOn = crtOn && !!fxState.flicker && !document.body.classList.contains('fx-flicker-off');
             const noiseCrtOn = crtOn && !!fxState.noiseCrt && !document.body.classList.contains('fx-noise-off');
+            const calmaAtiva = !!fxState.leituraCalma && document.body.classList.contains('leitura-calma');
             const visibility = heroTitle ? getComputedStyle(heroTitle).visibility : '—';
             const noiseVal = parseFloat(rootStyle.getPropertyValue('--noise-opacity')) || 0;
             const crtOpacity = crtOverlay ? parseFloat(getComputedStyle(crtOverlay).opacity) : 0;
-            const activeClasses = Array.from(document.body.classList).filter(c => /^(crt|fx-|hero-)/.test(c));
+            const activeClasses = Array.from(document.body.classList).filter(c => /^(crt|fx-|hero-|leitura-)/.test(c));
 
             setDebugValue(dbgFPS, currentFPS + ' fps', currentFPS >= 30 ? 'ok' : 'warn');
             setDebugValue(dbgViewport, window.innerWidth + '×' + window.innerHeight + ' · dpr ' + (window.devicePixelRatio || 1).toFixed(2));
@@ -3940,7 +4003,8 @@
             setDebugValue(dbgNoise, noiseVal.toFixed(3) + ' / max ' + Number(fxState.noiseMax).toFixed(2));
             setDebugValue(dbgCRTOpacity, isFinite(crtOpacity) ? crtOpacity.toFixed(2) : '—');
             setDebugValue(dbgCRTZ, rootStyle.getPropertyValue('--crt-z-base').trim() || '—');
-            setDebugValue(dbgTheme, 'dark-amber / ' + (crtOn ? 'CRT' : 'flat'), crtOn ? 'ok' : 'warn');
+            setDebugValue(dbgCalmMode, calmaAtiva ? 'ON · efeitos sincronizados' : 'OFF', calmaAtiva ? 'ok' : 'off');
+            setDebugValue(dbgTheme, calmaAtiva ? 'leitura calma / suave' : 'dark-amber / ' + (crtOn ? 'CRT' : 'flat'), calmaAtiva ? 'ok' : (crtOn ? 'ok' : 'warn'));
             setDebugValue(dbgClasses, activeClasses.length ? activeClasses.join(' ') : 'base');
         }
         function ativarDebug() {
