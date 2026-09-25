@@ -1878,6 +1878,126 @@
         .terminal-body-windowed,
         .glossario-tooltip { scrollbar-width: thin; scrollbar-color: var(--scrollbar-face) var(--scrollbar-track); }
         .window-taskbar-items { scrollbar-width: thin; scrollbar-color: var(--scrollbar-face) transparent; }
+        /* ===================================================================== */
+        /* SIDEBAR REFORMULADA — EXPLORADOR DE ARQUIVOS RETRÔ                    */
+        /* ===================================================================== */
+        .sidebar {
+            width: 286px;
+            background: linear-gradient(180deg, #211a14 0%, #17110d 100%);
+            border-right: 2px solid #6a5541;
+            box-shadow: 7px 0 26px rgba(0,0,0,.78), inset -1px 0 rgba(220,190,145,.08);
+        }
+        .sidebar-header {
+            min-height: 35px;
+            padding: 6px 8px;
+            background: #0b0806;
+            border-bottom: 1px solid #6a5541;
+        }
+        .explorer-icon { font-size: 1rem; }
+        .explorer-title { color: #e4c995; letter-spacing: .35px; }
+        .sidebar-path {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 10px 7px;
+            color: #958272;
+            font-size: .64rem;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #30241b;
+            background: rgba(0,0,0,.18);
+        }
+        .sidebar-path strong { color: #cdb28c; font-weight: 700; }
+        .sidebar-path .path-slash { color: #6d5947; }
+        .tree-container { padding: 9px 7px 13px; scrollbar-color: #5a4635 #0b0806; }
+        .tree-root { margin: 0; }
+        .tree-children { margin-left: 18px; }
+        .tree-node::before { left: 5px; border-color: #594737; }
+        .tree-row, .tree-item {
+            min-height: 27px;
+            gap: 7px;
+            padding: 2px 7px 2px 24px;
+            border: 1px solid transparent;
+            border-radius: 2px;
+            font-size: .73rem;
+            letter-spacing: .2px;
+        }
+        .tree-row::before, .tree-item::before { left: 6px; width: 12px; border-color: #594737; }
+        .tree-folder {
+            cursor: pointer;
+            color: #e3d1b5;
+            background: rgba(200,160,100,.055);
+        }
+        .tree-folder:hover { color: #fff0c9; background: rgba(200,160,100,.13); border-color: #584431; }
+        .tree-folder::after {
+            content: '▾';
+            order: -1;
+            position: absolute;
+            left: 8px;
+            color: #b99b70;
+            font-size: .7rem;
+            transition: transform .16s ease;
+        }
+        .tree-group.collapsed > .tree-folder::after { transform: rotate(-90deg); }
+        .tree-group.collapsed > .tree-children { display: none; }
+        .tree-folder .tree-icon { filter: none; font-size: .86rem; }
+        .tree-item { color: #a99d8e; }
+        .tree-item::after {
+            content: '·';
+            position: absolute;
+            left: 10px;
+            color: #806a52;
+        }
+        .tree-item:hover { color: #f3dcac; background: #302319; border-color: #614c38; }
+        .tree-item.ativo {
+            color: #17100b;
+            background: #d0b17b;
+            border-color: #ebd5a6;
+            box-shadow: none;
+            text-shadow: none;
+        }
+        .tree-item.ativo::after { color: #4f3824; }
+        .tree-item.ativo .tree-icon { filter: grayscale(1) brightness(.55); }
+        .tree-item.ativo {
+            background: #30251b;
+            border-color: #806443;
+            border-left: 3px solid #c8b090;
+            color: #e5c994;
+            box-shadow: none;
+        }
+        .tree-item.ativo .tree-icon { filter: none; }
+        .sidebar .tree-icon,
+        .sidebar .explorer-icon,
+        .sidebar-desktop-icon .desktop-icon-img {
+            filter: none;
+            text-shadow: none;
+            font-family: "Segoe UI Symbol", "DejaVu Sans", sans-serif;
+        }
+        .tree-label { min-width: 0; }
+        .tree-root > .tree-group > .tree-folder {
+            min-height: 31px;
+            margin-bottom: 4px;
+            color: #f0d9a8;
+            border-bottom: 1px solid #55412f;
+            border-radius: 0;
+        }
+        .tree-root > .tree-group > .tree-children { margin-left: 14px; }
+        .sidebar-tools-label {
+            padding: 10px 10px 5px;
+            color: #806d5b;
+            font-size: .59rem;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            border-top: 1px solid #30241b;
+        }
+        .sidebar-footer { padding: 9px 8px 10px; border-top: 1px solid #6a5541; background: #0b0806; }
+        .sidebar-footer-text { color: #88745f; font-size: .64rem; }
+        @media (max-width: 1024px) {
+            .sidebar { width: min(320px, 88vw); box-shadow: 8px 0 30px rgba(0,0,0,.85); }
+            .sidebar.ativo { transform: translateX(0); }
+            .tree-row, .tree-item { min-height: 31px; }
+        }
+        @media (prefers-reduced-motion: reduce) { .tree-folder::after { transition: none; } }
     </style>
 </head>
 <body>
@@ -1949,79 +2069,59 @@
 
     <!-- ATALHO ESTILO WINDOWS -->
     <div class="sidebar-desktop-icon" id="sidebarDesktopIcon" role="button" tabindex="0" aria-label="Abrir menu lateral" title="Duplo clique para abrir o menu">
-        <div class="desktop-icon-img" aria-hidden="true">📁</div>
+        <div class="desktop-icon-img" aria-hidden="true">📁︎</div>
         <div class="desktop-icon-label">
             voceimporta
             <small>menu</small>
         </div>
     </div>
 
-    <!-- SIDEBAR -->
-    <nav class="sidebar" id="sidebar">
+    <!-- SIDEBAR / EXPLORADOR DE ARQUIVOS -->
+    <nav class="sidebar" id="sidebar" aria-label="Explorador de arquivos do site">
         <div class="sidebar-header">
-            <span class="explorer-icon" aria-hidden="true">📁</span>
-            <span class="explorer-title">/mnt/voceimporta</span>
-            <button class="sidebar-hide-btn" id="sidebarHideBtn" aria-label="Esconder menu lateral" title="Esconder menu">×</button>
+            <span class="explorer-icon" aria-hidden="true">📁︎</span>
+            <span class="explorer-title">voceimporta — Explorer</span>
+            <button class="sidebar-hide-btn" id="sidebarHideBtn" type="button" aria-label="Esconder menu lateral" title="Esconder menu">×</button>
         </div>
+        <div class="sidebar-path" aria-label="Caminho atual"><span aria-hidden="true">⌂</span><span class="path-slash">/</span><strong>mnt</strong><span class="path-slash">/</span><strong>voceimporta</strong></div>
         <div class="tree-container">
             <ul class="sidebar-nav tree-root">
                 <li class="tree-node tree-group">
-                    <div class="tree-row tree-folder">
-                        <span class="tree-icon" aria-hidden="true">📁</span>
-                        <span class="tree-label">voceimporta</span>
-                    </div>
+                    <div class="tree-row tree-folder" role="button" tabindex="0" aria-expanded="true"><span class="tree-icon" aria-hidden="true">📂︎</span><span class="tree-label">voceimporta</span></div>
                     <ul class="tree-children">
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder">
-                                <span class="tree-icon" aria-hidden="true">📁</span>
-                                <span class="tree-label">entender</span>
-                            </div>
+                            <div class="tree-row tree-folder" role="button" tabindex="0" aria-expanded="true"><span class="tree-icon" aria-hidden="true">📂︎</span><span class="tree-label">entender</span></div>
                             <ul class="tree-children">
-                                <li class="tree-node"><a href="#sobre" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">o que é</span></a></li>
-                                <li class="tree-node"><a href="#tabu" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">quebrando o tabu</span></a></li>
-                                <li class="tree-node"><a href="#sintomas" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">sintomas</span></a></li>
-                                <li class="tree-node"><a href="#gravidade" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">gravidade</span></a></li>
+                                <li class="tree-node"><a href="#sobre" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">o-que-e.html</span></a></li>
+                                <li class="tree-node"><a href="#tabu" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">quebrando-o-tabu.html</span></a></li>
+                                <li class="tree-node"><a href="#sintomas" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">sintomas.html</span></a></li>
+                                <li class="tree-node"><a href="#gravidade" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">gravidade.html</span></a></li>
                             </ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">contextos</span></div>
-                            <ul class="tree-children">
-                                <li class="tree-node"><a href="#adolescentes" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">adolescentes</span></a></li>
-                                <li class="tree-node"><a href="#redes-sociais" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">redes sociais</span></a></li>
-                            </ul>
+                            <div class="tree-row tree-folder" role="button" tabindex="0" aria-expanded="true"><span class="tree-icon" aria-hidden="true">📂︎</span><span class="tree-label">contextos</span></div>
+                            <ul class="tree-children"><li class="tree-node"><a href="#adolescentes" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">adolescentes.html</span></a></li><li class="tree-node"><a href="#redes-sociais" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">redes-sociais.html</span></a></li></ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">caminhos</span></div>
-                            <ul class="tree-children">
-                                <li class="tree-node"><a href="#tratamentos" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">tratamentos</span></a></li>
-                                <li class="tree-node"><a href="#ajudar" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">como ajudar</span></a></li>
-                            </ul>
+                            <div class="tree-row tree-folder" role="button" tabindex="0" aria-expanded="true"><span class="tree-icon" aria-hidden="true">📂︎</span><span class="tree-label">caminhos</span></div>
+                            <ul class="tree-children"><li class="tree-node"><a href="#tratamentos" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">tratamentos.html</span></a></li><li class="tree-node"><a href="#ajudar" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">como-ajudar.html</span></a></li></ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">ferramentas</span></div>
-                            <ul class="tree-children">
-                                <li class="tree-node"><a href="#autoavaliacao" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">autoavaliação</span></a></li>
-                                <li class="tree-node"><a href="#respiro" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">como se acalmar</span></a></li>
-                            </ul>
+                            <div class="tree-row tree-folder" role="button" tabindex="0" aria-expanded="true"><span class="tree-icon" aria-hidden="true">📂︎</span><span class="tree-label">ferramentas</span></div>
+                            <ul class="tree-children"><li class="tree-node"><a href="#autoavaliacao" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">autoavaliacao.html</span></a></li><li class="tree-node"><a href="#respiro" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">respiro.html</span></a></li></ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">recursos</span></div>
-                            <ul class="tree-children">
-                                <li class="tree-node"><a href="#ajuda" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">ajuda</span></a></li>
-                                <li class="tree-node"><a href="#mapa" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">mapa</span></a></li>
-                                <li class="tree-node"><a href="#compartilhar" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">compartilhar</span></a></li>
-                            </ul>
+                            <div class="tree-row tree-folder" role="button" tabindex="0" aria-expanded="true"><span class="tree-icon" aria-hidden="true">📂︎</span><span class="tree-label">recursos</span></div>
+                            <ul class="tree-children"><li class="tree-node"><a href="#ajuda" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">ajuda-agora.html</span></a></li><li class="tree-node"><a href="#mapa" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">mapa.html</span></a></li><li class="tree-node"><a href="#compartilhar" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">compartilhar.html</span></a></li></ul>
                         </li>
                         <li class="tree-node tree-group">
-                            <div class="tree-row tree-folder"><span class="tree-icon" aria-hidden="true">📁</span><span class="tree-label">projeto</span></div>
-                            <ul class="tree-children">
-                                <li class="tree-node"><a href="#equipe" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">equipe</span></a></li>
-                                <li class="tree-node"><a href="#contato" class="tree-item"><span class="tree-icon" aria-hidden="true">📄</span><span class="tree-label">contato</span></a></li>
-                            </ul>
+                            <div class="tree-row tree-folder" role="button" tabindex="0" aria-expanded="true"><span class="tree-icon" aria-hidden="true">📂︎</span><span class="tree-label">projeto</span></div>
+                            <ul class="tree-children"><li class="tree-node"><a href="#equipe" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">equipe.html</span></a></li><li class="tree-node"><a href="#contato" class="tree-item"><span class="tree-icon" aria-hidden="true">📄︎</span><span class="tree-label">contato.html</span></a></li></ul>
                         </li>
                     </ul>
                 </li>
             </ul>
+            <div class="sidebar-tools-label">ferramentas do sistema</div>
         </div>
         <div class="sidebar-footer">
             <button class="crt-toggle-btn calm-toggle-btn" id="calmToggleBtn" type="button" aria-pressed="false" title="Ativar modo Leitura calma">
@@ -2936,6 +3036,43 @@
         menuToggle.addEventListener('click', () => { if (sidebar.classList.contains('ativo')) fecharSidebar(); else abrirSidebar(); });
         sidebarOverlay.addEventListener('click', fecharSidebar);
         document.querySelectorAll('.sidebar-nav a').forEach(link => { link.addEventListener('click', fecharSidebar); });
+
+        /* Explorador: pastas recolhíveis, teclado e arquivo ativo. */
+        document.querySelectorAll('.tree-folder').forEach(folder => {
+            const group = folder.closest('.tree-group');
+            const alternarPasta = () => {
+                const recolhida = group.classList.toggle('collapsed');
+                folder.setAttribute('aria-expanded', String(!recolhida));
+                const icon = folder.querySelector('.tree-icon');
+                if (icon) icon.textContent = recolhida ? '📁︎' : '📂︎';
+            };
+            folder.addEventListener('click', alternarPasta);
+            folder.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); alternarPasta(); }
+            });
+        });
+        const treeLinks = [...document.querySelectorAll('.tree-item')];
+        const marcarArquivoAtivo = (id) => {
+            treeLinks.forEach(link => link.classList.toggle('ativo', link.getAttribute('href') === '#' + id));
+            const ativo = treeLinks.find(link => link.classList.contains('ativo'));
+            if (ativo) {
+                const group = ativo.closest('.tree-group');
+                if (group && group.classList.contains('collapsed')) {
+                    group.classList.remove('collapsed');
+                    const folder = group.querySelector(':scope > .tree-folder');
+                    if (folder) { folder.setAttribute('aria-expanded', 'true'); const icon = folder.querySelector('.tree-icon'); if (icon) icon.textContent = '📂︎'; }
+                }
+            }
+        };
+        treeLinks.forEach(link => link.addEventListener('click', () => marcarArquivoAtivo(link.getAttribute('href').slice(1))));
+        const secoesDaArvore = treeLinks.map(link => document.getElementById(link.getAttribute('href').slice(1))).filter(Boolean);
+        if (secoesDaArvore.length && 'IntersectionObserver' in window) {
+            const observerArvore = new IntersectionObserver(entries => {
+                const visivel = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+                if (visivel) marcarArquivoAtivo(visivel.target.id);
+            }, { rootMargin: '-18% 0px -68% 0px', threshold: [0, .2, .5] });
+            secoesDaArvore.forEach(section => observerArvore.observe(section));
+        }
 
         function copiarLink() {
             const url = window.location.href;
